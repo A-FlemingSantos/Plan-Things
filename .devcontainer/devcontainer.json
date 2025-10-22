@@ -7,13 +7,13 @@
     }
   },
   "containerEnv": {
-    "JAVA_HOME": "/usr/lib/jvm/msopenjdk-17-amd64"
+    "JAVA_HOME": "/usr/lib/jvm/msopenjdk-current"
   },
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {
       "settings": {
-        "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-17-amd64",
+        "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
         "maven.executable.path": "/usr/bin/mvn",
         "terminal.integrated.defaultProfile.linux": "bash"
       },
