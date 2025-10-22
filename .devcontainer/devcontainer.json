@@ -1,0 +1,39 @@
+{
+  "name": "Plan-Things DevContainer (Java 17 + Node)",
+  "image": "mcr.microsoft.com/devcontainers/java:17",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/maven:1": {
+      "version": "latest"
+    }
+  },
+  "containerEnv": {
+    "JAVA_HOME": "/usr/lib/jvm/msopenjdk-17-amd64"
+  },
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-17-amd64",
+        "maven.executable.path": "/usr/bin/mvn",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-spring-boot",
+        "redhat.vscode-xml",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "forwardPorts": [8080, 5173],
+  "portsAttributes": {
+    "8080": { "label": "Spring Boot (backend)", "onAutoForward": "notify", "visibility": "public" },
+    "5173": { "label": "Vite (frontend)", "onAutoForward": "notify", "visibility": "public" }
+  },
+  "postCreateCommand": "echo Using $(java -version 2>&1 | head -n1) && node -v && npm -v && mvn -v",
+  "updateContentCommand": "",
+  "postStartCommand": ""
+}

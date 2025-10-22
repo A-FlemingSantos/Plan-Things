@@ -1,10 +1,16 @@
 import axios from 'axios';
 
+// Base URL definida via variável de ambiente (Opção B)
+// Em ambientes como Codespaces/GitHub dev, defina VITE_API_URL para o domínio público da porta 8080
+// Ex.: https://SEU-CODENAME-8080.app.github.dev
+const baseURL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
 // Configuração base do Axios
 const api = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
 });
 
