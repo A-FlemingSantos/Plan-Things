@@ -4,9 +4,6 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "20"
-    },
-    "ghcr.io/devcontainers/features/maven:1": {
-      "version": "latest"
     }
   },
   "containerEnv": {
@@ -33,7 +30,7 @@
     "8080": { "label": "Spring Boot (backend)", "onAutoForward": "notify", "visibility": "public" },
     "5173": { "label": "Vite (frontend)", "onAutoForward": "notify", "visibility": "public" }
   },
-  "postCreateCommand": "echo Using $(java -version 2>&1 | head -n1) && node -v && npm -v && mvn -v",
+  "postCreateCommand": "sudo apt-get update -y && sudo apt-get install -y maven && echo Using $(java -version 2>&1 | head -n1) && mvn -v && node -v && npm -v",
   "updateContentCommand": "",
   "postStartCommand": ""
 }
