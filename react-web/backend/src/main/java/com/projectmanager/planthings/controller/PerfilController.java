@@ -6,6 +6,9 @@ import com.projectmanager.planthings.model.services.PerfilService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-
-import javax.annotation.processing.Generated;
 
 
 @RestController
@@ -41,22 +42,17 @@ public class PerfilController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(perfilService.findById(Long.parseLong(id)));
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body("ID inválido");
+            return ResponseEntity.ok(perfilService.findById(id));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar perfil");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Perfil não encontrado");
         }
-
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Perfil perfil) {
         try {
-            Perfil perfilAtualizado = perfilService.update(Long.parseLong(id), perfil);
+            Perfil perfilAtualizado = perfilService.update(id, perfil);
             return ResponseEntity.ok(perfilAtualizado);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body("ID inválido");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar perfil");
         }
@@ -65,10 +61,8 @@ public class PerfilController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         try {
-            perfilService.delete(Long.parseLong(id));
+            perfilService.delete(id);
             return ResponseEntity.ok().body("Perfil deletado com sucesso");
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body("ID inválido");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar perfil");
         }
