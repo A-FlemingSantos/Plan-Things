@@ -19,7 +19,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/perfil")
+@RequestMapping("/api/v1/perfil")
 public class PerfilController {
     
     @Autowired
