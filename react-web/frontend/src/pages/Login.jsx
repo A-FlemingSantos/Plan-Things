@@ -5,16 +5,47 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Lock, Mail, Sparkles } from "lucide-react";
+import api from "@/lib/api";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simular login bem-sucedido
-    navigate("/dashboard");
+    setIsLoading(true);
+
+    try {
+      // Fazer requisição POST para o endpoint de login
+      const response = await api.post('/perfil/login', {
+        email: email,
+        senha: password
+      });
+
+      // Sucesso - salvar dados do usuário no localStorage
+      console.log('Login realizado com sucesso:', response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      localStorage.setItem('userId', response.data.id);
+      
+      alert('Login realizado com sucesso!');
+      navigate("/dashboard");
+    } catch (error) {
+      // Tratamento de erro
+      console.error('Erro ao fazer login:', error);
+      if (error.response && error.response.status === 401) {
+        alert(error.response.data.message || 'Email ou senha inválidos');
+      } else if (error.response) {
+        alert(`Erro ao fazer login: ${error.response.data.message || 'Erro no servidor'}`);
+      } else if (error.request) {
+        alert('Erro de conexão. Verifique se o backend está rodando.');
+      } else {
+        alert('Erro ao processar login. Tente novamente.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -101,10 +132,11 @@ const Login = () => {
               
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-primary hover:bg-primary/90 hover:shadow-strong transform hover:-translate-y-0.5 transition-all duration-300 text-white font-semibold text-base rounded-lg border-0"
+                disabled={isLoading}
+                className="w-full h-12 bg-primary hover:bg-primary/90 hover:shadow-strong transform hover:-translate-y-0.5 transition-all duration-300 text-white font-semibold text-base rounded-lg border-0 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
-                Entrar na minha conta
+                {isLoading ? "Entrando..." : "Entrar na minha conta"}
               </Button>
             </form>
           </CardContent>

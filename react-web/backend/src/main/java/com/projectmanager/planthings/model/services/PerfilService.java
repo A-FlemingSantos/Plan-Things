@@ -23,6 +23,10 @@ public class PerfilService{
 
     // Método para salvar um novo perfil
     public Perfil save(Perfil perfil) {
+        // Verifica se já existe um perfil com esse email
+        if (perfilRepository.findByEmail(perfil.getEmail()).isPresent()) {
+            throw new RuntimeException("Email já cadastrado no sistema");
+        }
         perfil.setCodStatus(true);
         return perfilRepository.save(perfil);
     }
@@ -46,5 +50,23 @@ public class PerfilService{
     public void delete(Long id) {
         Perfil perfilExistente = findById(id);
         perfilRepository.delete(perfilExistente);
+    }
+
+    // Método para autenticar usuário (login)
+    public Perfil login(String email, String senha) {
+        Perfil perfil = perfilRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Email ou senha inválidos"));
+        
+        // Verifica se a senha está correta
+        if (!perfil.getSenha().equals(senha)) {
+            throw new RuntimeException("Email ou senha inválidos");
+        }
+        
+        // Verifica se o perfil está ativo
+        if (!perfil.getCodStatus()) {
+            throw new RuntimeException("Perfil inativo");
+        }
+        
+        return perfil;
     }
 }

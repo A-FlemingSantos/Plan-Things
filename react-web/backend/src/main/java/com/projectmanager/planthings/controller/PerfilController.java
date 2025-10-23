@@ -2,6 +2,8 @@ package com.projectmanager.planthings.controller;
 
 import com.projectmanager.planthings.model.entity.Perfil;
 import com.projectmanager.planthings.model.services.PerfilService;
+import com.projectmanager.planthings.model.dto.LoginRequest;
+import com.projectmanager.planthings.model.dto.LoginResponse;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -65,6 +69,29 @@ public class PerfilController {
             return ResponseEntity.ok().body("Perfil deletado com sucesso");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar perfil");
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            Perfil perfil = perfilService.login(loginRequest.getEmail(), loginRequest.getSenha());
+            
+            // Criar resposta sem expor a senha
+            LoginResponse response = new LoginResponse(
+                perfil.getId(),
+                perfil.getEmail(),
+                perfil.getNome(),
+                perfil.getSobrenome(),
+                perfil.getTelefone(),
+                "Login realizado com sucesso"
+            );
+            
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 

@@ -10,7 +10,7 @@ public class Perfil {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO-INCREMENT SEQUENCIAL
     private Long id;
     
-    @Column(length = 320, nullable = false)
+    @Column(length = 320, nullable = false, unique = true)
     private String email;
 
     @Column(length = 50, nullable = false)
