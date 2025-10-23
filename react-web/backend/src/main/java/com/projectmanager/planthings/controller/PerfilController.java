@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+import javax.annotation.processing.Generated;
+
 
 @RestController
 @RequestMapping("/perfil")
@@ -23,17 +25,53 @@ public class PerfilController {
     private PerfilService perfilService;
 
     @GetMapping
-    public ResponseEntity<List<Perfil>> listarTodos() {
+    public ResponseEntity<List<Perfil>> findAll() {
 
             return ResponseEntity.ok(perfilService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Perfil> salvarPerfil(@RequestBody Perfil perfil) {
+    public ResponseEntity<Perfil> save(@RequestBody Perfil perfil) {
 
-        Perfil novo = perfilService.save(perfil);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novo);
+        Perfil novoPerfil = perfilService.save(perfil);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoPerfil);
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> findById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(perfilService.findById(Long.parseLong(id)));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("ID inválido");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar perfil");
+        }
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Perfil perfil) {
+        try {
+            Perfil perfilAtualizado = perfilService.update(Long.parseLong(id), perfil);
+            return ResponseEntity.ok(perfilAtualizado);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("ID inválido");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar perfil");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        try {
+            perfilService.delete(Long.parseLong(id));
+            return ResponseEntity.ok().body("Perfil deletado com sucesso");
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("ID inválido");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar perfil");
+        }
     }
 
 }
