@@ -14,12 +14,37 @@ public class PerfilService{
     @Autowired // Injeção de dependência automática
     private PerfilRepository perfilRepository;
 
+
+    // Método para buscar todos os perfis
     public List<Perfil> findAll() {
         return perfilRepository.findAll();
     }
 
+
+    // Método para salvar um novo perfil
     public Perfil save(Perfil perfil) {
         perfil.setCodStatus(true);
         return perfilRepository.save(perfil);
+    }
+
+
+    public Perfil findById(Long id) {
+        return perfilRepository.findById(id).orElseThrow(() -> new RuntimeException("Perfil não encontrado" + id));
+    }
+
+    // Método para atualizar um perfil existente
+    public Perfil update(Long id, Perfil perfil) {
+        Perfil perfilExistente = findById(id);
+        perfilExistente.setNome(perfil.getNome());
+        perfilExistente.setSobrenome(perfil.getSobrenome());
+        perfilExistente.setTelefone(perfil.getTelefone());
+        perfilExistente.setSenha(perfil.getSenha());
+        return perfilRepository.save(perfilExistente);
+    }
+
+    // Método para deletar um perfil por ID
+    public void delete(Long id) {
+        Perfil perfilExistente = findById(id);
+        perfilRepository.delete(perfilExistente);
     }
 }
