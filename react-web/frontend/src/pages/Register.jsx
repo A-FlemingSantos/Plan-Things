@@ -42,8 +42,11 @@ const Register = () => {
       // Fazer requisição POST para o endpoint
       const response = await api.post('/perfil', perfilData);
       
-      // Sucesso - navegar para o dashboard
+      // Sucesso - salvar dados do usuário no localStorage
       console.log('Perfil criado com sucesso:', response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      localStorage.setItem('userId', response.data.id);
+      
       alert('Cadastro realizado com sucesso!');
       navigate("/dashboard");
     } catch (error) {

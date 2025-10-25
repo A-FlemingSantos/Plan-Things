@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
   FolderOpen, 
@@ -112,6 +113,16 @@ function AppSidebar() {
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Limpar localStorage
+    localStorage.removeItem('user');
+    localStorage.removeItem('userId');
+    
+    // Redirecionar para página de login
+    navigate('/login');
+  };
 
   return (
     <SidebarProvider>
@@ -158,11 +169,17 @@ export default function Dashboard() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/perfil">
+                      <User className="w-4 h-4 mr-2" />
+                      Perfil
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Settings className="w-4 h-4 mr-2" />
                     Configurações
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="w-4 h-4 mr-2" />
                     Sair
                   </DropdownMenuItem>
