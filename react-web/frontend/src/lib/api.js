@@ -1,9 +1,24 @@
 import axios from 'axios';
 
-// Base URL definida via variável de ambiente (Opção B)
-// Em ambientes como Codespaces/GitHub dev, defina VITE_API_URL para o domínio público da porta 8080
-// Ex.: https://SEU-CODENAME-8080.app.github.dev
-const baseURL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+// Base URL dinâmica para Codespaces ou variável de ambiente
+function getDynamicApiUrl() {
+  // 1. Se VITE_API_URL estiver definida, use-a
+  if (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim() !== '') {
+    return import.meta.env.VITE_API_URL.replace(/\/$/, '');
+  }
+  // 2. Detecta se está rodando em Codespaces
+  const host = window?.location?.host;
+  // Exemplo de host: cuddly-pancake-pjw77pj79vr5f559-3000.app.github.dev
+  if (host && host.endsWith('.app.github.dev')) {
+    // Substitui a porta do frontend (ex: 3000) por 8080
+    const apiHost = host.replace(/-(\d+)\.app\.github\.dev$/, '-8080.app.github.dev');
+    return `https://${apiHost}/api/v1`;
+  }
+  // 3. Fallback para localhost
+  return 'http://localhost:8080/api/v1';
+}
+
+const baseURL = getDynamicApiUrl();
 
 // Configuração base do Axios
 const api = axios.create({
