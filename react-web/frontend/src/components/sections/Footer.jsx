@@ -69,7 +69,7 @@ export const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
-            <h3 className="text-2xl font-bold mb-6">ProjectFlow</h3>
+            <h3 className="text-2xl font-bold mb-6">Plan Things</h3>
             <p className="text-white/80 mb-6 text-sm leading-relaxed">
               A plataforma de gerenciamento de projetos que pequenas equipes adoram usar.
             </p>
@@ -144,7 +144,7 @@ export const Footer = () => {
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/60 text-sm mb-4 md:mb-0">
-            © 2024 ProjectFlow. Todos os direitos reservados.
+            © 2025 Plan Things. Todos os direitos reservados.
           </p>
           <div className="text-white/60 text-sm">
             Feito com ❤️ no Brasil

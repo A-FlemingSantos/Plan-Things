@@ -96,3 +96,84 @@ npm run dev
 - Erro CORS: conferir domínio de origem e profile/porta da API.
 - Falha de startup JPA/Flyway: conferir `DB_URL`, credenciais e schema remoto.
 - Porta ocupada (`8080`): usar profile `local` (`8081`) ou liberar a porta.
+
+## Proxy do Vite (Desenvolvimento)
+
+O frontend possui proxy configurado em `react-web/frontend/vite.config.js`:
+
+- Todas as requisições para `/api` são encaminhadas automaticamente ao backend.
+- O target é derivado de `VITE_API_URL` ou `http://localhost:8080` como fallback.
+
+Isso significa que o frontend pode fazer chamadas relativas como `/api/v1/perfil` sem precisar lidar com CORS durante o desenvolvimento.
+
+## Endpoints da API
+
+### Perfil (`/api/v1/perfil`)
+
+| Método | Path | Descrição |
+|--------|------|-----------|
+| GET | `/` | Listar perfis ativos |
+| POST | `/` | Criar novo perfil |
+| GET | `/{id}` | Buscar perfil por ID |
+| PUT | `/{id}` | Atualizar perfil |
+| DELETE | `/{id}` | Soft delete (inativar perfil) |
+| POST | `/login` | Autenticação |
+
+### Planos (`/api/v1/planos`)
+
+| Método | Path | Descrição |
+|--------|------|-----------|
+| GET | `/perfil/{perfilId}` | Listar planos do perfil |
+| GET | `/perfil/{perfilId}/{id}` | Buscar plano por ID |
+| POST | `/perfil/{perfilId}` | Criar plano |
+| PUT | `/perfil/{perfilId}/{id}` | Atualizar plano |
+| DELETE | `/perfil/{perfilId}/{id}` | Remover plano |
+
+### Listas (`/api/v1/listas`)
+
+| Método | Path | Descrição |
+|--------|------|-----------|
+| GET | `/perfil/{perfilId}/plano/{planoId}` | Listar listas de um plano |
+| GET | `/perfil/{perfilId}/{id}` | Buscar lista por ID |
+| POST | `/perfil/{perfilId}/plano/{planoId}` | Criar lista |
+| PUT | `/perfil/{perfilId}/{id}` | Atualizar lista |
+| DELETE | `/perfil/{perfilId}/{id}` | Remover lista |
+
+### Cartões (`/api/v1/cartoes`)
+
+| Método | Path | Descrição |
+|--------|------|-----------|
+| GET | `/perfil/{perfilId}/lista/{listaId}` | Listar cartões de uma lista |
+| GET | `/perfil/{perfilId}/{id}` | Buscar cartão por ID |
+| DELETE | `/perfil/{perfilId}/{id}` | Remover cartão |
+
+### Tarefas (`/api/v1/tarefas`)
+
+| Método | Path | Descrição |
+|--------|------|-----------|
+| GET | `/perfil/{perfilId}/lista/{listaId}` | Listar tarefas de uma lista |
+| GET | `/perfil/{perfilId}/{id}` | Buscar tarefa por ID |
+| POST | `/perfil/{perfilId}/lista/{listaId}` | Criar tarefa |
+| PUT | `/perfil/{perfilId}/{id}` | Atualizar tarefa |
+| DELETE | `/perfil/{perfilId}/{id}` | Remover tarefa |
+
+### Eventos (`/api/v1/eventos`)
+
+| Método | Path | Descrição |
+|--------|------|-----------|
+| GET | `/perfil/{perfilId}/lista/{listaId}` | Listar eventos de uma lista |
+| GET | `/perfil/{perfilId}/{id}` | Buscar evento por ID |
+| POST | `/perfil/{perfilId}/lista/{listaId}` | Criar evento |
+| PUT | `/perfil/{perfilId}/{id}` | Atualizar evento |
+| DELETE | `/perfil/{perfilId}/{id}` | Remover evento |
+
+## Modelo de Dados (Resumo)
+
+```
+Perfil (1) ──> (N) Plano (1) ──> (N) Lista (1) ──> (N) Cartão
+                                                         ├── Tarefa (data_conclusao)
+                                                         └── Evento (data_inicio, data_fim)
+```
+
+- `Tarefa` e `Evento` são subtipos de `Cartão` (herança JPA `SINGLE_TABLE`).
+- `Perfil` usa soft delete (`cod_status`); todos os outros usam hard delete com `ON DELETE CASCADE`.

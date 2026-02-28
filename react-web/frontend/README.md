@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+# Plan Things — Frontend
 
-## Project info
+Frontend React da aplicação Plan Things para gerenciamento de projetos de pequenas equipes.
 
-**URL**: https://lovable.dev/projects/09947cbc-cde2-4124-a91f-9146217a3ff1
+## Tecnologias
 
-## How can I edit this code?
+- [React](https://react.dev/) com [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [React Router](https://reactrouter.com/)
+- [TanStack Query](https://tanstack.com/query)
+- [Axios](https://axios-http.com/)
 
-There are several ways of editing your application.
+## Pré-requisitos
 
-**Use Lovable**
+- Node.js 18+ e npm
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/09947cbc-cde2-4124-a91f-9146217a3ff1) and start prompting.
+## Como rodar
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+O servidor de desenvolvimento inicia na porta `5173`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Variáveis de ambiente
 
-**Use GitHub Codespaces**
+Copie o modelo e ajuste conforme necessário:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+cp .env.example .env
+```
 
-## What technologies are used for this project?
+| Variável | Descrição |
+|----------|-----------|
+| `VITE_API_URL` | URL base da API do backend (ex: `http://localhost:8080/api/v1`) |
 
-This project is built with:
+Veja detalhes de resolução dinâmica em [`src/lib/api.js`](src/lib/api.js).
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Proxy no Vite (Desenvolvimento)
 
-## How can I deploy this project?
+O Vite possui proxy configurado em [`vite.config.js`](vite.config.js):
 
-Simply open [Lovable](https://lovable.dev/projects/09947cbc-cde2-4124-a91f-9146217a3ff1) and click on Share -> Publish.
+- Todas as requisições para `/api` são encaminhadas automaticamente ao backend.
+- O target é derivado de `VITE_API_URL` ou `http://localhost:8080` como fallback.
 
-## Can I connect a custom domain to my Lovable project?
+Isso permite chamadas relativas como `/api/v1/perfil` sem lidar com CORS durante o desenvolvimento.
 
-Yes, you can!
+## Estrutura principal
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```
+src/
+  components/   # Componentes reutilizáveis (UI, seções)
+  pages/        # Páginas da aplicação (Login, Register, Dashboard, Profile)
+  lib/          # Utilitários (api client, helpers)
+  hooks/        # Custom hooks
+  assets/       # Imagens e recursos estáticos
+```
