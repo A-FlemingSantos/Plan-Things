@@ -175,5 +175,5 @@ Perfil (1) ──> (N) Plano (1) ──> (N) Lista (1) ──> (N) Cartão
                                                          └── Evento (data_inicio, data_fim)
 ```
 
-- `Tarefa` e `Evento` são subtipos de `Cartão` (herança JPA `SINGLE_TABLE`).
+- `Tarefa` e `Evento` são subtipos de `Cartão` (herança JPA `JOINED`).
 - `Perfil` usa soft delete (`cod_status`); todos os outros usam hard delete com `ON DELETE CASCADE`.

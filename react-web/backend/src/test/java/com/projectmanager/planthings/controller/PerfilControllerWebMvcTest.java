@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,6 +41,10 @@ class PerfilControllerWebMvcTest {
 
         @MockitoBean
     private PerfilService perfilService;
+
+        private static @NonNull MediaType jsonMediaType() {
+                return Objects.requireNonNull(MediaType.APPLICATION_JSON);
+        }
 
     @Test
     void shouldCreatePerfilAndReturn201() throws Exception {
@@ -62,7 +69,7 @@ class PerfilControllerWebMvcTest {
                 """;
 
         mockMvc.perform(post("/api/v1/perfil")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(10))
@@ -82,7 +89,7 @@ class PerfilControllerWebMvcTest {
                 """;
 
         mockMvc.perform(post("/api/v1/perfil")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.status").value(409))
@@ -111,9 +118,11 @@ class PerfilControllerWebMvcTest {
 
         LoginRequest request = new LoginRequest("login@planthings.com", "123456");
 
+        String requestBody = Objects.requireNonNull(objectMapper.writeValueAsString(request));
+
         mockMvc.perform(post("/api/v1/perfil/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .contentType(jsonMediaType())
+                        .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.email").value("login@planthings.com"));
@@ -126,9 +135,11 @@ class PerfilControllerWebMvcTest {
 
         LoginRequest request = new LoginRequest("login@planthings.com", "errada");
 
+        String requestBody = Objects.requireNonNull(objectMapper.writeValueAsString(request));
+
         mockMvc.perform(post("/api/v1/perfil/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .contentType(jsonMediaType())
+                        .content(requestBody))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.status").value(401))
                 .andExpect(jsonPath("$.message").value("Email ou senha inválidos"));

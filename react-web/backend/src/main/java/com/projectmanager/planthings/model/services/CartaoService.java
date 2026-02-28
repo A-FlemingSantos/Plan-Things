@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Service
@@ -28,7 +29,7 @@ public class CartaoService {
     }
 
     public void delete(Long perfilId, Long id) {
-        Cartao cartao = findById(perfilId, id);
+        Cartao cartao = Objects.requireNonNull(findById(perfilId, id));
         cartaoRepository.delete(cartao);
     }
 

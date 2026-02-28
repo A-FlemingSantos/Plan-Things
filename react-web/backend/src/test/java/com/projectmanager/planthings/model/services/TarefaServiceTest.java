@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,7 +55,7 @@ class TarefaServiceTest {
 
         assertThrows(ConflictException.class, () -> tarefaService.update(1L, 10L, atualizacao));
 
-        verify(tarefaRepository, never()).save(org.mockito.ArgumentMatchers.any(Tarefa.class));
+        verify(tarefaRepository, never()).save(Objects.requireNonNull(existente));
         verify(cartaoService, never()).validarCor(org.mockito.ArgumentMatchers.anyString());
     }
 
@@ -69,7 +70,7 @@ class TarefaServiceTest {
 
         when(tarefaRepository.findByIdAndListaPlanoPerfilId(10L, 1L)).thenReturn(Optional.of(existente));
         when(eventoRepository.existsById(10L)).thenReturn(false);
-        when(tarefaRepository.save(existente)).thenReturn(existente);
+        when(tarefaRepository.save(Objects.requireNonNull(existente))).thenReturn(existente);
 
         Tarefa resultado = tarefaService.update(1L, 10L, atualizacao);
 
@@ -78,7 +79,7 @@ class TarefaServiceTest {
         assertEquals("#ABCDEF", resultado.getCor());
         assertEquals(LocalDateTime.of(2026, 4, 1, 12, 30), resultado.getDataConclusao());
         verify(cartaoService).validarCor("#ABCDEF");
-        verify(tarefaRepository).save(existente);
+        verify(tarefaRepository).save(Objects.requireNonNull(existente));
     }
 
     private Tarefa criarTarefaExistente() {

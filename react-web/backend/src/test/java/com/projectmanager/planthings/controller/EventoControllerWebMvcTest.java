@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -37,6 +39,10 @@ class EventoControllerWebMvcTest {
 
         @MockitoBean
     private EventoService eventoService;
+
+        private static @NonNull MediaType jsonMediaType() {
+                return Objects.requireNonNull(MediaType.APPLICATION_JSON);
+        }
 
     @Test
     void shouldListEventosWithDto() throws Exception {
@@ -102,7 +108,7 @@ class EventoControllerWebMvcTest {
                 """;
 
         mockMvc.perform(post("/api/v1/eventos/perfil/1/lista/30")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(51))
@@ -124,7 +130,7 @@ class EventoControllerWebMvcTest {
                 """;
 
         mockMvc.perform(post("/api/v1/eventos/perfil/1/lista/30")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400));

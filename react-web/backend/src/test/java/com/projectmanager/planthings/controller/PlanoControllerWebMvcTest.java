@@ -1,6 +1,5 @@
 package com.projectmanager.planthings.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projectmanager.planthings.exception.BadRequestException;
 import com.projectmanager.planthings.exception.GlobalExceptionHandler;
 import com.projectmanager.planthings.exception.NotFoundException;
@@ -12,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -34,11 +35,12 @@ class PlanoControllerWebMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-        @MockitoBean
+                @MockitoBean
     private PlanoService planoService;
+
+                private static @NonNull MediaType jsonMediaType() {
+                                return Objects.requireNonNull(MediaType.APPLICATION_JSON);
+                }
 
     @Test
     void shouldListPlanosAndReturnDto() throws Exception {
@@ -81,7 +83,7 @@ class PlanoControllerWebMvcTest {
                 """;
 
         mockMvc.perform(post("/api/v1/planos/perfil/1")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(6))
@@ -109,7 +111,7 @@ class PlanoControllerWebMvcTest {
                 """;
 
         mockMvc.perform(post("/api/v1/planos/perfil/1")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))

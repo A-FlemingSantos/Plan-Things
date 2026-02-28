@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TarefaService {
@@ -44,7 +45,7 @@ public class TarefaService {
 
         tarefa.setId(null);
         tarefa.setLista(lista);
-        return tarefaRepository.save(tarefa);
+        return Objects.requireNonNull(tarefaRepository.save(tarefa));
     }
 
     @Transactional
@@ -57,13 +58,13 @@ public class TarefaService {
         existente.setDescricao(tarefa.getDescricao());
         existente.setCor(tarefa.getCor());
         existente.setDataConclusao(tarefa.getDataConclusao());
-        return tarefaRepository.save(existente);
+        return Objects.requireNonNull(tarefaRepository.save(existente));
     }
 
     @Transactional
     public void delete(Long perfilId, Long id) {
         Tarefa existente = findById(perfilId, id);
-        tarefaRepository.delete(existente);
+        tarefaRepository.delete(Objects.requireNonNull(existente));
     }
 
     private Lista ensureListaOwnership(Long perfilId, Long listaId) {
@@ -72,7 +73,7 @@ public class TarefaService {
     }
 
     private void validarExclusividade(Long id) {
-        if (eventoRepository.existsById(id)) {
+        if (eventoRepository.existsById(Objects.requireNonNull(id))) {
             throw new ConflictException("Cartão não pode ser Tarefa e Evento ao mesmo tempo");
         }
     }

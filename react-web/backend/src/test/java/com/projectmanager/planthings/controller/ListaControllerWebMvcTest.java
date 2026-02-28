@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,6 +38,10 @@ class ListaControllerWebMvcTest {
 
         @MockitoBean
     private ListaService listaService;
+
+        private static @NonNull MediaType jsonMediaType() {
+                return Objects.requireNonNull(MediaType.APPLICATION_JSON);
+        }
 
     @Test
     void shouldListListasWithDto() throws Exception {
@@ -86,7 +92,7 @@ class ListaControllerWebMvcTest {
                 """;
 
         mockMvc.perform(post("/api/v1/listas/perfil/1/plano/10")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(21))
@@ -106,7 +112,7 @@ class ListaControllerWebMvcTest {
                 """;
 
         mockMvc.perform(post("/api/v1/listas/perfil/1/plano/10")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400));

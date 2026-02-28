@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +56,7 @@ class EventoServiceTest {
 
         assertThrows(ConflictException.class, () -> eventoService.update(1L, 10L, atualizacao));
 
-        verify(eventoRepository, never()).save(org.mockito.ArgumentMatchers.any(Evento.class));
+        verify(eventoRepository, never()).save(Objects.requireNonNull(existente));
         verify(cartaoService, never()).validarCor(org.mockito.ArgumentMatchers.anyString());
     }
 
@@ -71,7 +72,7 @@ class EventoServiceTest {
 
         when(eventoRepository.findByIdAndListaPlanoPerfilId(10L, 1L)).thenReturn(Optional.of(existente));
         when(tarefaRepository.existsById(10L)).thenReturn(false);
-        when(eventoRepository.save(existente)).thenReturn(existente);
+        when(eventoRepository.save(Objects.requireNonNull(existente))).thenReturn(existente);
 
         Evento resultado = eventoService.update(1L, 10L, atualizacao);
 
@@ -81,7 +82,7 @@ class EventoServiceTest {
         assertEquals(LocalDateTime.of(2026, 4, 10, 14, 0), resultado.getDataInicio());
         assertEquals(LocalDateTime.of(2026, 4, 10, 16, 0), resultado.getDataFim());
         verify(cartaoService).validarCor("#ABCDEF");
-        verify(eventoRepository).save(existente);
+        verify(eventoRepository).save(Objects.requireNonNull(existente));
     }
 
     private Evento criarEventoExistente() {

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PlanoService {
@@ -34,19 +35,19 @@ public class PlanoService {
         Perfil perfil = ensurePerfilAtivo(perfilId);
         plano.setId(null);
         plano.setPerfil(perfil);
-        return planoRepository.save(plano);
+        return Objects.requireNonNull(planoRepository.save(plano));
     }
 
     public Plano update(Long perfilId, Long id, Plano plano) {
         Plano existente = findById(perfilId, id);
         existente.setNome(plano.getNome());
         existente.setWallpaperUrl(plano.getWallpaperUrl());
-        return planoRepository.save(existente);
+        return Objects.requireNonNull(planoRepository.save(existente));
     }
 
     public void delete(Long perfilId, Long id) {
         Plano existente = findById(perfilId, id);
-        planoRepository.delete(existente);
+        planoRepository.delete(Objects.requireNonNull(existente));
     }
 
     private Perfil ensurePerfilAtivo(Long perfilId) {

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Service
@@ -39,7 +40,7 @@ public class ListaService {
 
         lista.setId(null);
         lista.setPlano(plano);
-        return listaRepository.save(lista);
+        return Objects.requireNonNull(listaRepository.save(lista));
     }
 
     public Lista update(Long perfilId, Long id, Lista lista) {
@@ -48,12 +49,12 @@ public class ListaService {
 
         existente.setNome(lista.getNome());
         existente.setCor(lista.getCor());
-        return listaRepository.save(existente);
+        return Objects.requireNonNull(listaRepository.save(existente));
     }
 
     public void delete(Long perfilId, Long id) {
         Lista existente = findById(perfilId, id);
-        listaRepository.delete(existente);
+        listaRepository.delete(Objects.requireNonNull(existente));
     }
 
     private Plano ensurePlanoOwnership(Long perfilId, Long planoId) {
