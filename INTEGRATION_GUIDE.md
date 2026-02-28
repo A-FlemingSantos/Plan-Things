@@ -1,144 +1,98 @@
 # Guia de Integração Frontend-Backend
 
-## 📋 Resumo das Alterações
+## Visão Geral
 
-Este documento descreve as alterações feitas para integrar o frontend React com o backend Spring Boot usando Axios.
+Este projeto integra um frontend React (Vite) com backend Spring Boot e banco SQL Server via Flyway.
 
-## 🔧 Arquivos Modificados/Criados
+- Frontend: `react-web/frontend`
+- Backend: `react-web/backend`
+- Migrações SQL: `react-web/backend/src/main/resources/db/migration`
 
-### 1. **Arquivo de API Criado** (`src/lib/api.js`)
-- **Localização**: `react-web/frontend/src/lib/api.js`
-- **Propósito**: Configuração central do Axios para comunicação com o backend
-- **Funcionalidades**:
-  - Base URL configurada para `http://localhost:8080`
-  - Interceptors de requisição e resposta para tratamento de erros
-  - Headers padrão configurados
-  - Preparado para adicionar autenticação JWT no futuro
+## Estado Atual da Integração
 
-### 2. **Register.jsx Atualizado** (`src/pages/Register.jsx`)
-- **Alterações**:
-  - Importação do módulo `api` 
-  - Método `handleSubmit` transformado em assíncrono
-  - Integração com endpoint `/perfil` usando POST
-  - Mapeamento correto dos dados do formulário para o modelo Perfil do backend:
-    - `name` → `nome`
-    - `email` → `email`
-    - `password` → `senha`
-    - `codStatus: true` (padrão para novos usuários)
-  - Tratamento de erros com mensagens específicas
-  - Feedback visual para o usuário (alerts)
+### Backend
 
-### 3. **PerfilController.java Atualizado**
-- **Alterações**:
-  - Adicionado `@CrossOrigin(origins = "http://localhost:5173")` para permitir requisições do frontend
-  - Importação do `CrossOrigin` do Spring
+- API REST disponível em `/api/v1`.
+- Persistência com Spring Data JPA + Hibernate.
+- Migração de schema controlada por Flyway (`V1__init_schema.sql`).
+- `ddl-auto=validate` para garantir aderência entre entidades e banco.
+- `open-in-view=false`.
+- Naming físico fixado para preservar nomes SQL (`PhysicalNamingStrategyStandardImpl`).
 
-## 🚀 Como Testar
+### Segurança e Consistência
 
-### 1. Iniciar o Backend
+- Senha de `Perfil` armazenada como hash SHA-256 em `VARBINARY(32)`.
+- Soft delete em `Perfil` via `cod_status`.
+- Leitura de perfis no serviço considera apenas ativos (`cod_status=true`).
+
+### CORS
+
+Configuração global em `react-web/backend/src/main/java/com/projectmanager/planthings/config/CorsConfig.java`:
+
+- `http://localhost:5173`
+- `https://*.github.dev`
+- Métodos: `GET, POST, PUT, PATCH, DELETE, OPTIONS`
+
+## Configuração de Ambiente
+
+### Backend (`application.properties`)
+
+As credenciais podem ser fornecidas por variáveis de ambiente:
+
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+
+Se não forem informadas, o backend usa os valores fallback definidos no arquivo.
+
+### Profiles e Portas
+
+- Sem profile: porta `8080`
+- Profile `local`: porta `8081` (arquivo `application-local.properties`)
+
+Executar com profile local:
+
+```bash
+cd react-web/backend
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+## Frontend e API Base URL
+
+Arquivo: `react-web/frontend/src/lib/api.js`
+
+Ordem de resolução da URL da API:
+
+1. `VITE_API_URL` (se definida)
+2. Host dinâmico para Codespaces (`*.app.github.dev`) com porta backend
+3. Fallback local: `http://localhost:8080/api/v1`
+
+## Como Subir o Projeto
+
+### 1) Backend
+
 ```bash
 cd react-web/backend
 ./mvnw spring-boot:run
-# ou no Windows
-mvnw.cmd spring-boot:run
 ```
-O backend estará rodando em: `http://localhost:8080`
 
-### 2. Iniciar o Frontend
+### 2) Frontend
+
 ```bash
 cd react-web/frontend
 npm run dev
-# ou se usar bun
-bun run dev
-```
-O frontend estará rodando em: `http://localhost:5173`
-
-### 3. Testar o Cadastro
-1. Acesse `http://localhost:5173/register`
-2. Preencha o formulário com:
-   - Nome completo
-   - Email
-   - Senha
-   - Confirmação de senha
-3. Clique em "Criar minha conta gratuita"
-4. Verifique:
-   - Console do navegador para logs
-   - Console do backend para requisição recebida
-   - Banco de dados para verificar se o perfil foi criado
-
-## 📊 Mapeamento de Dados
-
-### Frontend → Backend
-```javascript
-{
-  "nome": formData.name,        // String
-  "email": formData.email,      // String
-  "senha": formData.password,   // String
-  "codStatus": true             // Boolean
-}
 ```
 
-### Campos Opcionais no Backend (não enviados no cadastro)
-- `sobrenome` - pode ser adicionado depois
-- `telefone` - pode ser adicionado depois
+## Validação Rápida
 
-## 🔐 Considerações de Segurança
+1. Confirmar backend ativo (`8080` ou `8081`, conforme profile).
+2. Acessar frontend (`5173`).
+3. Testar cadastro/login de perfil.
+4. Verificar logs do backend para chamadas `/api/v1/*`.
 
-### ⚠️ IMPORTANTE - Para Produção:
-1. **Senha**: Nunca armazene senhas em texto plano
-   - Implemente hash de senha (BCrypt) no backend antes de salvar
-   
-2. **CORS**: Configure adequadamente
-   - Em produção, substitua `http://localhost:5173` pela URL real do frontend
-   - Considere configuração global de CORS
+## Troubleshooting
 
-3. **Validação**: 
-   - Adicione validação no backend (@Valid, @NotNull, etc.)
-   - Adicione validação mais robusta no frontend
-
-4. **HTTPS**: Use HTTPS em produção
-
-## 🐛 Solução de Problemas Comuns
-
-### Erro: "Network Error" ou "ERR_CONNECTION_REFUSED"
-- **Causa**: Backend não está rodando
-- **Solução**: Inicie o backend na porta 8080
-
-### Erro: CORS Policy
-- **Causa**: Configuração CORS incorreta
-- **Solução**: Verifique se `@CrossOrigin` está no controller
-
-### Erro: 400 Bad Request
-- **Causa**: Dados enviados não correspondem ao esperado pelo backend
-- **Solução**: Verifique o mapeamento de campos no console
-
-### Erro: 500 Internal Server Error
-- **Causa**: Erro no backend (ex: banco de dados)
-- **Solução**: Verifique logs do backend e configuração do banco
-
-## 📝 Próximos Passos Sugeridos
-
-1. **Implementar Hash de Senha**
-   - Adicionar BCryptPasswordEncoder no backend
-   
-2. **Melhorar Feedback Visual**
-   - Substituir `alert()` por componentes toast/notification
-   - Usar a biblioteca Sonner já instalada
-   
-3. **Validação de Email**
-   - Verificar email duplicado antes de criar perfil
-   - Adicionar verificação por email
-   
-4. **Loading States**
-   - Adicionar spinner/loading durante o cadastro
-   - Desabilitar botão durante submit
-
-5. **Configuração de Ambiente**
-   - Criar arquivo `.env` para URLs configuráveis
-   - Diferenciar ambientes dev/prod
-
-## 📚 Recursos
-
-- [Axios Documentation](https://axios-http.com/docs/intro)
-- [Spring Boot CORS](https://spring.io/guides/gs/rest-service-cors/)
-- [React Router](https://reactrouter.com/)
+- `ERR_CONNECTION_REFUSED`: backend não iniciado ou porta incorreta.
+- Erro CORS: conferir domínio de origem e profile/porta da API.
+- Falha de startup JPA/Flyway: conferir `DB_URL`, credenciais e schema remoto.
+- Porta ocupada (`8080`): usar profile `local` (`8081`) ou liberar a porta.

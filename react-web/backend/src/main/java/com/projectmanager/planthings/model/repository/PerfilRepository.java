@@ -12,5 +12,9 @@ public interface PerfilRepository  extends JpaRepository<Perfil, Long> {
     
     // Método para buscar perfil por email
     Optional<Perfil> findByEmail(String email);
+
+    java.util.List<Perfil> findByCodStatusTrue();
+
+    Optional<Perfil> findByIdAndCodStatusTrue(Long id);
     
 }

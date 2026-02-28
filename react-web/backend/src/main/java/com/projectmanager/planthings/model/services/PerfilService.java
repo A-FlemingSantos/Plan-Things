@@ -1,72 +1,89 @@
 package com.projectmanager.planthings.model.services;
 
+import com.projectmanager.planthings.exception.BadRequestException;
+import com.projectmanager.planthings.exception.ConflictException;
+import com.projectmanager.planthings.exception.NotFoundException;
+import com.projectmanager.planthings.exception.UnauthorizedException;
 import com.projectmanager.planthings.model.entity.Perfil;
 import com.projectmanager.planthings.model.repository.PerfilRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 
-
 @Service
-public class PerfilService{
+public class PerfilService {
 
-    @Autowired // Injeção de dependência automática
+    @Autowired
     private PerfilRepository perfilRepository;
 
-
-    // Método para buscar todos os perfis
     public List<Perfil> findAll() {
-        return perfilRepository.findAll();
+        return perfilRepository.findByCodStatusTrue();
     }
 
-
-    // Método para salvar um novo perfil
     public Perfil save(Perfil perfil) {
-        // Verifica se já existe um perfil com esse email
         if (perfilRepository.findByEmail(perfil.getEmail()).isPresent()) {
-            throw new RuntimeException("Email já cadastrado no sistema");
+            throw new ConflictException("Email já cadastrado no sistema");
         }
+
+        if (perfil.getSenhaTexto() == null || perfil.getSenhaTexto().isBlank()) {
+            throw new BadRequestException("Senha é obrigatória");
+        }
+
+        perfil.setSenha(hashSenha(perfil.getSenhaTexto()));
         perfil.setCodStatus(true);
         return perfilRepository.save(perfil);
     }
 
-
     public Perfil findById(Long id) {
-        return perfilRepository.findById(id).orElseThrow(() -> new RuntimeException("Perfil não encontrado" + id));
+        return perfilRepository.findByIdAndCodStatusTrue(id)
+                .orElseThrow(() -> new NotFoundException("Perfil não encontrado " + id));
     }
 
-    // Método para atualizar um perfil existente
     public Perfil update(Long id, Perfil perfil) {
         Perfil perfilExistente = findById(id);
         perfilExistente.setNome(perfil.getNome());
         perfilExistente.setSobrenome(perfil.getSobrenome());
         perfilExistente.setTelefone(perfil.getTelefone());
-        perfilExistente.setSenha(perfil.getSenha());
+
+        if (perfil.getSenhaTexto() != null && !perfil.getSenhaTexto().isBlank()) {
+            perfilExistente.setSenha(hashSenha(perfil.getSenhaTexto()));
+        }
+
         return perfilRepository.save(perfilExistente);
     }
 
-    // Método para deletar um perfil por ID
     public void delete(Long id) {
         Perfil perfilExistente = findById(id);
-        perfilRepository.delete(perfilExistente);
+        perfilExistente.setCodStatus(false);
+        perfilRepository.save(perfilExistente);
     }
 
-    // Método para autenticar usuário (login)
     public Perfil login(String email, String senha) {
         Perfil perfil = perfilRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Email ou senha inválidos"));
-        
-        // Verifica se a senha está correta
-        if (!perfil.getSenha().equals(senha)) {
-            throw new RuntimeException("Email ou senha inválidos");
-        }
-        
-        // Verifica se o perfil está ativo
+                .orElseThrow(() -> new UnauthorizedException("Email ou senha inválidos"));
+
         if (!perfil.getCodStatus()) {
-            throw new RuntimeException("Perfil inativo");
+            throw new UnauthorizedException("Perfil inativo");
         }
-        
+
+        if (!Arrays.equals(perfil.getSenha(), hashSenha(senha))) {
+            throw new UnauthorizedException("Email ou senha inválidos");
+        }
+
         return perfil;
+    }
+
+    private byte[] hashSenha(String senhaPura) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return digest.digest(senhaPura.getBytes(StandardCharsets.UTF_8));
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Algoritmo SHA-256 não disponível", e);
+        }
     }
 }
