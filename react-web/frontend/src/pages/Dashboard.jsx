@@ -102,7 +102,11 @@ export default function Dashboard() {
   };
 
   const handleDeletePlano = async (planoId) => {
-    if (!confirm("Tem certeza que deseja remover este plano e todos os seus dados?"))
+    if (
+      !confirm(
+        "Tem certeza que deseja remover este plano e todos os seus dados?"
+      )
+    )
       return;
     try {
       await api.delete(`/planos/perfil/${userId}/${planoId}`);
@@ -136,7 +140,7 @@ export default function Dashboard() {
         </div>
         <Button
           size="lg"
-          className="shadow-md"
+          className="bg-gradient-primary hover:opacity-90 shadow-glow-primary rounded-xl transition-all duration-300"
           onClick={() => setShowCreate(true)}
         >
           <Plus className="w-5 h-5 mr-2" />
@@ -146,12 +150,12 @@ export default function Dashboard() {
 
       {/* Search */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground/50 w-4 h-4" />
         <Input
           placeholder="Buscar planos..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
+          className="pl-10 glass-input rounded-xl"
         />
       </div>
 
@@ -159,15 +163,11 @@ export default function Dashboard() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1, 2, 3].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardHeader>
-                <div className="h-12 w-12 bg-muted rounded-xl" />
-                <div className="h-5 w-32 bg-muted rounded mt-3" />
-              </CardHeader>
-              <CardContent>
-                <div className="h-4 w-full bg-muted rounded" />
-              </CardContent>
-            </Card>
+            <div key={i} className="glass rounded-2xl animate-pulse p-6">
+              <div className="h-12 w-12 bg-muted/50 rounded-xl" />
+              <div className="h-5 w-32 bg-muted/50 rounded mt-4" />
+              <div className="h-4 w-full bg-muted/50 rounded mt-3" />
+            </div>
           ))}
         </div>
       ) : (
@@ -175,7 +175,7 @@ export default function Dashboard() {
           {filteredPlanos.map((plano) => (
             <Card
               key={plano.id}
-              className="group hover:shadow-elegant transition-all duration-300 cursor-pointer border-border/50 hover:border-primary/30 overflow-hidden relative"
+              className="group glass-card rounded-2xl border-white/20 overflow-hidden relative"
             >
               <Link to={`/plano/${plano.id}`} className="block">
                 {plano.wallpaperUrl && (
@@ -183,13 +183,13 @@ export default function Dashboard() {
                     <img
                       src={plano.wallpaperUrl}
                       alt=""
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
                 )}
                 <CardHeader className="space-y-3 pb-4">
                   {!plano.wallpaperUrl && (
-                    <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-md">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow-primary">
                       <FolderOpen className="w-6 h-6 text-white" />
                     </div>
                   )}
@@ -208,7 +208,7 @@ export default function Dashboard() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 bg-background/80 hover:bg-primary/10"
+                  className="h-8 w-8 glass-strong rounded-lg hover:bg-primary/20"
                   onClick={(e) => openEdit(plano, e)}
                 >
                   <Pencil className="w-4 h-4" />
@@ -216,7 +216,7 @@ export default function Dashboard() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 bg-background/80 hover:bg-destructive hover:text-white"
+                  className="h-8 w-8 glass-strong rounded-lg hover:bg-destructive/20 hover:text-destructive"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -230,12 +230,12 @@ export default function Dashboard() {
           ))}
 
           {/* Add New Plano Card */}
-          <Card
-            className="group hover:shadow-elegant transition-all duration-300 cursor-pointer border-dashed border-2 border-border/50 hover:border-primary/50 bg-muted/20 flex items-center justify-center min-h-[200px]"
+          <div
+            className="group glass-subtle rounded-2xl border-2 border-dashed border-white/20 hover:border-primary/40 flex items-center justify-center min-h-[200px] cursor-pointer transition-all duration-300 hover:bg-primary/5"
             onClick={() => setShowCreate(true)}
           >
             <div className="text-center space-y-3 p-6">
-              <div className="w-12 h-12 mx-auto rounded-xl bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+              <div className="w-12 h-12 mx-auto rounded-xl glass flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                 <Plus className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" />
               </div>
               <div>
@@ -247,21 +247,26 @@ export default function Dashboard() {
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       )}
 
       {/* Empty state */}
       {!loading && filteredPlanos.length === 0 && planos.length === 0 && (
         <div className="text-center py-16">
-          <FolderOpen className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
+          <div className="glass-subtle inline-flex p-6 rounded-2xl mb-6">
+            <FolderOpen className="w-16 h-16 text-muted-foreground/30" />
+          </div>
           <h3 className="text-xl font-semibold text-foreground mb-2">
             Nenhum plano ainda
           </h3>
           <p className="text-muted-foreground mb-6">
-            Crie seu primeiro plano para começar a organizar seus projetos.
+            Crie seu primeiro plano para comecar a organizar seus projetos.
           </p>
-          <Button onClick={() => setShowCreate(true)}>
+          <Button
+            onClick={() => setShowCreate(true)}
+            className="bg-gradient-primary hover:opacity-90 shadow-glow-primary rounded-xl"
+          >
             <Plus className="w-4 h-4 mr-2" />
             Criar Primeiro Plano
           </Button>
@@ -270,11 +275,11 @@ export default function Dashboard() {
 
       {/* Create Plano Dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent>
+        <DialogContent className="glass-strong rounded-2xl border-white/20">
           <DialogHeader>
             <DialogTitle>Criar Novo Plano</DialogTitle>
             <DialogDescription>
-              Dê um nome ao seu novo plano de trabalho.
+              De um nome ao seu novo plano de trabalho.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCreatePlano} className="space-y-4">
@@ -289,6 +294,7 @@ export default function Dashboard() {
                 }
                 maxLength={50}
                 required
+                className="glass-input rounded-xl"
               />
             </div>
             <div className="space-y-2">
@@ -296,15 +302,18 @@ export default function Dashboard() {
                 URL da Imagem de Capa (opcional)
               </Label>
               <div className="relative">
-                <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                 <Input
                   id="wallpaper"
                   placeholder="https://exemplo.com/imagem.jpg"
                   value={newPlano.wallpaperUrl}
                   onChange={(e) =>
-                    setNewPlano((p) => ({ ...p, wallpaperUrl: e.target.value }))
+                    setNewPlano((p) => ({
+                      ...p,
+                      wallpaperUrl: e.target.value,
+                    }))
                   }
-                  className="pl-10"
+                  className="pl-10 glass-input rounded-xl"
                 />
               </div>
             </div>
@@ -313,10 +322,15 @@ export default function Dashboard() {
                 type="button"
                 variant="outline"
                 onClick={() => setShowCreate(false)}
+                className="rounded-xl"
               >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={creating}>
+              <Button
+                type="submit"
+                disabled={creating}
+                className="bg-gradient-primary hover:opacity-90 rounded-xl"
+              >
                 {creating ? "Criando..." : "Criar Plano"}
               </Button>
             </DialogFooter>
@@ -329,11 +343,11 @@ export default function Dashboard() {
         open={editingPlano !== null}
         onOpenChange={() => setEditingPlano(null)}
       >
-        <DialogContent>
+        <DialogContent className="glass-strong rounded-2xl border-white/20">
           <DialogHeader>
             <DialogTitle>Editar Plano</DialogTitle>
             <DialogDescription>
-              Atualize as informações do plano.
+              Atualize as informacoes do plano.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleEditPlano} className="space-y-4">
@@ -347,6 +361,7 @@ export default function Dashboard() {
                 }
                 maxLength={50}
                 required
+                className="glass-input rounded-xl"
               />
             </div>
             <div className="space-y-2">
@@ -354,15 +369,18 @@ export default function Dashboard() {
                 URL da Imagem de Capa (opcional)
               </Label>
               <div className="relative">
-                <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                 <Input
                   id="editWallpaper"
                   placeholder="https://exemplo.com/imagem.jpg"
                   value={editData.wallpaperUrl}
                   onChange={(e) =>
-                    setEditData((p) => ({ ...p, wallpaperUrl: e.target.value }))
+                    setEditData((p) => ({
+                      ...p,
+                      wallpaperUrl: e.target.value,
+                    }))
                   }
-                  className="pl-10"
+                  className="pl-10 glass-input rounded-xl"
                 />
               </div>
             </div>
@@ -371,10 +389,15 @@ export default function Dashboard() {
                 type="button"
                 variant="outline"
                 onClick={() => setEditingPlano(null)}
+                className="rounded-xl"
               >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={saving}>
+              <Button
+                type="submit"
+                disabled={saving}
+                className="bg-gradient-primary hover:opacity-90 rounded-xl"
+              >
                 {saving ? "Salvando..." : "Salvar"}
               </Button>
             </DialogFooter>

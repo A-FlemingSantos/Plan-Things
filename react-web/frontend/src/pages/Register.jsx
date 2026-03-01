@@ -3,7 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ArrowLeft, User, Mail, Lock, Check, Sparkles, Zap } from "lucide-react";
 import api from "@/lib/api";
 
@@ -12,98 +19,109 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle registration logic here
     if (formData.password !== formData.confirmPassword) {
-      alert("As senhas não coincidem");
+      alert("As senhas nao coincidem");
       return;
     }
 
     try {
-      // Preparar dados para enviar ao backend
       const perfilData = {
         nome: formData.name,
         email: formData.email,
-        senha: formData.password
+        senha: formData.password,
       };
 
-      // Fazer requisição POST para o endpoint
-      const response = await api.post('/perfil', perfilData);
-      
-      // Sucesso - salvar dados do usuário no localStorage
-      console.log('Perfil criado com sucesso:', response.data);
-      localStorage.setItem('user', JSON.stringify(response.data));
-      localStorage.setItem('userId', response.data.id);
-      
-      alert('Cadastro realizado com sucesso!');
+      const response = await api.post("/perfil", perfilData);
+
+      console.log("Perfil criado com sucesso:", response.data);
+      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("userId", response.data.id);
+
+      alert("Cadastro realizado com sucesso!");
       navigate("/dashboard");
     } catch (error) {
-      // Tratamento de erro
-      console.error('Erro ao criar perfil:', error);
+      console.error("Erro ao criar perfil:", error);
       if (error.response) {
-        alert(`Erro ao cadastrar: ${error.response.data.message || 'Erro no servidor'}`);
+        alert(
+          `Erro ao cadastrar: ${
+            error.response.data.message || "Erro no servidor"
+          }`
+        );
       } else if (error.request) {
-        alert('Erro de conexão. Verifique se o backend está rodando.');
+        alert("Erro de conexao. Verifique se o backend esta rodando.");
       } else {
-        alert('Erro ao processar cadastro. Tente novamente.');
+        alert("Erro ao processar cadastro. Tente novamente.");
       }
     }
   };
 
   const benefits = [
     "Gerenciamento ilimitado de projetos",
-    "Colaboração em tempo real",
-    "Relatórios e analytics avançados",
-    "Suporte prioritário 24/7"
+    "Colaboracao em tempo real",
+    "Relatorios e analytics avancados",
+    "Suporte prioritario 24/7",
   ];
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 right-10 w-36 h-36 bg-primary/15 rounded-full blur-xl"></div>
-        <div className="absolute bottom-10 left-10 w-28 h-28 bg-primary/20 rounded-full blur-2xl"></div>
-        <div className="absolute top-1/3 right-1/4 w-20 h-20 bg-primary/10 rounded-full blur-lg"></div>
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Mesh background */}
+      <div className="absolute inset-0 bg-background">
+        <div
+          className="absolute inset-0"
+          style={{ backgroundImage: "var(--mesh-gradient)" }}
+        />
       </div>
 
-      <div className="w-full max-w-5xl relative z-10 flex gap-8 items-center">
+      {/* Floating orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 right-10 w-[350px] h-[350px] bg-accent-violet/6 rounded-full blur-3xl animate-float" />
+        <div
+          className="absolute bottom-10 left-10 w-[280px] h-[280px] bg-primary/8 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "2s" }}
+        />
+      </div>
+
+      <div className="w-full max-w-5xl relative z-10 flex gap-10 items-center">
         {/* Left side - Benefits */}
         <div className="hidden lg:flex flex-col space-y-8 flex-1">
           <div className="text-foreground">
             <h2 className="text-4xl font-bold mb-4 leading-tight">
               Comece sua jornada de
-              <span className="block text-primary">
+              <span className="block text-gradient-primary">
                 produtividade hoje!
               </span>
             </h2>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Junte-se a milhares de equipes que já transformaram sua forma de trabalhar
+              Junte-se a milhares de equipes que ja transformaram sua forma de
+              trabalhar
             </p>
           </div>
 
           <div className="space-y-4">
             {benefits.map((benefit, index) => (
-              <div 
-                key={index} 
-                className="flex items-center space-x-3 text-foreground bg-primary/5 p-4 rounded-xl border border-primary/20"
-                style={{ animationDelay: `${index * 200}ms` }}
+              <div
+                key={index}
+                className="flex items-center space-x-3 glass-card p-4 rounded-xl animate-fade-in-up"
+                style={{ animationDelay: `${index * 150}ms` }}
               >
-                <div className="bg-primary p-1.5 rounded-full">
+                <div className="bg-gradient-primary p-1.5 rounded-full shadow-glow-primary">
                   <Check className="h-4 w-4 text-white" />
                 </div>
-                <span className="font-medium">{benefit}</span>
+                <span className="font-medium text-foreground">{benefit}</span>
               </div>
             ))}
           </div>
@@ -112,41 +130,46 @@ const Register = () => {
         {/* Right side - Form */}
         <div className="w-full max-w-md lg:max-w-lg">
           {/* Back button */}
-          <Link 
-            to="/" 
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-8 transition-colors duration-300 bg-primary/5 px-4 py-2 rounded-full border border-primary/20 hover:bg-primary/10"
+          <Link
+            to="/"
+            className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-8 transition-all duration-300 glass-subtle px-4 py-2 rounded-full border border-white/20 hover:border-primary/30"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Voltar para página inicial
+            Voltar para pagina inicial
           </Link>
 
-          <Card className="shadow-strong bg-card border border-border overflow-hidden animate-fade-in-up">
-            {/* Decorative header */}
-            <div className="h-2 bg-primary"></div>
-            
-            <CardHeader className="space-y-4 pb-6">
+          <Card className="glass-strong rounded-2xl border-white/20 overflow-hidden shadow-glass-lg animate-fade-in-up">
+            {/* Gradient top bar */}
+            <div className="h-1.5 bg-gradient-hero" />
+
+            <CardHeader className="space-y-4 pb-6 pt-8">
               <div className="flex justify-center">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg"></div>
-                  <div className="relative bg-primary p-4 rounded-full shadow-medium">
+                  <div className="absolute inset-0 bg-accent-violet/20 rounded-2xl blur-xl scale-150" />
+                  <div className="relative bg-gradient-hero p-4 rounded-2xl shadow-glow-violet">
                     <Zap className="h-6 w-6 text-white" />
                   </div>
                 </div>
               </div>
-              <CardTitle className="text-3xl text-center font-bold text-primary">
+              <CardTitle className="text-3xl text-center font-bold text-foreground">
                 Criar conta gratuita
               </CardTitle>
               <CardDescription className="text-center text-muted-foreground text-base">
                 Configure sua conta em menos de 2 minutos
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="px-8 pb-6">
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-semibold text-foreground">Nome completo</Label>
+                  <Label
+                    htmlFor="name"
+                    className="text-sm font-semibold text-foreground"
+                  >
+                    Nome completo
+                  </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
                     <Input
                       id="name"
                       name="name"
@@ -155,15 +178,20 @@ const Register = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="pl-10 h-12 bg-background/50 border-2 border-border hover:border-primary/50 focus:border-primary transition-all duration-300 rounded-lg"
+                      className="pl-10 h-12 glass-input rounded-xl"
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-semibold text-foreground">Email profissional</Label>
+                  <Label
+                    htmlFor="email"
+                    className="text-sm font-semibold text-foreground"
+                  >
+                    Email profissional
+                  </Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
                     <Input
                       id="email"
                       name="email"
@@ -172,88 +200,100 @@ const Register = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="pl-10 h-12 bg-background/50 border-2 border-border hover:border-primary/50 focus:border-primary transition-all duration-300 rounded-lg"
+                      className="pl-10 h-12 glass-input rounded-xl"
                     />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-sm font-semibold text-foreground">Senha</Label>
+                    <Label
+                      htmlFor="password"
+                      className="text-sm font-semibold text-foreground"
+                    >
+                      Senha
+                    </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
                       <Input
                         id="password"
                         name="password"
                         type="password"
-                        placeholder="••••••••"
+                        placeholder="........"
                         value={formData.password}
                         onChange={handleInputChange}
                         required
-                        className="pl-10 h-12 bg-background/50 border-2 border-border hover:border-primary/50 focus:border-primary transition-all duration-300 rounded-lg"
+                        className="pl-10 h-12 glass-input rounded-xl"
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="text-sm font-semibold text-foreground">Confirmar</Label>
+                    <Label
+                      htmlFor="confirmPassword"
+                      className="text-sm font-semibold text-foreground"
+                    >
+                      Confirmar
+                    </Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
                       <Input
                         id="confirmPassword"
                         name="confirmPassword"
                         type="password"
-                        placeholder="••••••••"
+                        placeholder="........"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
                         required
-                        className="pl-10 h-12 bg-background/50 border-2 border-border hover:border-primary/50 focus:border-primary transition-all duration-300 rounded-lg"
+                        className="pl-10 h-12 glass-input rounded-xl"
                       />
                     </div>
                   </div>
                 </div>
-                
-                <div className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg">
-                  <p>Ao criar sua conta, você concorda com nossos Termos de Uso e Política de Privacidade.</p>
+
+                <div className="text-xs text-muted-foreground/70 glass-subtle p-3 rounded-xl border border-white/10">
+                  <p>
+                    Ao criar sua conta, voce concorda com nossos Termos de Uso e
+                    Politica de Privacidade.
+                  </p>
                 </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full h-12 bg-primary hover:bg-primary/90 hover:shadow-strong transform hover:-translate-y-0.5 transition-all duration-300 text-white font-semibold text-base rounded-lg border-0"
+
+                <Button
+                  type="submit"
+                  className="w-full h-12 bg-gradient-primary hover:opacity-90 shadow-glow-primary hover:shadow-glow-violet text-white font-semibold text-base rounded-xl transition-all duration-300"
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
                   Criar minha conta gratuita
                 </Button>
               </form>
             </CardContent>
-            
-            <CardFooter className="bg-muted/30 px-8 py-6 border-t">
+
+            <CardFooter className="glass-subtle px-8 py-6 border-t border-white/10">
               <div className="text-sm text-center text-muted-foreground w-full">
-                Já é membro?{" "}
-                <Link 
-                  to="/login" 
-                  className="text-primary hover:text-primary-dark transition-colors duration-300 font-semibold hover:underline"
+                Ja e membro?{" "}
+                <Link
+                  to="/login"
+                  className="text-primary hover:text-primary/80 transition-colors duration-300 font-semibold hover:underline"
                 >
-                  Faça login aqui
+                  Faca login aqui
                 </Link>
               </div>
             </CardFooter>
           </Card>
-          
+
           {/* Trust indicators */}
-          <div className="mt-6 flex justify-center items-center space-x-6 text-muted-foreground text-sm">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span>SSL seguro</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span>LGPD compliance</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <span>Sem cartão</span>
-            </div>
+          <div className="mt-6 flex justify-center items-center gap-4 flex-wrap">
+            {["SSL seguro", "LGPD compliance", "Sem cartao"].map((label) => (
+              <div
+                key={label}
+                className="glass-subtle flex items-center gap-2 px-4 py-2 rounded-full"
+              >
+                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                <span className="text-xs text-muted-foreground/70">
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

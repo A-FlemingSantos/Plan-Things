@@ -87,7 +87,7 @@ export default function Calendario() {
   const monthNames = [
     "Janeiro",
     "Fevereiro",
-    "Março",
+    "Marco",
     "Abril",
     "Maio",
     "Junho",
@@ -98,7 +98,7 @@ export default function Calendario() {
     "Novembro",
     "Dezembro",
   ];
-  const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+  const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -150,31 +150,41 @@ export default function Calendario() {
   return (
     <div className="p-8 space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-foreground">Calendário</h2>
+        <h2 className="text-3xl font-bold text-foreground">Calendario</h2>
         <p className="text-muted-foreground mt-1">
-          Visualize seus eventos e tarefas em um só lugar
+          Visualize seus eventos e tarefas em um so lugar
         </p>
       </div>
 
       {loading ? (
         <div className="animate-pulse">
-          <div className="h-[500px] bg-muted rounded-xl" />
+          <div className="h-[500px] glass rounded-2xl" />
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Calendar Grid */}
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="glass rounded-2xl border-white/20">
               <CardContent className="p-6">
                 {/* Month Navigation */}
                 <div className="flex items-center justify-between mb-6">
-                  <Button variant="ghost" size="icon" onClick={prevMonth}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={prevMonth}
+                    className="rounded-xl hover:bg-white/20"
+                  >
                     <ChevronLeft className="w-5 h-5" />
                   </Button>
                   <h3 className="text-xl font-semibold">
                     {monthNames[month]} {year}
                   </h3>
-                  <Button variant="ghost" size="icon" onClick={nextMonth}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={nextMonth}
+                    className="rounded-xl hover:bg-white/20"
+                  >
                     <ChevronRight className="w-5 h-5" />
                   </Button>
                 </div>
@@ -193,7 +203,9 @@ export default function Calendario() {
                   {/* Calendar Days */}
                   {calendarDays.map((day, idx) => {
                     if (!day)
-                      return <div key={`empty-${idx}`} className="min-h-[80px]" />;
+                      return (
+                        <div key={`empty-${idx}`} className="min-h-[80px]" />
+                      );
 
                     const items = getItemsForDay(day);
                     const isToday =
@@ -205,10 +217,10 @@ export default function Calendario() {
                     return (
                       <div
                         key={day}
-                        className={`min-h-[80px] p-1.5 rounded-lg border cursor-pointer transition-colors ${
+                        className={`min-h-[80px] p-1.5 rounded-xl border cursor-pointer transition-all duration-200 ${
                           isSelected
-                            ? "border-primary bg-primary/5"
-                            : "border-transparent hover:bg-muted/50"
+                            ? "border-primary/40 glass-strong shadow-glow-primary"
+                            : "border-transparent hover:bg-white/10"
                         } ${isToday ? "bg-primary/10" : ""}`}
                         onClick={() =>
                           setSelectedDay(day === selectedDay ? null : day)
@@ -227,9 +239,10 @@ export default function Calendario() {
                           {items.slice(0, 2).map((item, i) => (
                             <div
                               key={i}
-                              className="text-[10px] leading-tight truncate rounded px-1 py-0.5"
+                              className="text-[10px] leading-tight truncate rounded-md px-1 py-0.5"
                               style={{
-                                backgroundColor: (item.cor || "#3B82F6") + "20",
+                                backgroundColor:
+                                  (item.cor || "#3B82F6") + "20",
                                 color: item.cor || "#3B82F6",
                               }}
                             >
@@ -252,7 +265,7 @@ export default function Calendario() {
 
           {/* Selected Day Details */}
           <div>
-            <Card className="sticky top-6">
+            <Card className="glass rounded-2xl border-white/20 sticky top-6">
               <CardContent className="p-6">
                 <h3 className="font-semibold text-lg mb-4">
                   {selectedDay
@@ -268,9 +281,11 @@ export default function Calendario() {
 
                 {!selectedDay && (
                   <div className="text-center py-8">
-                    <CalendarIcon className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" />
+                    <div className="glass-subtle inline-flex p-4 rounded-2xl mb-3">
+                      <CalendarIcon className="w-12 h-12 text-muted-foreground/30" />
+                    </div>
                     <p className="text-sm text-muted-foreground">
-                      Clique em um dia do calendário para ver os detalhes
+                      Clique em um dia do calendario para ver os detalhes
                     </p>
                   </div>
                 )}
@@ -279,7 +294,7 @@ export default function Calendario() {
                   {selectedItems.map((item, i) => (
                     <div
                       key={i}
-                      className="p-3 rounded-lg border border-border/50"
+                      className="p-3 rounded-xl glass-subtle border border-white/10"
                       style={{
                         borderLeftColor: item.cor || "#3B82F6",
                         borderLeftWidth: "3px",
@@ -291,7 +306,10 @@ export default function Calendario() {
                         ) : (
                           <CheckSquare className="w-3.5 h-3.5 text-primary" />
                         )}
-                        <Badge variant="outline" className="text-xs">
+                        <Badge
+                          variant="outline"
+                          className="text-xs rounded-full glass-subtle border-white/15"
+                        >
                           {item._type === "evento" ? "Evento" : "Tarefa"}
                         </Badge>
                         <span className="text-xs text-muted-foreground">
@@ -309,7 +327,7 @@ export default function Calendario() {
                           {new Date(item.dataInicio).toLocaleDateString(
                             "pt-BR"
                           )}{" "}
-                          —{" "}
+                          &mdash;{" "}
                           {new Date(item.dataFim).toLocaleDateString("pt-BR")}
                         </p>
                       )}
@@ -321,7 +339,7 @@ export default function Calendario() {
                           )}
                         </p>
                       )}
-                      <p className="text-xs text-muted-foreground/70 mt-1">
+                      <p className="text-xs text-muted-foreground/50 mt-1">
                         Lista: {item.listaNome}
                       </p>
                     </div>
@@ -336,11 +354,11 @@ export default function Calendario() {
       {/* Legend */}
       {!loading && (
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 glass-subtle px-4 py-2 rounded-full">
             <CalendarIcon className="w-4 h-4 text-green-600" />
             <span>Eventos ({eventos.length})</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 glass-subtle px-4 py-2 rounded-full">
             <CheckSquare className="w-4 h-4 text-primary" />
             <span>Tarefas ({tarefas.length})</span>
           </div>

@@ -70,7 +70,6 @@ export default function Configuracoes() {
         email: form.email,
         telefone: form.telefone,
       });
-      // Update localStorage
       const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
       const updatedUser = { ...currentUser, ...form };
       localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -90,7 +89,7 @@ export default function Configuracoes() {
   const handleDeactivate = async () => {
     if (
       !confirm(
-        "Tem certeza que deseja desativar sua conta? Você não poderá mais acessar a plataforma."
+        "Tem certeza que deseja desativar sua conta? Voce nao podera mais acessar a plataforma."
       )
     )
       return;
@@ -109,9 +108,9 @@ export default function Configuracoes() {
     return (
       <div className="p-8 max-w-2xl mx-auto space-y-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 w-48 bg-muted rounded" />
-          <div className="h-4 w-72 bg-muted rounded" />
-          <div className="h-64 bg-muted rounded-xl" />
+          <div className="h-8 w-48 bg-muted/50 rounded-xl" />
+          <div className="h-4 w-72 bg-muted/50 rounded" />
+          <div className="h-64 glass rounded-2xl" />
         </div>
       </div>
     );
@@ -120,16 +119,16 @@ export default function Configuracoes() {
   return (
     <div className="p-8 max-w-2xl mx-auto space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-foreground">Configurações</h2>
+        <h2 className="text-3xl font-bold text-foreground">Configuracoes</h2>
         <p className="text-muted-foreground mt-1">
-          Gerencie suas informações de conta
+          Gerencie suas informacoes de conta
         </p>
       </div>
 
       {/* Profile Form */}
-      <Card>
+      <Card className="glass rounded-2xl border-white/20">
         <CardHeader>
-          <CardTitle>Informações Pessoais</CardTitle>
+          <CardTitle>Informacoes Pessoais</CardTitle>
           <CardDescription>Atualize seus dados de perfil.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -138,14 +137,14 @@ export default function Configuracoes() {
               <div className="space-y-2">
                 <Label htmlFor="nome">Nome</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                   <Input
                     id="nome"
                     value={form.nome}
                     onChange={(e) =>
                       setForm((p) => ({ ...p, nome: e.target.value }))
                     }
-                    className="pl-10"
+                    className="pl-10 glass-input rounded-xl"
                     required
                   />
                 </div>
@@ -158,6 +157,7 @@ export default function Configuracoes() {
                   onChange={(e) =>
                     setForm((p) => ({ ...p, sobrenome: e.target.value }))
                   }
+                  className="glass-input rounded-xl"
                 />
               </div>
             </div>
@@ -165,7 +165,7 @@ export default function Configuracoes() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                 <Input
                   id="email"
                   type="email"
@@ -173,7 +173,7 @@ export default function Configuracoes() {
                   onChange={(e) =>
                     setForm((p) => ({ ...p, email: e.target.value }))
                   }
-                  className="pl-10"
+                  className="pl-10 glass-input rounded-xl"
                   required
                 />
               </div>
@@ -182,52 +182,60 @@ export default function Configuracoes() {
             <div className="space-y-2">
               <Label htmlFor="telefone">Telefone</Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                 <Input
                   id="telefone"
                   value={form.telefone}
                   onChange={(e) =>
                     setForm((p) => ({ ...p, telefone: e.target.value }))
                   }
-                  className="pl-10"
+                  className="pl-10 glass-input rounded-xl"
                   placeholder="(00) 00000-0000"
                 />
               </div>
             </div>
 
             {successMsg && (
-              <div className="text-sm text-green-600 bg-green-50 border border-green-200 rounded-lg px-4 py-2">
+              <div className="text-sm text-green-600 glass-subtle border border-green-200/30 rounded-xl px-4 py-2">
                 {successMsg}
               </div>
             )}
 
-            <Button type="submit" disabled={saving} className="w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={saving}
+              className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 shadow-glow-primary rounded-xl"
+            >
               <Save className="w-4 h-4 mr-2" />
-              {saving ? "Salvando..." : "Salvar Alterações"}
+              {saving ? "Salvando..." : "Salvar Alteracoes"}
             </Button>
           </form>
         </CardContent>
       </Card>
 
-      <Separator />
+      <Separator className="bg-white/10" />
 
       {/* Danger Zone */}
-      <Card className="border-destructive/20">
+      <Card className="glass rounded-2xl border-destructive/20">
         <CardHeader>
           <CardTitle className="text-destructive flex items-center gap-2">
             <AlertTriangle className="w-5 h-5" />
             Zona de Perigo
           </CardTitle>
           <CardDescription>
-            Ações irreversíveis para sua conta.
+            Acoes irreversiveis para sua conta.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-4">
-            Ao desativar sua conta, seus dados serão preservados mas você não
-            poderá mais acessar a plataforma.
+            Ao desativar sua conta, seus dados serao preservados mas voce nao
+            podera mais acessar a plataforma.
           </p>
-          <Button variant="destructive" onClick={handleDeactivate}>
+          <Button
+            variant="destructive"
+            onClick={handleDeactivate}
+            className="rounded-xl"
+          >
             <Trash2 className="w-4 h-4 mr-2" />
             Desativar Conta
           </Button>

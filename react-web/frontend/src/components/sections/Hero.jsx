@@ -1,66 +1,103 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
-      {/* Blur effect background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 -left-20 w-[600px] h-[600px] bg-blue-500/40 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-10 -right-20 w-[700px] h-[700px] bg-blue-400/35 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-blue-300/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/15 rounded-full blur-3xl"></div>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Mesh animated background */}
+      <div className="absolute inset-0 bg-background">
+        <div className="absolute inset-0" style={{ backgroundImage: 'var(--mesh-gradient)' }} />
       </div>
-      
-      <div className="relative z-10 container mx-auto px-6 text-center text-foreground">
+
+      {/* Floating glass orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 -left-20 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl animate-float" />
+        <div
+          className="absolute bottom-10 -right-20 w-[600px] h-[600px] bg-accent-violet/6 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "2s" }}
+        />
+        <div
+          className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "4s" }}
+        />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-6 text-center">
         <div className="max-w-4xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/20 mb-8">
-            <span className="text-sm font-medium text-primary">✨ Gerencie projetos com eficiência</span>
-          </div>
-          
-          {/* Main heading */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight text-foreground">
-            Agilize o Trabalho
-            <span className="block bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-              em Equipe
+          {/* Glass badge */}
+          <div className="inline-flex items-center px-5 py-2.5 rounded-full glass border border-white/30 mb-10 animate-fade-in">
+            <Sparkles className="w-4 h-4 text-primary mr-2" />
+            <span className="text-sm font-medium text-foreground/80">
+              Gerencie projetos com eficiencia
             </span>
+          </div>
+
+          {/* Main heading */}
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight animate-fade-in-up">
+            <span className="text-foreground">Agilize o Trabalho</span>
+            <span className="block text-gradient-hero mt-2">em Equipe</span>
           </h1>
-          
+
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl mb-12 text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Feito para pequenas equipes que querem crescer sem complicações
+          <p
+            className="text-xl md:text-2xl mb-14 text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
+            style={{ animationDelay: "0.2s" }}
+          >
+            Feito para pequenas equipes que querem crescer sem complicacoes
           </p>
-          
+
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up"
+            style={{ animationDelay: "0.4s" }}
+          >
             <Link to="/cadastro">
-              <Button variant="default" size="lg" className="w-full sm:w-64 group">
-                Começar Gratuitamente
+              <Button
+                size="lg"
+                className="w-full sm:w-64 h-14 bg-gradient-primary hover:opacity-90 shadow-glow-primary hover:shadow-glow-violet text-white font-semibold text-base rounded-2xl transition-all duration-300 group"
+              >
+                Comecar Gratuitamente
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            
+
             <Link to="/login">
-              <Button variant="outline" size="lg" className="w-full sm:w-64">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-64 h-14 glass border-white/30 hover:bg-white/20 font-semibold text-base rounded-2xl transition-all duration-300"
+              >
                 Entrar
               </Button>
             </Link>
           </div>
-          
-          {/* Trust indicators */}
-          <div className="mt-16 text-muted-foreground">
-            <p className="text-sm mb-4">Confiado por mais de 1.000 equipes em todo o Brasil</p>
-            <div className="flex justify-center items-center space-x-8 opacity-60">
-              <span className="text-sm font-semibold">Startup Inc.</span>
-              <span className="text-sm font-semibold">Tech Solutions</span>
-              <span className="text-sm font-semibold">Creative Agency</span>
+
+          {/* Trust indicators with glass effect */}
+          <div
+            className="mt-20 animate-fade-in-up"
+            style={{ animationDelay: "0.6s" }}
+          >
+            <p className="text-sm mb-6 text-muted-foreground/70">
+              Confiado por mais de 1.000 equipes em todo o Brasil
+            </p>
+            <div className="flex justify-center items-center gap-8">
+              {["Startup Inc.", "Tech Solutions", "Creative Agency"].map(
+                (name) => (
+                  <div
+                    key={name}
+                    className="glass-subtle px-5 py-2.5 rounded-xl"
+                  >
+                    <span className="text-sm font-semibold text-muted-foreground/60">
+                      {name}
+                    </span>
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>
       </div>
-      
     </section>
   );
 };

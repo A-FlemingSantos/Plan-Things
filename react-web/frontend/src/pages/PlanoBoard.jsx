@@ -41,15 +41,12 @@ export default function PlanoBoard() {
   const [cartoesPorLista, setCartoesPorLista] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // Create lista state
   const [showCreateLista, setShowCreateLista] = useState(false);
   const [newLista, setNewLista] = useState({ nome: "", cor: "#3B82F6" });
 
-  // Edit lista state
   const [editingLista, setEditingLista] = useState(null);
   const [editListaData, setEditListaData] = useState({ nome: "", cor: "" });
 
-  // Create card state
   const [showCreateCard, setShowCreateCard] = useState(null);
   const [cardType, setCardType] = useState("tarefa");
   const [newCard, setNewCard] = useState({
@@ -61,7 +58,6 @@ export default function PlanoBoard() {
     dataFim: "",
   });
 
-  // Edit card state
   const [editingCard, setEditingCard] = useState(null);
   const [editCardData, setEditCardData] = useState({});
 
@@ -120,7 +116,10 @@ export default function PlanoBoard() {
   const handleEditLista = async (e) => {
     e.preventDefault();
     try {
-      await api.put(`/listas/perfil/${userId}/${editingLista.id}`, editListaData);
+      await api.put(
+        `/listas/perfil/${userId}/${editingLista.id}`,
+        editListaData
+      );
       setEditingLista(null);
       fetchData();
     } catch (err) {
@@ -130,7 +129,7 @@ export default function PlanoBoard() {
   };
 
   const handleDeleteLista = async (listaId) => {
-    if (!confirm("Remover esta lista e todos os seus cartões?")) return;
+    if (!confirm("Remover esta lista e todos os seus cartoes?")) return;
     try {
       await api.delete(`/listas/perfil/${userId}/${listaId}`);
       fetchData();
@@ -175,21 +174,19 @@ export default function PlanoBoard() {
       setShowCreateCard(null);
       fetchData();
     } catch (err) {
-      console.error("Erro ao criar cartão:", err);
-      alert("Erro ao criar cartão.");
+      console.error("Erro ao criar cartao:", err);
+      alert("Erro ao criar cartao.");
     }
   };
 
   const handleDeleteCard = async (cardId, e) => {
-    if (e) {
-      e.stopPropagation();
-    }
-    if (!confirm("Remover este cartão?")) return;
+    if (e) e.stopPropagation();
+    if (!confirm("Remover este cartao?")) return;
     try {
       await api.delete(`/cartoes/perfil/${userId}/${cardId}`);
       fetchData();
     } catch (err) {
-      console.error("Erro ao remover cartão:", err);
+      console.error("Erro ao remover cartao:", err);
     }
   };
 
@@ -235,8 +232,8 @@ export default function PlanoBoard() {
       setEditingCard(null);
       fetchData();
     } catch (err) {
-      console.error("Erro ao atualizar cartão:", err);
-      alert("Erro ao atualizar cartão.");
+      console.error("Erro ao atualizar cartao:", err);
+      alert("Erro ao atualizar cartao.");
     }
   };
 
@@ -249,10 +246,13 @@ export default function PlanoBoard() {
     return (
       <div className="p-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 w-64 bg-muted rounded" />
+          <div className="h-8 w-64 bg-muted/50 rounded-xl" />
           <div className="flex gap-4 overflow-hidden">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="w-80 h-96 bg-muted rounded-xl flex-shrink-0" />
+              <div
+                key={i}
+                className="w-80 h-96 glass rounded-2xl flex-shrink-0"
+              />
             ))}
           </div>
         </div>
@@ -269,6 +269,7 @@ export default function PlanoBoard() {
             variant="ghost"
             size="icon"
             onClick={() => navigate("/dashboard")}
+            className="rounded-xl hover:bg-white/20"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -281,7 +282,10 @@ export default function PlanoBoard() {
             </p>
           </div>
         </div>
-        <Button onClick={() => setShowCreateLista(true)}>
+        <Button
+          onClick={() => setShowCreateLista(true)}
+          className="bg-gradient-primary hover:opacity-90 shadow-glow-primary rounded-xl"
+        >
           <Plus className="w-4 h-4 mr-2" />
           Nova Lista
         </Button>
@@ -293,36 +297,47 @@ export default function PlanoBoard() {
           {listas.map((lista) => (
             <div
               key={lista.id}
-              className="w-80 flex-shrink-0 flex flex-col bg-muted/30 rounded-xl border border-border/50 max-h-full"
+              className="w-80 flex-shrink-0 flex flex-col glass rounded-2xl border-white/20 max-h-full"
             >
               {/* Lista Header */}
               <div
-                className="p-4 flex items-center justify-between rounded-t-xl"
+                className="p-4 flex items-center justify-between rounded-t-2xl"
                 style={{
                   borderTop: `3px solid ${lista.cor}`,
                 }}
               >
                 <div className="flex items-center gap-2">
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="w-3 h-3 rounded-full shadow-sm"
                     style={{ backgroundColor: lista.cor }}
                   />
                   <h3 className="font-semibold text-sm">{lista.nome}</h3>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge
+                    variant="secondary"
+                    className="text-xs glass-subtle rounded-full"
+                  >
                     {(cartoesPorLista[lista.id] || []).length}
                   </Badge>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 rounded-lg hover:bg-white/20"
+                    >
                       <MoreVertical className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="glass-strong rounded-xl border-white/20">
                     <DropdownMenuItem
+                      className="rounded-lg"
                       onClick={() => {
                         setEditingLista(lista);
-                        setEditListaData({ nome: lista.nome, cor: lista.cor });
+                        setEditListaData({
+                          nome: lista.nome,
+                          cor: lista.cor,
+                        });
                       }}
                     >
                       <Pencil className="w-4 h-4 mr-2" />
@@ -330,7 +345,7 @@ export default function PlanoBoard() {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleDeleteLista(lista.id)}
-                      className="text-destructive"
+                      className="text-destructive rounded-lg"
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
                       Remover Lista
@@ -344,7 +359,7 @@ export default function PlanoBoard() {
                 {(cartoesPorLista[lista.id] || []).map((card) => (
                   <Card
                     key={card.id}
-                    className="group cursor-pointer hover:shadow-md transition-shadow border-l-4"
+                    className="group cursor-pointer glass-card rounded-xl border-white/15 border-l-4 hover:shadow-glass"
                     style={{ borderLeftColor: card.cor }}
                     onClick={() => openEditCard(card)}
                   >
@@ -367,7 +382,10 @@ export default function PlanoBoard() {
                             </p>
                           )}
                           <div className="flex items-center gap-2 mt-2 flex-wrap">
-                            <Badge variant="outline" className="text-xs">
+                            <Badge
+                              variant="outline"
+                              className="text-xs rounded-full glass-subtle border-white/15"
+                            >
                               {card.tipo === "TAREFA" ? "Tarefa" : "Evento"}
                             </Badge>
                             {card.tipo === "TAREFA" && card.dataConclusao && (
@@ -386,7 +404,7 @@ export default function PlanoBoard() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6 opacity-0 group-hover:opacity-100 flex-shrink-0"
+                          className="h-6 w-6 opacity-0 group-hover:opacity-100 flex-shrink-0 rounded-lg"
                           onClick={(e) => handleDeleteCard(card.id, e)}
                         >
                           <Trash2 className="w-3 h-3" />
@@ -397,14 +415,14 @@ export default function PlanoBoard() {
                 ))}
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-muted-foreground hover:text-foreground text-sm"
+                  className="w-full justify-start text-muted-foreground hover:text-foreground text-sm rounded-xl hover:bg-white/10"
                   onClick={() => {
                     setShowCreateCard(lista.id);
                     setCardType("tarefa");
                   }}
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Adicionar cartão
+                  Adicionar cartao
                 </Button>
               </div>
             </div>
@@ -412,7 +430,7 @@ export default function PlanoBoard() {
 
           {/* Add new lista column */}
           <div
-            className="w-80 flex-shrink-0 flex items-center justify-center bg-muted/10 rounded-xl border-2 border-dashed border-border/50 hover:border-primary/50 cursor-pointer transition-colors min-h-[200px]"
+            className="w-80 flex-shrink-0 flex items-center justify-center glass-subtle rounded-2xl border-2 border-dashed border-white/15 hover:border-primary/40 cursor-pointer transition-all duration-300 min-h-[200px] hover:bg-primary/5"
             onClick={() => setShowCreateLista(true)}
           >
             <div className="text-center space-y-2">
@@ -427,11 +445,11 @@ export default function PlanoBoard() {
 
       {/* Create Lista Dialog */}
       <Dialog open={showCreateLista} onOpenChange={setShowCreateLista}>
-        <DialogContent>
+        <DialogContent className="glass-strong rounded-2xl border-white/20">
           <DialogHeader>
             <DialogTitle>Nova Lista</DialogTitle>
             <DialogDescription>
-              Crie uma nova lista para organizar seus cartões.
+              Crie uma nova lista para organizar seus cartoes.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCreateLista} className="space-y-4">
@@ -446,6 +464,7 @@ export default function PlanoBoard() {
                 }
                 maxLength={50}
                 required
+                className="glass-input rounded-xl"
               />
             </div>
             <div className="space-y-2">
@@ -458,14 +477,14 @@ export default function PlanoBoard() {
                   onChange={(e) =>
                     setNewLista((p) => ({ ...p, cor: e.target.value }))
                   }
-                  className="w-10 h-10 rounded cursor-pointer border-0"
+                  className="w-10 h-10 rounded-lg cursor-pointer border-0"
                 />
                 <Input
                   value={newLista.cor}
                   onChange={(e) =>
                     setNewLista((p) => ({ ...p, cor: e.target.value }))
                   }
-                  className="flex-1"
+                  className="flex-1 glass-input rounded-xl"
                   placeholder="#3B82F6"
                 />
               </div>
@@ -475,10 +494,16 @@ export default function PlanoBoard() {
                 type="button"
                 variant="outline"
                 onClick={() => setShowCreateLista(false)}
+                className="rounded-xl"
               >
                 Cancelar
               </Button>
-              <Button type="submit">Criar Lista</Button>
+              <Button
+                type="submit"
+                className="bg-gradient-primary hover:opacity-90 rounded-xl"
+              >
+                Criar Lista
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -489,7 +514,7 @@ export default function PlanoBoard() {
         open={editingLista !== null}
         onOpenChange={() => setEditingLista(null)}
       >
-        <DialogContent>
+        <DialogContent className="glass-strong rounded-2xl border-white/20">
           <DialogHeader>
             <DialogTitle>Editar Lista</DialogTitle>
             <DialogDescription>
@@ -506,6 +531,7 @@ export default function PlanoBoard() {
                 }
                 maxLength={50}
                 required
+                className="glass-input rounded-xl"
               />
             </div>
             <div className="space-y-2">
@@ -517,14 +543,14 @@ export default function PlanoBoard() {
                   onChange={(e) =>
                     setEditListaData((p) => ({ ...p, cor: e.target.value }))
                   }
-                  className="w-10 h-10 rounded cursor-pointer border-0"
+                  className="w-10 h-10 rounded-lg cursor-pointer border-0"
                 />
                 <Input
                   value={editListaData.cor}
                   onChange={(e) =>
                     setEditListaData((p) => ({ ...p, cor: e.target.value }))
                   }
-                  className="flex-1"
+                  className="flex-1 glass-input rounded-xl"
                 />
               </div>
             </div>
@@ -533,10 +559,16 @@ export default function PlanoBoard() {
                 type="button"
                 variant="outline"
                 onClick={() => setEditingLista(null)}
+                className="rounded-xl"
               >
                 Cancelar
               </Button>
-              <Button type="submit">Salvar</Button>
+              <Button
+                type="submit"
+                className="bg-gradient-primary hover:opacity-90 rounded-xl"
+              >
+                Salvar
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -547,11 +579,11 @@ export default function PlanoBoard() {
         open={showCreateCard !== null}
         onOpenChange={() => setShowCreateCard(null)}
       >
-        <DialogContent>
+        <DialogContent className="glass-strong rounded-2xl border-white/20">
           <DialogHeader>
-            <DialogTitle>Novo Cartão</DialogTitle>
+            <DialogTitle>Novo Cartao</DialogTitle>
             <DialogDescription>
-              Adicione uma tarefa ou evento à lista.
+              Adicione uma tarefa ou evento a lista.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCreateCard} className="space-y-4">
@@ -561,6 +593,11 @@ export default function PlanoBoard() {
                 variant={cardType === "tarefa" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setCardType("tarefa")}
+                className={`rounded-xl ${
+                  cardType === "tarefa"
+                    ? "bg-gradient-primary hover:opacity-90"
+                    : ""
+                }`}
               >
                 <CheckSquare className="w-4 h-4 mr-1" /> Tarefa
               </Button>
@@ -569,6 +606,11 @@ export default function PlanoBoard() {
                 variant={cardType === "evento" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setCardType("evento")}
+                className={`rounded-xl ${
+                  cardType === "evento"
+                    ? "bg-gradient-primary hover:opacity-90"
+                    : ""
+                }`}
               >
                 <Calendar className="w-4 h-4 mr-1" /> Evento
               </Button>
@@ -576,24 +618,26 @@ export default function PlanoBoard() {
             <div className="space-y-2">
               <Label>Nome</Label>
               <Input
-                placeholder="Nome do cartão"
+                placeholder="Nome do cartao"
                 value={newCard.nome}
                 onChange={(e) =>
                   setNewCard((p) => ({ ...p, nome: e.target.value }))
                 }
                 maxLength={50}
                 required
+                className="glass-input rounded-xl"
               />
             </div>
             <div className="space-y-2">
-              <Label>Descrição (opcional)</Label>
+              <Label>Descricao (opcional)</Label>
               <Textarea
-                placeholder="Descreva o cartão..."
+                placeholder="Descreva o cartao..."
                 value={newCard.descricao}
                 onChange={(e) =>
                   setNewCard((p) => ({ ...p, descricao: e.target.value }))
                 }
                 maxLength={500}
+                className="glass-input rounded-xl"
               />
             </div>
             <div className="space-y-2">
@@ -605,20 +649,20 @@ export default function PlanoBoard() {
                   onChange={(e) =>
                     setNewCard((p) => ({ ...p, cor: e.target.value }))
                   }
-                  className="w-10 h-10 rounded cursor-pointer border-0"
+                  className="w-10 h-10 rounded-lg cursor-pointer border-0"
                 />
                 <Input
                   value={newCard.cor}
                   onChange={(e) =>
                     setNewCard((p) => ({ ...p, cor: e.target.value }))
                   }
-                  className="flex-1"
+                  className="flex-1 glass-input rounded-xl"
                 />
               </div>
             </div>
             {cardType === "tarefa" ? (
               <div className="space-y-2">
-                <Label>Data de Conclusão</Label>
+                <Label>Data de Conclusao</Label>
                 <Input
                   type="date"
                   value={newCard.dataConclusao}
@@ -629,12 +673,13 @@ export default function PlanoBoard() {
                     }))
                   }
                   required
+                  className="glass-input rounded-xl"
                 />
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Data Início</Label>
+                  <Label>Data Inicio</Label>
                   <Input
                     type="date"
                     value={newCard.dataInicio}
@@ -645,6 +690,7 @@ export default function PlanoBoard() {
                       }))
                     }
                     required
+                    className="glass-input rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
@@ -659,6 +705,7 @@ export default function PlanoBoard() {
                       }))
                     }
                     required
+                    className="glass-input rounded-xl"
                   />
                 </div>
               </div>
@@ -668,10 +715,16 @@ export default function PlanoBoard() {
                 type="button"
                 variant="outline"
                 onClick={() => setShowCreateCard(null)}
+                className="rounded-xl"
               >
                 Cancelar
               </Button>
-              <Button type="submit">Criar</Button>
+              <Button
+                type="submit"
+                className="bg-gradient-primary hover:opacity-90 rounded-xl"
+              >
+                Criar
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -682,13 +735,13 @@ export default function PlanoBoard() {
         open={editingCard !== null}
         onOpenChange={() => setEditingCard(null)}
       >
-        <DialogContent>
+        <DialogContent className="glass-strong rounded-2xl border-white/20">
           <DialogHeader>
             <DialogTitle>
               Editar {editingCard?.tipo === "TAREFA" ? "Tarefa" : "Evento"}
             </DialogTitle>
             <DialogDescription>
-              Atualize as informações do cartão.
+              Atualize as informacoes do cartao.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSaveEditCard} className="space-y-4">
@@ -701,10 +754,11 @@ export default function PlanoBoard() {
                 }
                 maxLength={50}
                 required
+                className="glass-input rounded-xl"
               />
             </div>
             <div className="space-y-2">
-              <Label>Descrição</Label>
+              <Label>Descricao</Label>
               <Textarea
                 value={editCardData.descricao || ""}
                 onChange={(e) =>
@@ -714,6 +768,7 @@ export default function PlanoBoard() {
                   }))
                 }
                 maxLength={500}
+                className="glass-input rounded-xl"
               />
             </div>
             <div className="space-y-2">
@@ -725,20 +780,20 @@ export default function PlanoBoard() {
                   onChange={(e) =>
                     setEditCardData((p) => ({ ...p, cor: e.target.value }))
                   }
-                  className="w-10 h-10 rounded cursor-pointer border-0"
+                  className="w-10 h-10 rounded-lg cursor-pointer border-0"
                 />
                 <Input
                   value={editCardData.cor || ""}
                   onChange={(e) =>
                     setEditCardData((p) => ({ ...p, cor: e.target.value }))
                   }
-                  className="flex-1"
+                  className="flex-1 glass-input rounded-xl"
                 />
               </div>
             </div>
             {editingCard?.tipo === "TAREFA" && (
               <div className="space-y-2">
-                <Label>Data de Conclusão</Label>
+                <Label>Data de Conclusao</Label>
                 <Input
                   type="date"
                   value={editCardData.dataConclusao || ""}
@@ -749,13 +804,14 @@ export default function PlanoBoard() {
                     }))
                   }
                   required
+                  className="glass-input rounded-xl"
                 />
               </div>
             )}
             {editingCard?.tipo === "EVENTO" && (
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Data Início</Label>
+                  <Label>Data Inicio</Label>
                   <Input
                     type="date"
                     value={editCardData.dataInicio || ""}
@@ -766,6 +822,7 @@ export default function PlanoBoard() {
                       }))
                     }
                     required
+                    className="glass-input rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
@@ -780,6 +837,7 @@ export default function PlanoBoard() {
                       }))
                     }
                     required
+                    className="glass-input rounded-xl"
                   />
                 </div>
               </div>
@@ -788,6 +846,7 @@ export default function PlanoBoard() {
               <Button
                 type="button"
                 variant="destructive"
+                className="rounded-xl"
                 onClick={() => {
                   handleDeleteCard(editingCard.id);
                   setEditingCard(null);
@@ -800,10 +859,16 @@ export default function PlanoBoard() {
                 type="button"
                 variant="outline"
                 onClick={() => setEditingCard(null)}
+                className="rounded-xl"
               >
                 Cancelar
               </Button>
-              <Button type="submit">Salvar</Button>
+              <Button
+                type="submit"
+                className="bg-gradient-primary hover:opacity-90 rounded-xl"
+              >
+                Salvar
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
