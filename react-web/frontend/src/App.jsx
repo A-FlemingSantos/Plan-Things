@@ -8,6 +8,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import PlanoBoard from "./pages/PlanoBoard";
+import Calendario from "./pages/Calendario";
+import Configuracoes from "./pages/Configuracoes";
+import DashboardLayout from "./components/DashboardLayout";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,8 +26,13 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/perfil" element={<Profile />} />
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/plano/:planoId" element={<PlanoBoard />} />
+            <Route path="/calendario" element={<Calendario />} />
+            <Route path="/configuracoes" element={<Configuracoes />} />
+            <Route path="/perfil" element={<Profile />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -122,12 +122,9 @@ const Login = () => {
               </div>
               
               <div className="text-right">
-                <Link 
-                  to="/esqueceu-senha" 
-                  className="text-sm text-primary hover:text-primary-dark transition-colors duration-300 font-medium"
-                >
+                <span className="text-sm text-muted-foreground cursor-not-allowed">
                   Esqueceu sua senha?
-                </Link>
+                </span>
               </div>
               
               <Button 
