@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Things | Intelligent Project Management</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                            950: '#0f172a',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 15s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for Liquid Glass Effects & Theming -->
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --text-body: #0f172a;
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 100%);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+            --glass-nav-bg: rgba(248, 250, 252, 0.6);
+            --nav-scrolled: rgba(248, 250, 252, 0.9);
+            --glass-card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 100%);
+            --glass-card-hover: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.7) 100%);
+            --glass-card-hover-border: rgba(0, 0, 0, 0.2);
+            --glass-card-hover-shadow: 0 10px 40px -1px rgba(0, 0, 0, 0.1);
+            --glass-btn-sec-bg: rgba(0, 0, 0, 0.05);
+            --glass-btn-sec-border: rgba(0, 0, 0, 0.1);
+            --glass-btn-sec-hover: rgba(0, 0, 0, 0.1);
+            --glass-mockup-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .dark {
+            --bg-body: #0B1120;
+            --text-body: #f8fafc;
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            --glass-nav-bg: rgba(11, 17, 32, 0.6);
+            --nav-scrolled: rgba(11, 17, 32, 0.8);
+            --glass-card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            --glass-card-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+            --glass-card-hover-border: rgba(255, 255, 255, 0.25);
+            --glass-card-hover-shadow: 0 10px 40px -1px rgba(59, 130, 246, 0.15);
+            --glass-btn-sec-bg: rgba(255, 255, 255, 0.05);
+            --glass-btn-sec-border: rgba(255, 255, 255, 0.2);
+            --glass-btn-sec-hover: rgba(255, 255, 255, 0.1);
+            --glass-mockup-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05), 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-body);
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Core Glassmorphism Utility */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Specific Component Overrides */
+        .glass-nav {
+            background: var(--glass-nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card {
+            background: var(--glass-card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: var(--glass-card-hover);
+            border-color: var(--glass-card-hover-border);
+            box-shadow: var(--glass-card-hover-shadow);
+        }
+
+        .glass-button-primary {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.9) 100%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(96, 165, 250, 0.5);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+            transition: all 0.2s ease;
+        }
+
+        .glass-button-primary:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 1) 0%, rgba(37, 99, 235, 1) 100%);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        .glass-button-secondary {
+            background: var(--glass-btn-sec-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-btn-sec-border);
+            transition: all 0.2s ease;
+        }
+
+        .glass-button-secondary:hover {
+            background: var(--glass-btn-sec-hover);
+            border-color: var(--glass-border);
+        }
+        
+        /* Inner shadow for thicker glass look on the mockup */
+        .glass-mockup {
+            box-shadow: var(--glass-mockup-shadow);
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* Animation Delays */
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+    </style>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Background Ambient Glows -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-brand-600/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-70 animate-blob"></div>
+        <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-70 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-cyan-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-70 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
+                        <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">Plan Things</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Features</a>
+                    <a href="#solutions" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Solutions</a>
+                    <a href="#pricing" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Pricing</a>
+                    <a href="#" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Resources</a>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-900/5 dark:hover:bg-white/10 transition-colors focus:outline-none" aria-label="Toggle Theme">
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                        <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                    </button>
+                    <a href="#" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Log in</a>
+                    <a href="#" class="glass-button-primary px-5 py-2.5 rounded-full text-sm font-medium text-white shadow-lg">
+                        Start for free
+                    </a>
+                </div>
+
+                <!-- Mobile menu button & Toggle -->
+                <div class="md:hidden flex items-center space-x-2">
+                    <button id="themeToggleMobile" class="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-900/5 dark:hover:bg-white/10 transition-colors focus:outline-none" aria-label="Toggle Theme">
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                        <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                    </button>
+                    <button class="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel mb-8 border border-slate-900/10 dark:border-white/10 text-xs font-medium text-brand-700 dark:text-brand-100">
+                    <span class="flex h-2 w-2 rounded-full bg-brand-400"></span>
+                    Plan Things 2.0 is now live
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-transparent bg-clip-text bg-gradient-to-b from-slate-900 to-slate-500 dark:from-white dark:to-slate-400">
+                    Synchronize Your Team's <br class="hidden md:block" /> Creative Potential
+                </h1>
+                <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                    The liquid-smooth project management platform designed for agile teams. Bring clarity to chaos with intelligent workflows, transparent tracking, and seamless collaboration.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#" class="w-full sm:w-auto glass-button-primary px-8 py-4 rounded-full text-base font-medium flex items-center justify-center gap-2 text-white">
+                        Start Your Workspace
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="w-full sm:w-auto glass-button-secondary px-8 py-4 rounded-full text-base font-medium flex items-center justify-center gap-2 text-slate-800 dark:text-white">
+                        <i data-lucide="play-circle" class="w-5 h-5"></i>
+                        Watch Demo
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dashboard Mockup (Liquid Glass Style) -->
+            <div class="mt-20 relative mx-auto max-w-5xl animate-float">
+                <div class="glass-panel glass-mockup rounded-2xl border border-slate-900/10 dark:border-white/10 p-2 sm:p-4 backdrop-blur-xl">
+                    <!-- Mac style window controls -->
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-slate-900/5 dark:border-white/5">
+                        <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                        <div class="ml-4 text-xs text-slate-600 dark:text-slate-400 font-medium">Acme Corp / Q3 Roadmap</div>
+                    </div>
+                    
+                    <!-- Mockup Content -->
+                    <div class="flex flex-col md:flex-row gap-4 p-4 min-h-[400px]">
+                        <!-- Sidebar -->
+                        <div class="hidden md:flex flex-col w-48 space-y-2">
+                            <div class="flex items-center gap-3 p-2 rounded-lg bg-slate-900/5 dark:bg-white/5 text-brand-700 dark:text-brand-100 border border-slate-900/5 dark:border-white/5">
+                                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                                <span class="text-sm font-medium">Board</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-900/5 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
+                                <i data-lucide="list-todo" class="w-4 h-4"></i>
+                                <span class="text-sm">List</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-900/5 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                                <span class="text-sm">Timeline</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-slate-900/5 dark:border-white/5">
+                                <div class="flex items-center gap-3 p-2">
+                                    <div class="w-6 h-6 rounded-full bg-gradient-to-r from-purple-400 to-brand-400"></div>
+                                    <span class="text-sm text-slate-700 dark:text-slate-300">Team Space</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Board Area -->
+                        <div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- Column 1: To Do -->
+                            <div class="glass-card rounded-xl p-4 flex flex-col gap-3">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="text-sm font-medium text-slate-800 dark:text-slate-200">To Do</h3>
+                                    <span class="text-xs bg-slate-900/10 dark:bg-white/10 px-2 py-0.5 rounded-full">3</span>
+                                </div>
+                                <div class="bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 p-3 rounded-lg hover:border-brand-500/50 transition-colors cursor-pointer">
+                                    <div class="flex gap-2 mb-2">
+                                        <span class="text-[10px] uppercase tracking-wider font-semibold text-brand-500 dark:text-brand-400 bg-brand-400/10 px-2 py-0.5 rounded">Design</span>
+                                    </div>
+                                    <p class="text-sm text-slate-800 dark:text-slate-200 mb-3">Revamp landing page assets</p>
+                                    <div class="flex justify-between items-center">
+                                        <i data-lucide="message-square" class="w-3 h-3 text-slate-500"></i>
+                                        <div class="w-5 h-5 rounded-full bg-blue-500 border border-white dark:border-[#0B1120]"></div>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 p-3 rounded-lg hover:border-brand-500/50 transition-colors cursor-pointer">
+                                    <div class="flex gap-2 mb-2">
+                                        <span class="text-[10px] uppercase tracking-wider font-semibold text-purple-500 dark:text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded">Engineering</span>
+                                    </div>
+                                    <p class="text-sm text-slate-800 dark:text-slate-200 mb-3">Integrate payment gateway API</p>
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center gap-1 text-xs text-slate-500"><i data-lucide="paperclip" class="w-3 h-3"></i> 2</div>
+                                        <div class="w-5 h-5 rounded-full bg-teal-500 border border-white dark:border-[#0B1120]"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Column 2: In Progress -->
+                            <div class="glass-card rounded-xl p-4 flex flex-col gap-3">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="text-sm font-medium text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
+                                        In Progress
+                                    </h3>
+                                    <span class="text-xs bg-slate-900/10 dark:bg-white/10 px-2 py-0.5 rounded-full">1</span>
+                                </div>
+                                <div class="bg-slate-900/5 dark:bg-white/5 border border-brand-500/30 p-3 rounded-lg shadow-[0_0_15px_rgba(59,130,246,0.1)] cursor-pointer">
+                                    <div class="flex gap-2 mb-2">
+                                        <span class="text-[10px] uppercase tracking-wider font-semibold text-amber-500 dark:text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">Marketing</span>
+                                    </div>
+                                    <p class="text-sm text-slate-800 dark:text-slate-200 mb-3">Draft Q3 launch email sequence</p>
+                                    <div class="w-full bg-slate-900/10 dark:bg-white/10 rounded-full h-1 mb-3">
+                                        <div class="bg-brand-500 h-1 rounded-full w-[60%]"></div>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs text-slate-600 dark:text-slate-400">Due Tomorrow</span>
+                                        <div class="flex -space-x-2">
+                                            <div class="w-5 h-5 rounded-full bg-purple-500 border border-white dark:border-[#0B1120] z-10"></div>
+                                            <div class="w-5 h-5 rounded-full bg-pink-500 border border-white dark:border-[#0B1120] z-0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Column 3: Done -->
+                            <div class="glass-card rounded-xl p-4 flex flex-col gap-3 opacity-60">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="text-sm font-medium text-slate-800 dark:text-slate-200">Done</h3>
+                                    <span class="text-xs bg-slate-900/10 dark:bg-white/10 px-2 py-0.5 rounded-full">2</span>
+                                </div>
+                                <div class="bg-slate-900/5 dark:bg-white/5 border border-slate-900/5 dark:border-white/5 p-3 rounded-lg">
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 line-through mb-3">Competitor analysis report</p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs text-green-500 dark:text-green-400 flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Completed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Decorative Blur behind mockup -->
+                <div class="absolute inset-0 -z-10 bg-gradient-to-tr from-brand-600/20 to-purple-600/20 blur-3xl rounded-full scale-90"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Everything you need to ship faster.</h2>
+                <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Complex projects require simple, robust tools. Plan Things distills modern project management into a transparent, frictionless experience.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="glass-card p-8 rounded-2xl group">
+                    <div class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="zap" class="w-6 h-6 text-brand-500 dark:text-brand-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">Real-time Sync</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Changes propagate instantly across your team's devices. No more refreshing or conflicting edits.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-card p-8 rounded-2xl group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="git-merge" class="w-6 h-6 text-purple-500 dark:text-purple-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">Automated Workflows</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Set up rules to automatically assign tasks, update statuses, and notify stakeholders.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-card p-8 rounded-2xl group">
+                    <div class="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6 text-teal-500 dark:text-teal-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">Visual Analytics</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Turn task data into actionable insights with gorgeous, easily digestible performance metrics.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass-card p-8 rounded-2xl group">
+                    <div class="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-pink-500 dark:text-pink-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">Enterprise Security</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Bank-grade encryption, role-based access control, and comprehensive audit logs standard.</p>
+                </div>
+
+                <!-- Feature 5 (Spans 2 columns on desktop) -->
+                <div class="glass-card p-8 rounded-2xl md:col-span-2 group flex flex-col md:flex-row gap-8 items-center overflow-hidden relative">
+                    <div class="absolute bottom-0 left-1/2 w-full h-32 bg-brand-500/10 rounded-full blur-3xl transform -translate-x-1/2"></div>
+                    <div class="flex-1 z-10">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 text-xs font-medium text-slate-700 dark:text-slate-300 mb-4">
+                            <i data-lucide="blocks" class="w-3 h-3"></i> Integrations
+                        </div>
+                        <h3 class="text-2xl font-semibold text-slate-900 dark:text-white mb-3">Plays well with others</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">Connect Plan Things to your existing tech stack. Slack, GitHub, Figma, and Google Workspace integrations are available out of the box.</p>
+                        <a href="#" class="text-brand-500 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 font-medium text-sm inline-flex items-center gap-1 transition-colors">
+                            Explore all integrations <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                    <!-- Mini Integration Visual -->
+                    <div class="w-full md:w-64 grid grid-cols-2 gap-3 z-10">
+                        <div class="bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 rounded-xl p-4 flex items-center justify-center backdrop-blur-sm shadow-inner">
+                            <i data-lucide="slack" class="w-8 h-8 text-slate-600 dark:text-slate-300"></i>
+                        </div>
+                        <div class="bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 rounded-xl p-4 flex items-center justify-center backdrop-blur-sm shadow-inner">
+                            <i data-lucide="github" class="w-8 h-8 text-slate-600 dark:text-slate-300"></i>
+                        </div>
+                        <div class="bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 rounded-xl p-4 flex items-center justify-center backdrop-blur-sm shadow-inner">
+                            <i data-lucide="figma" class="w-8 h-8 text-slate-600 dark:text-slate-300"></i>
+                        </div>
+                        <div class="bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 rounded-xl p-4 flex items-center justify-center backdrop-blur-sm shadow-inner">
+                            <i data-lucide="trello" class="w-8 h-8 text-slate-600 dark:text-slate-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials / Social Proof -->
+    <section class="py-24 relative z-10 border-y border-slate-900/5 dark:border-white/5 bg-slate-900/[0.02] dark:bg-white/[0.02]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-6">Trusted by innovative teams worldwide</h2>
+                    <p class="text-slate-600 dark:text-slate-400 mb-8">Join thousands of product managers, developers, and designers who have found clarity with Plan Things.</p>
+                    <div class="flex items-center gap-4">
+                        <div class="flex -space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-600 border-2 border-white dark:border-[#0B1120]"></div>
+                            <div class="w-10 h-10 rounded-full bg-slate-500 border-2 border-white dark:border-[#0B1120]"></div>
+                            <div class="w-10 h-10 rounded-full bg-slate-400 border-2 border-white dark:border-[#0B1120]"></div>
+                            <div class="w-10 h-10 rounded-full bg-brand-500 border-2 border-white dark:border-[#0B1120] flex items-center justify-center text-xs font-bold text-white">+2k</div>
+                        </div>
+                        <div class="text-sm text-slate-600 dark:text-slate-400">
+                            <div class="flex text-amber-500 dark:text-amber-400 mb-1">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            4.9/5 on G2 Crowd
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 w-full">
+                    <div class="glass-panel p-8 rounded-2xl relative">
+                        <i data-lucide="quote" class="w-10 h-10 text-slate-900/10 dark:text-white/10 absolute top-6 right-6"></i>
+                        <p class="text-lg text-slate-800 dark:text-slate-200 mb-6 relative z-10 font-light italic">
+                            "Before Plan Things, our engineering sprints were a mess of disconnected spreadsheets and noisy chat channels. The interface is so clean and transparent that adoption across our 40-person team was immediate."
+                        </p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-brand-500 flex items-center justify-center text-white font-bold">SJ</div>
+                            <div>
+                                <h4 class="text-slate-900 dark:text-white font-medium">Sarah Jenkins</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm">VP of Engineering, CloudScale</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing (Simplified) -->
+    <section id="pricing" class="py-24 relative z-10">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Transparent Pricing</h2>
+                <p class="text-slate-600 dark:text-slate-400">Start for free, upgrade when your team needs more power.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Free Tier -->
+                <div class="glass-card p-8 rounded-3xl flex flex-col">
+                    <h3 class="text-2xl font-semibold text-slate-900 dark:text-white mb-2">Starter</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-6">Perfect for small teams finding their flow.</p>
+                    <div class="mb-8">
+                        <span class="text-5xl font-bold text-slate-900 dark:text-white">$0</span>
+                        <span class="text-slate-600 dark:text-slate-400">/mo</span>
+                    </div>
+                    <ul class="space-y-4 mb-8 flex-1">
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> Up to 5 team members</li>
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> Unlimited active tasks</li>
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> 1 Integrations</li>
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> Basic list & board views</li>
+                    </ul>
+                    <a href="#" class="w-full glass-button-secondary py-3 rounded-xl text-center font-medium text-slate-900 dark:text-white transition-all">
+                        Get Started
+                    </a>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="glass-panel p-8 rounded-3xl flex flex-col relative border-brand-500/30 dark:border-brand-500/50 shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+                    <div class="absolute top-0 right-8 transform -translate-y-1/2">
+                        <span class="bg-gradient-to-r from-brand-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Popular</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-slate-900 dark:text-white mb-2">Professional</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-6">For growing teams requiring advanced control.</p>
+                    <div class="mb-8">
+                        <span class="text-5xl font-bold text-slate-900 dark:text-white">$12</span>
+                        <span class="text-slate-600 dark:text-slate-400">/user/mo</span>
+                    </div>
+                    <ul class="space-y-4 mb-8 flex-1">
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> Unlimited team members</li>
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> Advanced analytics & reporting</li>
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> Unlimited integrations</li>
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> Custom workflows & automations</li>
+                        <li class="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><i data-lucide="check" class="w-5 h-5 text-brand-500 dark:text-brand-400"></i> Priority support</li>
+                    </ul>
+                    <a href="#" class="w-full glass-button-primary py-3 rounded-xl text-center font-medium text-white transition-all">
+                        Start 14-Day Free Trial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-20 relative z-10 px-4">
+        <div class="max-w-5xl mx-auto glass-panel rounded-3xl p-12 text-center relative overflow-hidden">
+            <!-- Decorative inner glow -->
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-600/10 to-purple-600/10 z-0"></div>
+            
+            <div class="relative z-10">
+                <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-6">Ready to transform your workflow?</h2>
+                <p class="text-lg text-slate-700 dark:text-slate-300 mb-8 max-w-2xl mx-auto">Stop managing tools and start managing projects. Get your team aligned in minutes.</p>
+                <a href="#" class="inline-flex glass-button-primary px-8 py-4 rounded-full text-lg font-medium text-white">
+                    Create your workspace
+                </a>
+                <p class="mt-4 text-sm text-slate-600 dark:text-slate-400">No credit card required for Starter plan.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900/10 dark:border-white/10 pt-16 pb-8 relative z-10 bg-slate-100/50 dark:bg-black/20 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-6 h-6 rounded bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center">
+                            <i data-lucide="layers" class="w-3 h-3 text-white"></i>
+                        </div>
+                        <span class="font-bold text-lg text-slate-900 dark:text-white">Plan Things</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">The modern project management standard for teams that value focus and clarity.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-slate-900 dark:text-white font-semibold mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Features</a></li>
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Integrations</a></li>
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Pricing</a></li>
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-slate-900 dark:text-white font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-slate-900 dark:text-white font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-900/10 dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+                <p>&copy; 2026 Plan Things Inc. All rights reserved.</p>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    All systems operational
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize Icons & Theme Toggle Logic -->
+    <script>
+        lucide.createIcons();
+
+        const htmlElement = document.documentElement;
+        const themeToggles = document.querySelectorAll('#themeToggle, #themeToggleMobile');
+
+        // Function to update the scrolled nav background properly from CSS variable
+        function updateNavBackground() {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 10) {
+                nav.classList.add('shadow-lg');
+                nav.style.background = 'var(--nav-scrolled)';
+            } else {
+                nav.classList.remove('shadow-lg');
+                nav.style.background = 'var(--glass-nav-bg)';
+            }
+        }
+
+        // Setup theme toggles
+        themeToggles.forEach(btn => {
+            btn.addEventListener('click', () => {
+                htmlElement.classList.toggle('dark');
+                updateNavBackground(); // Instantly update nav if scrolled
+            });
+        });
+
+        // Setup scroll event for navbar
+        window.addEventListener('scroll', updateNavBackground);
+        
+        // Initialize nav background on load
+        updateNavBackground();
+    </script>
+</body>
+</html>
