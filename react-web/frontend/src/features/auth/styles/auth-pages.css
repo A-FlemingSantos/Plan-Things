@@ -1,0 +1,50 @@
+.auth-page-wrapper {
+  background: radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 55%);
+}
+
+.auth-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-btn-sec-bg);
+  color: var(--text-body);
+  padding: 0.8rem 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.auth-input::placeholder {
+  color: rgb(148 163 184);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+
+.auth-page-wrapper .glass-panel {
+  border-color: rgba(15, 23, 42, 0.16);
+}
+
+.auth-input {
+  border-color: rgba(15, 23, 42, 0.22);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.auth-input::placeholder {
+  color: rgb(100 116 139);
+}
+
+.dark .auth-page-wrapper .glass-panel {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.dark .auth-input {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.dark .auth-input::placeholder {
+  color: rgb(148 163 184);
+}
