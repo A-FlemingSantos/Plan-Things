@@ -74,13 +74,6 @@ cd react-web/backend
 ./mvnw spring-boot:run
 ```
 
-Profile local (porta `8081`):
-
-```bash
-cd react-web/backend
-./mvnw spring-boot:run -Dspring-boot.run.profiles=local
-```
-
 ## Rodando o frontend
 
 ```bash

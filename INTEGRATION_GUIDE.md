@@ -45,17 +45,9 @@ As credenciais podem ser fornecidas por variáveis de ambiente:
 
 Se não forem informadas, o backend usa os valores fallback definidos no arquivo.
 
-### Profiles e Portas
+### Porta do Backend
 
-- Sem profile: porta `8080`
-- Profile `local`: porta `8081` (arquivo `application-local.properties`)
-
-Executar com profile local:
-
-```bash
-cd react-web/backend
-./mvnw spring-boot:run -Dspring-boot.run.profiles=local
-```
+- Porta padrão: `8080`
 
 ## Frontend e API Base URL
 
@@ -85,7 +77,7 @@ npm run dev
 
 ## Validação Rápida
 
-1. Confirmar backend ativo (`8080` ou `8081`, conforme profile).
+1. Confirmar backend ativo (`8080`).
 2. Acessar frontend (`5173`).
 3. Testar cadastro/login de perfil.
 4. Verificar logs do backend para chamadas `/api/v1/*`.
@@ -93,9 +85,9 @@ npm run dev
 ## Troubleshooting
 
 - `ERR_CONNECTION_REFUSED`: backend não iniciado ou porta incorreta.
-- Erro CORS: conferir domínio de origem e profile/porta da API.
+- Erro CORS: conferir domínio de origem e porta da API.
 - Falha de startup JPA/Flyway: conferir `DB_URL`, credenciais e schema remoto.
-- Porta ocupada (`8080`): usar profile `local` (`8081`) ou liberar a porta.
+- Porta ocupada (`8080`): liberar a porta ou alterar `server.port` temporariamente no ambiente.
 
 ## Proxy do Vite (Desenvolvimento)
 
