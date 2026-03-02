@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   ArrowRight,
   BarChart3,
@@ -71,10 +72,10 @@ function Navbar({ isScrolled, onToggleTheme }) {
               <Sun className="w-5 h-5 hidden dark:block" />
               <Moon className="w-5 h-5 block dark:hidden" />
             </button>
-            <a href="#" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Log in</a>
-            <a href="#" className="glass-button-primary px-5 py-2.5 rounded-full text-sm font-medium text-white shadow-lg">
+            <Link to="/login" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Log in</Link>
+            <Link to="/cadastro" className="glass-button-primary px-5 py-2.5 rounded-full text-sm font-medium text-white shadow-lg">
               Start for free
-            </a>
+            </Link>
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
@@ -425,9 +426,9 @@ function FinalCtaSection() {
         <div className="relative z-10">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">Ready to transform your workflow?</h2>
           <p className="text-lg text-slate-700 dark:text-slate-300 mb-8 max-w-2xl mx-auto">Stop managing tools and start managing projects. Get your team aligned in minutes.</p>
-          <a href="#" className="inline-flex glass-button-primary px-8 py-4 rounded-full text-lg font-medium text-white">
+          <Link to="/cadastro" className="inline-flex glass-button-primary px-8 py-4 rounded-full text-lg font-medium text-white">
             Create your workspace
-          </a>
+          </Link>
           <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">No credit card required for Starter plan.</p>
         </div>
       </div>
