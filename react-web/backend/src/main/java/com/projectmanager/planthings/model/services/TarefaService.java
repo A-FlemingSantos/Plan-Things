@@ -45,6 +45,7 @@ public class TarefaService {
 
         tarefa.setId(null);
         tarefa.setLista(lista);
+        tarefa.setPosicao(cartaoService.getNextPosicao(listaId));
         return Objects.requireNonNull(tarefaRepository.save(tarefa));
     }
 

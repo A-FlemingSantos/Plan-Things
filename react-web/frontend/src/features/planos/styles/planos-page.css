@@ -1,0 +1,756 @@
+/* ─── Dashboard de Planos — Etapa 2 ─────────────────────────────────────── */
+
+/* ─── Secondary Bar ────────────────────────────────────────────────────── */
+.planos-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 24px;
+}
+
+.planos-bar__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.planos-bar__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── Tabs ─────────────────────────────────────────────────────────────── */
+.planos-tabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 0.5rem;
+  padding: 3px;
+}
+
+.dark .planos-tabs {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.planos-tab {
+  padding: 6px 14px;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgb(100, 116, 139);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.planos-tab:hover:not(:disabled) {
+  color: var(--text-body);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.dark .planos-tab:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.planos-tab--active {
+  color: var(--text-body);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.dark .planos-tab--active {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.planos-tab:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.planos-tab:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 1px;
+}
+
+/* ─── Filter / Sort buttons ────────────────────────────────────────────── */
+.planos-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgb(100, 116, 139);
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.planos-filter-btn:hover {
+  color: var(--text-body);
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+.dark .planos-filter-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.planos-filter-btn:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 1px;
+}
+
+/* ─── Plan Grid ────────────────────────────────────────────────────────── */
+.planos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+@media (min-width: 1280px) {
+  .planos-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .planos-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* ─── Plan Card ────────────────────────────────────────────────────────── */
+.plano-card {
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.plano-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--glass-card-hover-border);
+  box-shadow: var(--glass-card-hover-shadow);
+}
+
+.plano-card:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 2px;
+}
+
+.plano-card__cover {
+  height: 96px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 10px 12px;
+  overflow: hidden;
+}
+
+.plano-card__cover-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.4s ease;
+}
+
+.plano-card:hover .plano-card__cover-bg {
+  transform: scale(1.05);
+}
+
+/* Overlay to ensure text readability over cover images */
+.plano-card__cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.05) 60%);
+  pointer-events: none;
+}
+
+.plano-card__body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plano-card__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-body);
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plano-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.plano-card__indicators {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  color: rgb(100, 116, 139);
+}
+
+.dark .plano-card__indicators {
+  color: rgb(148, 163, 184);
+}
+
+.plano-card__indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Card Hover Actions ───────────────────────────────────────────────── */
+.plano-card__actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+}
+
+.plano-card:hover .plano-card__actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.plano-card__action-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.9);
+  color: rgb(71, 85, 105);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.dark .plano-card__action-btn {
+  background: rgba(30, 41, 59, 0.9);
+  color: rgb(203, 213, 225);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.plano-card__action-btn:hover {
+  background: #fff;
+  color: rgb(15, 23, 42);
+  transform: scale(1.08);
+}
+
+.dark .plano-card__action-btn:hover {
+  background: rgb(51, 65, 85);
+  color: #fff;
+}
+
+.plano-card__action-btn--danger:hover {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.dark .plano-card__action-btn--danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.plano-card__action-btn:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 1px;
+}
+
+/* ─── New Plan Card ────────────────────────────────────────────────────── */
+.plano-card--new {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 152px;
+  border: 2px dashed var(--glass-border);
+  background: transparent;
+  backdrop-filter: none;
+  cursor: pointer;
+  gap: 10px;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.25s ease;
+}
+
+.plano-card--new:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.04);
+  transform: translateY(-3px);
+}
+
+.dark .plano-card--new:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.plano-card--new__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.plano-card--new:hover .plano-card--new__icon {
+  background: rgba(59, 130, 246, 0.18);
+  transform: scale(1.08);
+}
+
+.plano-card--new__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgb(100, 116, 139);
+}
+
+.dark .plano-card--new__label {
+  color: rgb(148, 163, 184);
+}
+
+/* ─── Modal Overlay ────────────────────────────────────────────────────── */
+.plano-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fade-in 0.15s ease-out;
+}
+
+.dark .plano-modal-overlay {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.plano-modal {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.2);
+  animation: fade-in-up 0.2s ease-out;
+  overflow: hidden;
+}
+
+.dark .plano-modal {
+  box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.5);
+}
+
+.plano-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+}
+
+.plano-modal__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-body);
+}
+
+.plano-modal__close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  color: rgb(100, 116, 139);
+  background: transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.plano-modal__close:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-body);
+}
+
+.dark .plano-modal__close:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.plano-modal__close:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 1px;
+}
+
+.plano-modal__body {
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.plano-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--glass-border);
+}
+
+/* ─── Form field ───────────────────────────────────────────────────────── */
+.plano-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.plano-field__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgb(71, 85, 105);
+}
+
+.dark .plano-field__label {
+  color: rgb(203, 213, 225);
+}
+
+.plano-field__input {
+  width: 100%;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-body);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.6);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.dark .plano-field__input {
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.plano-field__input::placeholder {
+  color: rgb(148, 163, 184);
+}
+
+.plano-field__input:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.dark .plano-field__input:focus {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.plano-field__input--error {
+  border-color: #ef4444;
+}
+
+.plano-field__input--error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.plano-field__error {
+  font-size: 0.75rem;
+  color: #ef4444;
+}
+
+.plano-field__hint {
+  font-size: 0.75rem;
+  color: rgb(148, 163, 184);
+}
+
+/* ─── Wallpaper Picker ─────────────────────────────────────────────────── */
+.wallpaper-picker {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.wallpaper-swatch {
+  aspect-ratio: 16 / 10;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.wallpaper-swatch:hover {
+  transform: scale(1.06);
+}
+
+.wallpaper-swatch--active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.wallpaper-swatch:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 2px;
+}
+
+/* ─── Modal buttons ────────────────────────────────────────────────────── */
+.plano-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.plano-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+  transform: none !important;
+}
+
+.plano-btn--primary {
+  color: #fff;
+  background: rgba(59, 130, 246, 0.9);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.plano-btn--primary:hover:not(:disabled) {
+  background: rgb(59, 130, 246);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transform: translateY(-1px);
+}
+
+.plano-btn--secondary {
+  color: var(--text-body);
+  background: var(--glass-btn-sec-bg);
+  border: 1px solid var(--glass-btn-sec-border);
+}
+
+.plano-btn--secondary:hover:not(:disabled) {
+  background: var(--glass-btn-sec-hover);
+}
+
+.plano-btn--danger {
+  color: #fff;
+  background: rgba(239, 68, 68, 0.9);
+  border: 1px solid rgba(252, 165, 165, 0.3);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.plano-btn--danger:hover:not(:disabled) {
+  background: rgb(239, 68, 68);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  transform: translateY(-1px);
+}
+
+.plano-btn:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 2px;
+}
+
+/* ─── Skeleton Loading ─────────────────────────────────────────────────── */
+.plano-skeleton {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+
+.plano-skeleton__cover {
+  height: 96px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.04) 25%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.dark .plano-skeleton__cover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.plano-skeleton__body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plano-skeleton__line {
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 25%, rgba(0, 0, 0, 0.09) 50%, rgba(0, 0, 0, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.dark .plano-skeleton__line {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.plano-skeleton__line--short {
+  width: 60%;
+}
+
+/* ─── Toast / Feedback ─────────────────────────────────────────────────── */
+.plano-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 40px -4px rgba(0, 0, 0, 0.15);
+  animation: fade-in-up 0.25s ease-out;
+  max-width: 380px;
+}
+
+.plano-toast--success {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.dark .plano-toast--success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.plano-toast--error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.dark .plano-toast--error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* ─── Delete modal specifics ───────────────────────────────────────────── */
+.delete-modal__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  margin: 0 auto 12px;
+}
+
+.dark .delete-modal__icon {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.delete-modal__text {
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgb(100, 116, 139);
+  line-height: 1.5;
+}
+
+.dark .delete-modal__text {
+  color: rgb(148, 163, 184);
+}
+
+.delete-modal__name {
+  font-weight: 600;
+  color: var(--text-body);
+}
+
+/* ─── Responsive adjustments ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .planos-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .planos-bar__right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .wallpaper-picker {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+
+  .plano-toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+  }
+
+  .plano-modal {
+    max-width: none;
+    margin: 0 8px;
+  }
+}

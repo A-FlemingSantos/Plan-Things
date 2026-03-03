@@ -20,6 +20,9 @@ public abstract class Cartao {
     @Column(name = "cor", columnDefinition = "CHAR(7)")
     private String cor;
 
+    @Column(name = "posicao", nullable = false)
+    private Integer posicao = 0;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "lista_id", nullable = false)
     private Lista lista;
@@ -54,6 +57,14 @@ public abstract class Cartao {
 
     public void setCor(String cor) {
         this.cor = cor;
+    }
+
+    public Integer getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(Integer posicao) {
+        this.posicao = posicao;
     }
 
     public Lista getLista() {

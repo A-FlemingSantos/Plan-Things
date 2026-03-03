@@ -47,6 +47,7 @@ public class EventoService {
 
         evento.setId(null);
         evento.setLista(lista);
+        evento.setPosicao(cartaoService.getNextPosicao(listaId));
         return Objects.requireNonNull(eventoRepository.save(evento));
     }
 

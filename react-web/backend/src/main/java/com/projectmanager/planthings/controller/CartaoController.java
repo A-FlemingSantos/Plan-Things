@@ -1,10 +1,12 @@
 package com.projectmanager.planthings.controller;
 
 import com.projectmanager.planthings.model.dto.CartaoResponse;
+import com.projectmanager.planthings.model.dto.ReorderRequest;
 import com.projectmanager.planthings.model.entity.Cartao;
 import com.projectmanager.planthings.model.entity.Evento;
 import com.projectmanager.planthings.model.entity.Tarefa;
 import com.projectmanager.planthings.model.services.CartaoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,13 @@ public class CartaoController {
         return ResponseEntity.ok("Cartão removido com sucesso");
     }
 
+    @PatchMapping("/perfil/{perfilId}/reorder")
+    public ResponseEntity<String> reorder(@PathVariable Long perfilId,
+                                          @Valid @RequestBody ReorderRequest request) {
+        cartaoService.reorder(perfilId, request.getCards());
+        return ResponseEntity.ok("Cartões reordenados com sucesso");
+    }
+
     private CartaoResponse toResponse(Cartao cartao) {
         String tipo = "CARTAO";
         java.time.LocalDateTime dataConclusao = null;
@@ -58,6 +67,7 @@ public class CartaoController {
                 cartao.getDescricao(),
                 cartao.getCor(),
                 cartao.getLista() != null ? cartao.getLista().getId() : null,
+                cartao.getPosicao(),
                 dataConclusao,
                 dataInicio,
                 dataFim

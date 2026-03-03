@@ -52,7 +52,6 @@ export default defineConfig(({ mode }) => {
     ? {
         protocol: "wss",
         host: `${codespaceName}-${devPort}.${csFwDomain}`,
-        port: 443,
         clientPort: 443,
       }
     : undefined;
