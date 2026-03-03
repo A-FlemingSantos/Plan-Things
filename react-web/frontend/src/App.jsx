@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import { AuthenticatedLayout } from "@/components/layout/AuthenticatedLayout";
 import { HomepageGemini } from "@/features/homepage/HomepageGemini";
@@ -12,8 +13,9 @@ import { PerfilPage } from "@/features/perfil/PerfilPage";
 
 const App = () => (
   <BrowserRouter>
-    <AuthProvider>
-      <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <Routes>
         {/* ─── Rotas publicas ─────────────────────────────────────────── */}
         <Route path="/" element={<HomepageGemini />} />
         <Route path="/login" element={<LoginPage />} />
@@ -37,8 +39,9 @@ const App = () => (
 
         {/* ─── Fallback ───────────────────────────────────────────────── */}
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AuthProvider>
+        </Routes>
+      </AuthProvider>
+    </ThemeProvider>
   </BrowserRouter>
 );
 

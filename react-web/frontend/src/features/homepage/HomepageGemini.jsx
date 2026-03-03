@@ -29,6 +29,7 @@ import {
   Zap,
 } from "lucide-react";
 import "./styles/homepage-gemini.css";
+import { useTheme } from "@/contexts/ThemeContext";
 
 function AmbientBackground() {
   return (
@@ -499,11 +500,11 @@ function FooterSection() {
 
 export function HomepageGemini() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { toggleTheme } = useTheme();
 
   useEffect(() => {
     const htmlElement = document.documentElement;
     htmlElement.classList.add("scroll-smooth");
-    htmlElement.classList.add("dark");
 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -518,7 +519,7 @@ export function HomepageGemini() {
   }, []);
 
   const handleThemeToggle = () => {
-    document.documentElement.classList.toggle("dark");
+    toggleTheme();
   };
 
   return (

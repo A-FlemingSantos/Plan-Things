@@ -13,6 +13,7 @@ import {
   User,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import "@/features/homepage/styles/homepage-gemini.css";
 import "./styles/authenticated-layout.css";
 
@@ -24,6 +25,7 @@ function getInitials(nome, sobrenome) {
 
 export function AuthenticatedLayout() {
   const { user, logout } = useAuth();
+  const { toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -34,8 +36,8 @@ export function AuthenticatedLayout() {
   }, [logout, navigate]);
 
   const handleThemeToggle = useCallback(() => {
-    document.documentElement.classList.toggle("dark");
-  }, []);
+    toggleTheme();
+  }, [toggleTheme]);
 
   // close dropdown on outside click
   useEffect(() => {

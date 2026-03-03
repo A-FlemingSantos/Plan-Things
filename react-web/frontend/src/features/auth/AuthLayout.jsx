@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Layers, Moon, Sun } from "lucide-react";
 import "@/features/homepage/styles/homepage-gemini.css";
 import "./styles/auth-pages.css";
+import { useTheme } from "@/contexts/ThemeContext";
 
 function AmbientBackground() {
   return (
@@ -21,8 +22,10 @@ export function AuthLayout({
   altHref,
   altAction,
 }) {
+  const { toggleTheme } = useTheme();
+
   const handleThemeToggle = () => {
-    document.documentElement.classList.toggle("dark");
+    toggleTheme();
   };
 
   return (
