@@ -4,6 +4,9 @@ import {
   ArrowLeft,
   Plus,
   LayoutList,
+  LayoutDashboard,
+  ListTodo,
+  Calendar,
   AlertCircle,
   CheckCircle2,
   X,
@@ -857,71 +860,93 @@ export function PlanoBoardPage() {
     ].filter(Boolean).join(" ");
 
     return (
-      <div className={canvasClassName} ref={boardCanvasRef}>
-        {listas.map((lista) => (
-          <ListColumn
-            key={lista.id}
-            lista={lista}
-            cartoes={cartoesMap[lista.id]}
-            cartoesLoading={cartoesLoadingMap[lista.id]}
-            onEdit={handleInlineEdit}
-            onDelete={openDeleteList}
-            onAddCard={openAddCard}
-            onEditCard={handleEditCardSafe}
-            onDeleteCard={openDeleteCard}
-            dragState={dragState}
-            dropTarget={dropTarget}
-            onDragPointerDown={handleDragPointerDown}
-          />
-        ))}
+      <div className="board-workspace">
+        <aside className="board-sidebar" aria-label="Visualizacoes do plano">
+          <div className="board-sidebar__item board-sidebar__item--active">
+            <LayoutDashboard className="w-4 h-4" />
+            <span>Board</span>
+          </div>
+          <div className="board-sidebar__item">
+            <ListTodo className="w-4 h-4" />
+            <span>Lista</span>
+          </div>
+          <div className="board-sidebar__item">
+            <Calendar className="w-4 h-4" />
+            <span>Timeline</span>
+          </div>
 
-        {/* Add list slot */}
-        <div className="board-add-list">
-          {addingList ? (
-            <div className="board-add-list__form">
-              <input
-                ref={addListInputRef}
-                className="board-add-list__input"
-                type="text"
-                placeholder="Nome da lista..."
-                value={newListName}
-                onChange={(e) => setNewListName(e.target.value)}
-                onKeyDown={handleInlineKeyDown}
-                maxLength={50}
-                autoComplete="off"
-                aria-label="Nome da nova lista"
-              />
-              <div className="board-add-list__actions">
-                <button
-                  className="board-add-list__submit"
-                  onClick={handleInlineCreate}
-                  disabled={
-                    addingLoading || !newListName.trim()
-                  }
-                >
-                  {addingLoading ? "Criando..." : "Criar lista"}
-                </button>
-                <button
-                  className="board-add-list__cancel"
-                  onClick={() => {
-                    setAddingList(false);
-                    setNewListName("");
-                  }}
-                  aria-label="Cancelar"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+          <div className="board-sidebar__footer">
+            <div className="board-sidebar__team-dot" />
+            <span>Team Space</span>
+          </div>
+        </aside>
+
+        <div className={canvasClassName} ref={boardCanvasRef}>
+          {listas.map((lista) => (
+            <ListColumn
+              key={lista.id}
+              lista={lista}
+              cartoes={cartoesMap[lista.id]}
+              cartoesLoading={cartoesLoadingMap[lista.id]}
+              onEdit={handleInlineEdit}
+              onDelete={openDeleteList}
+              onAddCard={openAddCard}
+              onEditCard={handleEditCardSafe}
+              onDeleteCard={openDeleteCard}
+              dragState={dragState}
+              dropTarget={dropTarget}
+              onDragPointerDown={handleDragPointerDown}
+            />
+          ))}
+
+          {/* Add list slot */}
+          <div className="board-add-list">
+            {addingList ? (
+              <div className="board-add-list__form">
+                <input
+                  ref={addListInputRef}
+                  className="board-add-list__input"
+                  type="text"
+                  placeholder="Nome da lista..."
+                  value={newListName}
+                  onChange={(e) => setNewListName(e.target.value)}
+                  onKeyDown={handleInlineKeyDown}
+                  maxLength={50}
+                  autoComplete="off"
+                  aria-label="Nome da nova lista"
+                />
+                <div className="board-add-list__actions">
+                  <button
+                    className="board-add-list__submit"
+                    onClick={handleInlineCreate}
+                    disabled={
+                      addingLoading || !newListName.trim()
+                    }
+                  >
+                    {addingLoading ? "Criando..." : "Criar lista"}
+                  </button>
+                  <button
+                    className="board-add-list__cancel"
+                    onClick={() => {
+                      setAddingList(false);
+                      setNewListName("");
+                    }}
+                    aria-label="Cancelar"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <button
-              className="board-add-list__trigger"
-              onClick={() => setAddingList(true)}
-            >
-              <Plus className="w-4 h-4" />
-              Adicionar outra lista
-            </button>
-          )}
+            ) : (
+              <button
+                className="board-add-list__trigger"
+                onClick={() => setAddingList(true)}
+              >
+                <Plus className="w-4 h-4" />
+                Adicionar outra lista
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );
