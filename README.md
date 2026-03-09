@@ -112,4 +112,4 @@ cd react-web/backend
 
 ## Documentação adicional
 
-- Guia de integração: [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)
+Para detalhes de configuração de ambiente, consulte os arquivos `.env.example` em cada sub-projeto.

@@ -7,10 +7,22 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   { ignores: ["dist"] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ["**/*.{ts,tsx}"],
+    // Node.js config files — use CJS-compatible rules
+    files: ["*.config.{js,ts}", "*.config.*.{js,ts}"],
+    extends: [js.configs.recommended],
     languageOptions: {
-      ecmaVersion: 2020,
+      globals: { ...globals.node },
+    },
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
+  {
+    // All application source files — JS, JSX, TS, TSX
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ["src/**/*.{js,jsx,ts,tsx}"],
+    languageOptions: {
+      ecmaVersion: "latest",
       globals: globals.browser,
     },
     plugins: {
@@ -21,6 +33,7 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      "no-unused-vars": "off",
     },
   },
 );

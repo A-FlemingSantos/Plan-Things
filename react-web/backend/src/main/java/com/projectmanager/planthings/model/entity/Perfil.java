@@ -39,8 +39,8 @@ public class Perfil {
     private String telefone;
 
     @JsonIgnore
-    @Column(name = "senha", columnDefinition = "VARBINARY(32)", nullable = false)
-    private byte[] senha;
+    @Column(name = "senha", columnDefinition = "NVARCHAR(60)", nullable = false)
+    private String senha;
 
     @Column(name = "cod_status", nullable = false)
     private Boolean codStatus;
@@ -94,11 +94,11 @@ public class Perfil {
         this.telefone = telefone;
     }
 
-    public byte[] getSenha() {
+    public String getSenha() {
         return senha;
     }
 
-    public void setSenha(byte[] senha) {
+    public void setSenha(String senha) {
         this.senha = senha;
     }
 

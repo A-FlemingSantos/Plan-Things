@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,6 +21,7 @@ const loginSchema = z.object({
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [apiError, setApiError] = useState(null);
 
@@ -43,7 +44,8 @@ export function LoginPage() {
       });
 
       login(response.data);
-      navigate("/app/planos", { replace: true });
+      const from = location.state?.from?.pathname ?? "/app/planos";
+      navigate(from, { replace: true });
     } catch (err) {
       const normalized = normalizeError(err);
       setApiError(normalized.message);

@@ -7,12 +7,9 @@ import com.projectmanager.planthings.exception.UnauthorizedException;
 import com.projectmanager.planthings.model.entity.Perfil;
 import com.projectmanager.planthings.model.repository.PerfilRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -20,6 +17,8 @@ public class PerfilService {
 
     @Autowired
     private PerfilRepository perfilRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     public List<Perfil> findAll() {
         return perfilRepository.findByCodStatusTrue();
@@ -34,7 +33,7 @@ public class PerfilService {
             throw new BadRequestException("Senha é obrigatória");
         }
 
-        perfil.setSenha(hashSenha(perfil.getSenhaTexto()));
+        perfil.setSenha(passwordEncoder.encode(perfil.getSenhaTexto()));
         perfil.setCodStatus(true);
         return perfilRepository.save(perfil);
     }
@@ -46,12 +45,19 @@ public class PerfilService {
 
     public Perfil update(Long id, Perfil perfil) {
         Perfil perfilExistente = findById(id);
+
+        if (!perfilExistente.getEmail().equals(perfil.getEmail())
+                && perfilRepository.findByEmail(perfil.getEmail()).isPresent()) {
+            throw new ConflictException("Email já cadastrado no sistema");
+        }
+        perfilExistente.setEmail(perfil.getEmail());
+
         perfilExistente.setNome(perfil.getNome());
         perfilExistente.setSobrenome(perfil.getSobrenome());
         perfilExistente.setTelefone(perfil.getTelefone());
 
         if (perfil.getSenhaTexto() != null && !perfil.getSenhaTexto().isBlank()) {
-            perfilExistente.setSenha(hashSenha(perfil.getSenhaTexto()));
+            perfilExistente.setSenha(passwordEncoder.encode(perfil.getSenhaTexto()));
         }
 
         return perfilRepository.save(perfilExistente);
@@ -71,19 +77,10 @@ public class PerfilService {
             throw new UnauthorizedException("Perfil inativo");
         }
 
-        if (!Arrays.equals(perfil.getSenha(), hashSenha(senha))) {
+        if (!passwordEncoder.matches(senha, perfil.getSenha())) {
             throw new UnauthorizedException("Email ou senha inválidos");
         }
 
         return perfil;
-    }
-
-    private byte[] hashSenha(String senhaPura) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            return digest.digest(senhaPura.getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Algoritmo SHA-256 não disponível", e);
-        }
     }
 }

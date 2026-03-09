@@ -8,8 +8,8 @@ Frontend React da aplicação Plan Things para gerenciamento de projetos de pequ
 - [Tailwind CSS](https://tailwindcss.com/)
 - [shadcn/ui](https://ui.shadcn.com/)
 - [React Router](https://reactrouter.com/)
-- [TanStack Query](https://tanstack.com/query)
 - [Axios](https://axios-http.com/)
+- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
 
 ## Pré-requisitos
 
@@ -26,17 +26,12 @@ O servidor de desenvolvimento inicia na porta `5173`.
 
 ## Variáveis de ambiente
 
-Copie o modelo e ajuste conforme necessário:
+A resolução da URL do backend é feita automaticamente por [`vite.config.js`](vite.config.js):
 
-```bash
-cp .env.example .env
-```
+- Em localhost, usa `http://localhost:8080/api/v1` como fallback.
+- Em GitHub Codespaces, o target é detectado automaticamente via variável de ambiente.
 
-| Variável | Descrição |
-|----------|-----------|
-| `VITE_API_URL` | URL base da API do backend (ex: `http://localhost:8080/api/v1`) |
-
-Veja detalhes de resolução dinâmica em [`src/lib/api.js`](src/lib/api.js).
+Caso precise sobrescrever, defina `VITE_API_URL` antes de rodar o servidor.
 
 ## Proxy no Vite (Desenvolvimento)
 
@@ -51,9 +46,12 @@ Isso permite chamadas relativas como `/api/v1/perfil` sem lidar com CORS durante
 
 ```
 src/
-  components/   # Componentes reutilizáveis (UI, seções)
-  pages/        # Páginas da aplicação (Login, Register, Dashboard, Profile)
-  lib/          # Utilitários (api client, helpers)
-  hooks/        # Custom hooks
-  assets/       # Imagens e recursos estáticos
+  components/    # Componentes reutilizáveis (PrivateRoute, layouts)
+  contexts/      # Contextos globais (AuthContext, ThemeContext)
+  features/      # Funcionalidades por domínio
+    auth/        # Login, cadastro e layout de autenticação
+    homepage/    # Página pública inicial
+    perfil/      # Gerenciamento de perfil do usuário
+    planos/      # Board de planos, listas e cartões
+  lib/           # Utilitários (apiClient.js)
 ```
