@@ -80,7 +80,7 @@ export function AuthenticatedLayout() {
             <span className="font-bold text-sm tracking-tight">Plan Things</span>
           </Link>
 
-          <Link to="/app/planos" className="app-header-btn app-header-btn--icon" title="Dashboard">
+          <Link to="/app/planos" className="app-header-btn app-header-btn--icon" title="Painel">
             <Home className="w-4 h-4" />
           </Link>
         </div>

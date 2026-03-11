@@ -41,7 +41,7 @@ export function DeleteCardConfirmModal({ open, onClose, onConfirm, cartao, loadi
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
-      aria-label="Confirmar exclusao"
+        aria-label="Confirmar exclusão"
     >
       <div className="plano-modal" style={{ maxWidth: 400 }}>
         <div className="plano-modal__header">
@@ -63,7 +63,7 @@ export function DeleteCardConfirmModal({ open, onClose, onConfirm, cartao, loadi
             Tem certeza que deseja excluir {isTarefa ? "a tarefa" : "o evento"}{" "}
             <span className="delete-modal__name">{cartao.nome}</span>?
             <br />
-            Esta acao nao pode ser desfeita.
+            Esta ação não pode ser desfeita.
           </p>
         </div>
 

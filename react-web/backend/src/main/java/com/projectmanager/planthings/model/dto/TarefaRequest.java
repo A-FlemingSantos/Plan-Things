@@ -18,7 +18,7 @@ public class TarefaRequest {
     @Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "Cor inválida. Use o formato #RRGGBB")
     private String cor;
 
-    @NotNull(message = "Data de conclusão é obrigatória")
+    @NotNull(message = "A data de conclusão é obrigatória")
     private LocalDateTime dataConclusao;
 
     public String getNome() {

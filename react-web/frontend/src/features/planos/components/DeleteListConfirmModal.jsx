@@ -40,7 +40,7 @@ export function DeleteListConfirmModal({ open, onClose, onConfirm, lista, loadin
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
-      aria-label="Confirmar exclusao"
+        aria-label="Confirmar exclusão"
     >
       <div className="plano-modal" style={{ maxWidth: 400 }}>
         <div className="plano-modal__header">
@@ -62,7 +62,7 @@ export function DeleteListConfirmModal({ open, onClose, onConfirm, lista, loadin
             Tem certeza que deseja excluir a lista{" "}
             <span className="delete-modal__name">{lista.nome}</span>?
             <br />
-            Todos os cartoes desta lista serao removidos. Esta acao nao pode ser desfeita.
+            Todos os cartões desta lista serão removidos. Esta ação não pode ser desfeita.
           </p>
         </div>
 

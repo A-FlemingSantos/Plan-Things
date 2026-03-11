@@ -2,16 +2,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { X, CheckSquare, Calendar } from "lucide-react";
 
 const COLOR_PRESETS = [
-  { id: "blue",   hex: "#3b82f6" },
-  { id: "cyan",   hex: "#06b6d4" },
-  { id: "green",  hex: "#10b981" },
-  { id: "yellow", hex: "#eab308" },
-  { id: "orange", hex: "#f97316" },
-  { id: "red",    hex: "#ef4444" },
-  { id: "pink",   hex: "#ec4899" },
-  { id: "purple", hex: "#8b5cf6" },
-  { id: "indigo", hex: "#6366f1" },
-  { id: "teal",   hex: "#14b8a6" },
+  { id: "blue", label: "azul", hex: "#3b82f6" },
+  { id: "cyan", label: "ciano", hex: "#06b6d4" },
+  { id: "green", label: "verde", hex: "#10b981" },
+  { id: "yellow", label: "amarelo", hex: "#eab308" },
+  { id: "orange", label: "laranja", hex: "#f97316" },
+  { id: "red", label: "vermelho", hex: "#ef4444" },
+  { id: "pink", label: "rosa", hex: "#ec4899" },
+  { id: "purple", label: "roxo", hex: "#8b5cf6" },
+  { id: "indigo", label: "índigo", hex: "#6366f1" },
+  { id: "teal", label: "verde-água", hex: "#14b8a6" },
 ];
 
 function toLocalDatetimeValue(isoStr) {
@@ -82,30 +82,30 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
     const trimmedNome = nome.trim();
 
     if (!trimmedNome) {
-      errs.nome = "Nome e obrigatorio.";
+      errs.nome = "Nome é obrigatório.";
     } else if (trimmedNome.length > 50) {
-      errs.nome = "Nome deve ter no maximo 50 caracteres.";
+      errs.nome = "Nome deve ter no máximo 50 caracteres.";
     }
 
     if (descricao.length > 500) {
-      errs.descricao = "Descricao deve ter no maximo 500 caracteres.";
+      errs.descricao = "Descrição deve ter no máximo 500 caracteres.";
     }
 
     if (tipo === "TAREFA") {
       if (!dataConclusao) {
-        errs.dataConclusao = "Data de conclusao e obrigatoria.";
+        errs.dataConclusao = "A data de conclusão é obrigatória.";
       }
     }
 
     if (tipo === "EVENTO") {
       if (!dataInicio) {
-        errs.dataInicio = "Data de inicio e obrigatoria.";
+        errs.dataInicio = "A data de início é obrigatória.";
       }
       if (!dataFim) {
-        errs.dataFim = "Data fim e obrigatoria.";
+        errs.dataFim = "A data de fim é obrigatória.";
       }
       if (dataInicio && dataFim && new Date(dataFim) < new Date(dataInicio)) {
-        errs.dataFim = "Data fim nao pode ser anterior a data de inicio.";
+        errs.dataFim = "A data de fim não pode ser anterior à data de início.";
       }
     }
 
@@ -158,13 +158,13 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
-      aria-label={isEditing ? "Editar cartao" : "Novo cartao"}
+      aria-label={isEditing ? "Editar cartão" : "Novo cartão"}
     >
       <div className="plano-modal" style={{ maxWidth: 520 }}>
         {/* Header */}
         <div className="plano-modal__header">
           <h2 className="plano-modal__title">
-            {isEditing ? "Editar cartao" : "Novo cartao"}
+            {isEditing ? "Editar cartão" : "Novo cartão"}
           </h2>
           <button
             className="plano-modal__close"
@@ -181,8 +181,8 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
             {/* Type selector (only for creation) */}
             {!isEditing && (
               <div className="plano-field">
-                <label className="plano-field__label">Tipo do cartao</label>
-                <div className="card-type-selector" role="radiogroup" aria-label="Tipo do cartao">
+                <label className="plano-field__label">Tipo do cartão</label>
+                <div className="card-type-selector" role="radiogroup" aria-label="Tipo do cartão">
                   <button
                     type="button"
                     role="radio"
@@ -231,7 +231,7 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
                 id="card-nome"
                 type="text"
                 className={`plano-field__input ${errors.nome ? "plano-field__input--error" : ""}`}
-                placeholder="Nome do cartao"
+                placeholder="Nome do cartão"
                 value={nome}
                 onChange={(e) => {
                   setNome(e.target.value);
@@ -250,12 +250,12 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
             {/* Descricao */}
             <div className="plano-field">
               <label className="plano-field__label" htmlFor="card-descricao">
-                Descricao (opcional)
+                Descrição (opcional)
               </label>
               <textarea
                 id="card-descricao"
                 className={`plano-field__input plano-field__textarea ${errors.descricao ? "plano-field__input--error" : ""}`}
-                placeholder="Descricao detalhada do cartao"
+                placeholder="Descrição detalhada do cartão"
                 value={descricao}
                 onChange={(e) => {
                   setDescricao(e.target.value);
@@ -275,7 +275,7 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
             {isTarefa && (
               <div className="plano-field">
                 <label className="plano-field__label" htmlFor="card-data-conclusao">
-                  Data de conclusao
+                  Data de conclusão
                 </label>
                 <input
                   id="card-data-conclusao"
@@ -299,7 +299,7 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
                 <div className="card-form__date-row">
                   <div className="plano-field" style={{ flex: 1 }}>
                     <label className="plano-field__label" htmlFor="card-data-inicio">
-                      Inicio
+                      Início
                     </label>
                     <input
                       id="card-data-inicio"
@@ -341,7 +341,7 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
             {/* Color picker */}
             <div className="plano-field">
               <label className="plano-field__label">Cor (opcional)</label>
-              <div className="color-picker" role="radiogroup" aria-label="Cor do cartao">
+               <div className="color-picker" role="radiogroup" aria-label="Cor do cartão">
                 <button
                   type="button"
                   role="radio"
@@ -360,7 +360,7 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
                     type="button"
                     role="radio"
                     aria-checked={selectedColor === color.id}
-                    aria-label={`Cor ${color.id}`}
+                    aria-label={`Cor ${color.label}`}
                     className={`color-swatch ${
                       selectedColor === color.id ? "color-swatch--active" : ""
                     }`}
@@ -392,8 +392,8 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
                   ? "Salvando..."
                   : "Criando..."
                 : isEditing
-                  ? "Salvar alteracoes"
-                  : "Criar cartao"}
+                  ? "Salvar alterações"
+                  : "Criar cartão"}
             </button>
           </div>
         </form>

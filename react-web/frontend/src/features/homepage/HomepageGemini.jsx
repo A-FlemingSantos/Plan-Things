@@ -58,24 +58,24 @@ function Navbar({ isScrolled, onToggleTheme }) {
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Features</a>
-            <a href="#solutions" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Solutions</a>
-            <a href="#pricing" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Pricing</a>
-            <a href="#" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Resources</a>
+            <a href="#features" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Funcionalidades</a>
+            <a href="#solutions" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Soluções</a>
+            <a href="#pricing" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Planos</a>
+            <a href="#" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Recursos</a>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
             <button
               onClick={onToggleTheme}
               className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-900/5 dark:hover:bg-white/10 transition-colors focus:outline-none"
-              aria-label="Toggle Theme"
+               aria-label="Alternar tema"
             >
               <Sun className="w-5 h-5 hidden dark:block" />
               <Moon className="w-5 h-5 block dark:hidden" />
             </button>
-            <Link to="/login" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Log in</Link>
+            <Link to="/login" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white transition-colors">Entrar</Link>
             <Link to="/cadastro" className="glass-button-primary px-5 py-2.5 rounded-full text-sm font-medium text-white shadow-lg">
-              Start for free
+              Começar grátis
             </Link>
           </div>
 
@@ -83,12 +83,12 @@ function Navbar({ isScrolled, onToggleTheme }) {
             <button
               onClick={onToggleTheme}
               className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-900/5 dark:hover:bg-white/10 transition-colors focus:outline-none"
-              aria-label="Toggle Theme"
+              aria-label="Alternar tema"
             >
               <Sun className="w-5 h-5 hidden dark:block" />
               <Moon className="w-5 h-5 block dark:hidden" />
             </button>
-            <button className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white focus:outline-none" aria-label="Open menu">
+            <button className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-white focus:outline-none" aria-label="Abrir menu">
               <Menu className="w-6 h-6" />
             </button>
           </div>
@@ -105,22 +105,22 @@ function HeroSection() {
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel mb-8 border border-slate-900/10 dark:border-white/10 text-xs font-medium text-brand-700 dark:text-brand-100">
             <span className="flex h-2 w-2 rounded-full bg-brand-400" />
-            Plan Things 2.0 is now live
+            Plan Things 2.0 já está no ar
           </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-transparent bg-clip-text bg-gradient-to-b from-slate-900 to-slate-500 dark:from-white dark:to-slate-400">
-            Synchronize Your Team&apos;s <br className="hidden md:block" /> Creative Potential
+            Sincronize a criatividade <br className="hidden md:block" /> da sua equipe
           </h1>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-            The liquid-smooth project management platform designed for agile teams. Bring clarity to chaos with intelligent workflows, transparent tracking, and seamless collaboration.
+            A plataforma de gestão de projetos criada para equipes ágeis. Traga clareza ao caos com fluxos inteligentes, acompanhamento transparente e colaboração sem atritos.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="#" className="w-full sm:w-auto glass-button-primary px-8 py-4 rounded-full text-base font-medium flex items-center justify-center gap-2 text-white">
-              Start Your Workspace
+              Comece seu espaço de trabalho
               <ArrowRight className="w-4 h-4" />
             </a>
             <a href="#" className="w-full sm:w-auto glass-button-secondary px-8 py-4 rounded-full text-base font-medium flex items-center justify-center gap-2 text-slate-800 dark:text-white">
               <PlayCircle className="w-5 h-5" />
-              Watch Demo
+              Ver demonstração
             </a>
           </div>
         </div>
@@ -131,27 +131,27 @@ function HeroSection() {
               <div className="w-3 h-3 rounded-full bg-red-500/80" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
               <div className="w-3 h-3 rounded-full bg-green-500/80" />
-              <div className="ml-4 text-xs text-slate-600 dark:text-slate-400 font-medium">Acme Corp / Q3 Roadmap</div>
+              <div className="ml-4 text-xs text-slate-600 dark:text-slate-400 font-medium">Acme Corp / Roteiro do 3º trimestre</div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-4 p-4 min-h-[400px]">
               <div className="hidden md:flex flex-col w-48 space-y-2">
                 <div className="flex items-center gap-3 p-2 rounded-lg bg-slate-900/5 dark:bg-white/5 text-brand-700 dark:text-brand-100 border border-slate-900/5 dark:border-white/5">
                   <LayoutDashboard className="w-4 h-4" />
-                  <span className="text-sm font-medium">Board</span>
+                  <span className="text-sm font-medium">Quadro</span>
                 </div>
                 <div className="flex items-center gap-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-900/5 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
                   <ListTodo className="w-4 h-4" />
-                  <span className="text-sm">List</span>
+                  <span className="text-sm">Lista</span>
                 </div>
                 <div className="flex items-center gap-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-900/5 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
                   <Calendar className="w-4 h-4" />
-                  <span className="text-sm">Timeline</span>
+                  <span className="text-sm">Linha do tempo</span>
                 </div>
                 <div className="mt-auto pt-4 border-t border-slate-900/5 dark:border-white/5">
                   <div className="flex items-center gap-3 p-2">
                     <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-400 to-brand-400" />
-                    <span className="text-sm text-slate-700 dark:text-slate-300">Team Space</span>
+                     <span className="text-sm text-slate-700 dark:text-slate-300">Espaço da equipe</span>
                   </div>
                 </div>
               </div>
@@ -159,14 +159,14 @@ function HeroSection() {
               <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="glass-card rounded-xl p-4 flex flex-col gap-3">
                   <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-medium text-slate-800 dark:text-slate-200">To Do</h3>
+                     <h3 className="text-sm font-medium text-slate-800 dark:text-slate-200">A Fazer</h3>
                     <span className="text-xs bg-slate-900/10 dark:bg-white/10 px-2 py-0.5 rounded-full">3</span>
                   </div>
                   <div className="bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 p-3 rounded-lg hover:border-brand-500/50 transition-colors cursor-pointer">
                     <div className="flex gap-2 mb-2">
                       <span className="text-[10px] uppercase tracking-wider font-semibold text-brand-500 dark:text-brand-400 bg-brand-400/10 px-2 py-0.5 rounded">Design</span>
                     </div>
-                    <p className="text-sm text-slate-800 dark:text-slate-200 mb-3">Revamp landing page assets</p>
+                    <p className="text-sm text-slate-800 dark:text-slate-200 mb-3">Atualizar os materiais da página inicial</p>
                     <div className="flex justify-between items-center">
                       <MessageSquare className="w-3 h-3 text-slate-500" />
                       <div className="w-5 h-5 rounded-full bg-blue-500 border border-white dark:border-[#0B1120]" />
@@ -174,9 +174,9 @@ function HeroSection() {
                   </div>
                   <div className="bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 p-3 rounded-lg hover:border-brand-500/50 transition-colors cursor-pointer">
                     <div className="flex gap-2 mb-2">
-                      <span className="text-[10px] uppercase tracking-wider font-semibold text-purple-500 dark:text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded">Engineering</span>
+                      <span className="text-[10px] uppercase tracking-wider font-semibold text-purple-500 dark:text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded">Engenharia</span>
                     </div>
-                    <p className="text-sm text-slate-800 dark:text-slate-200 mb-3">Integrate payment gateway API</p>
+                    <p className="text-sm text-slate-800 dark:text-slate-200 mb-3">Integrar a API do gateway de pagamento</p>
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-1 text-xs text-slate-500">
                         <Paperclip className="w-3 h-3" /> 2
@@ -190,7 +190,7 @@ function HeroSection() {
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="text-sm font-medium text-slate-800 dark:text-slate-200 flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-brand-400 animate-pulse" />
-                      In Progress
+                      Em andamento
                     </h3>
                     <span className="text-xs bg-slate-900/10 dark:bg-white/10 px-2 py-0.5 rounded-full">1</span>
                   </div>
@@ -198,12 +198,12 @@ function HeroSection() {
                     <div className="flex gap-2 mb-2">
                       <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-500 dark:text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">Marketing</span>
                     </div>
-                    <p className="text-sm text-slate-800 dark:text-slate-200 mb-3">Draft Q3 launch email sequence</p>
+                    <p className="text-sm text-slate-800 dark:text-slate-200 mb-3">Preparar a sequência de e-mails de lançamento do 3º trimestre</p>
                     <div className="w-full bg-slate-900/10 dark:bg-white/10 rounded-full h-1 mb-3">
                       <div className="bg-brand-500 h-1 rounded-full w-[60%]" />
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-slate-600 dark:text-slate-400">Due Tomorrow</span>
+                      <span className="text-xs text-slate-600 dark:text-slate-400">Entrega amanhã</span>
                       <div className="flex -space-x-2">
                         <div className="w-5 h-5 rounded-full bg-purple-500 border border-white dark:border-[#0B1120] z-10" />
                         <div className="w-5 h-5 rounded-full bg-pink-500 border border-white dark:border-[#0B1120] z-0" />
@@ -214,14 +214,14 @@ function HeroSection() {
 
                 <div className="glass-card rounded-xl p-4 flex flex-col gap-3 opacity-60">
                   <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-medium text-slate-800 dark:text-slate-200">Done</h3>
+                     <h3 className="text-sm font-medium text-slate-800 dark:text-slate-200">Concluído</h3>
                     <span className="text-xs bg-slate-900/10 dark:bg-white/10 px-2 py-0.5 rounded-full">2</span>
                   </div>
                   <div className="bg-slate-900/5 dark:bg-white/5 border border-slate-900/5 dark:border-white/5 p-3 rounded-lg">
-                    <p className="text-sm text-slate-600 dark:text-slate-400 line-through mb-3">Competitor analysis report</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 line-through mb-3">Relatório de análise da concorrência</p>
                     <div className="flex justify-between items-center">
                       <span className="text-xs text-green-500 dark:text-green-400 flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3" /> Completed
+                        <CheckCircle2 className="w-3 h-3" /> Concluído
                       </span>
                     </div>
                   </div>
@@ -242,8 +242,8 @@ function FeaturesSection() {
     <section id="features" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything you need to ship faster.</h2>
-          <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Complex projects require simple, robust tools. Plan Things distills modern project management into a transparent, frictionless experience.</p>
+           <h2 className="text-3xl md:text-4xl font-bold mb-4">Tudo o que você precisa para entregar mais rápido.</h2>
+           <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Projetos complexos precisam de ferramentas simples e robustas. O Plan Things transforma a gestão moderna de projetos em uma experiência transparente e sem atritos.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -251,8 +251,8 @@ function FeaturesSection() {
             <div className="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <Zap className="w-6 h-6 text-brand-500 dark:text-brand-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">Real-time Sync</h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Changes propagate instantly across your team&apos;s devices. No more refreshing or conflicting edits.</p>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">Sincronização em tempo real</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">As mudanças são refletidas instantaneamente nos dispositivos da sua equipe. Sem precisar recarregar a página nem lidar com edições conflitantes.</p>
           </div>
 
           <div className="glass-card p-8 rounded-2xl group relative overflow-hidden">
@@ -260,36 +260,36 @@ function FeaturesSection() {
             <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <GitMerge className="w-6 h-6 text-purple-500 dark:text-purple-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">Automated Workflows</h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Set up rules to automatically assign tasks, update statuses, and notify stakeholders.</p>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">Fluxos automatizados</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Configure regras para atribuir tarefas automaticamente, atualizar status e notificar as pessoas envolvidas.</p>
           </div>
 
           <div className="glass-card p-8 rounded-2xl group">
             <div className="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <BarChart3 className="w-6 h-6 text-teal-500 dark:text-teal-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">Visual Analytics</h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Turn task data into actionable insights with gorgeous, easily digestible performance metrics.</p>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">Análises visuais</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Transforme dados de tarefas em insights acionáveis com métricas bonitas e fáceis de entender.</p>
           </div>
 
           <div className="glass-card p-8 rounded-2xl group">
             <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <ShieldCheck className="w-6 h-6 text-pink-500 dark:text-pink-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">Enterprise Security</h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Bank-grade encryption, role-based access control, and comprehensive audit logs standard.</p>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">Segurança empresarial</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Criptografia de nível bancário, controle de acesso por função e trilhas de auditoria completas como padrão.</p>
           </div>
 
           <div className="glass-card p-8 rounded-2xl md:col-span-2 group flex flex-col md:flex-row gap-8 items-center overflow-hidden relative">
             <div className="absolute bottom-0 left-1/2 w-full h-32 bg-brand-500/10 rounded-full blur-3xl transform -translate-x-1/2" />
             <div className="flex-1 z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/5 dark:bg-white/5 border border-slate-900/10 dark:border-white/10 text-xs font-medium text-slate-700 dark:text-slate-300 mb-4">
-                <Blocks className="w-3 h-3" /> Integrations
+                 <Blocks className="w-3 h-3" /> Integrações
               </div>
-              <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-3">Plays well with others</h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">Connect Plan Things to your existing tech stack. Slack, GitHub, Figma, and Google Workspace integrations are available out of the box.</p>
+               <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-3">Integra-se com o que você já usa</h3>
+               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">Conecte o Plan Things à sua pilha atual. Integrações com Slack, GitHub, Figma e Google Workspace já vêm prontas para uso.</p>
               <a href="#" className="text-brand-500 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 font-medium text-sm inline-flex items-center gap-1 transition-colors">
-                Explore all integrations <ArrowRight className="w-4 h-4" />
+                 Explorar todas as integrações <ArrowRight className="w-4 h-4" />
               </a>
             </div>
 
@@ -320,8 +320,8 @@ function TestimonialsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row gap-12 items-center">
           <div className="flex-1">
-            <h2 className="text-3xl font-bold mb-6">Trusted by innovative teams worldwide</h2>
-            <p className="text-slate-600 dark:text-slate-400 mb-8">Join thousands of product managers, developers, and designers who have found clarity with Plan Things.</p>
+             <h2 className="text-3xl font-bold mb-6">Confiado por equipes inovadoras no mundo todo</h2>
+             <p className="text-slate-600 dark:text-slate-400 mb-8">Junte-se a milhares de gestores de produto, desenvolvedores e designers que encontraram mais clareza com o Plan Things.</p>
             <div className="flex items-center gap-4">
               <div className="flex -space-x-3">
                 <div className="w-10 h-10 rounded-full bg-slate-600 border-2 border-white dark:border-[#0B1120]" />
@@ -337,7 +337,7 @@ function TestimonialsSection() {
                   <Star className="w-4 h-4 fill-current" />
                   <Star className="w-4 h-4 fill-current" />
                 </div>
-                4.9/5 on G2 Crowd
+                 4,9/5 no G2 Crowd
               </div>
             </div>
           </div>
@@ -346,13 +346,13 @@ function TestimonialsSection() {
             <div className="glass-panel p-8 rounded-2xl relative">
               <Quote className="w-10 h-10 text-slate-900/10 dark:text-white/10 absolute top-6 right-6" />
               <p className="text-lg text-slate-800 dark:text-slate-200 mb-6 relative z-10 font-light italic">
-                "Before Plan Things, our engineering sprints were a mess of disconnected spreadsheets and noisy chat channels. The interface is so clean and transparent that adoption across our 40-person team was immediate."
+                 "Antes do Plan Things, nossas sprints de engenharia eram um caos de planilhas desconectadas e canais de conversa barulhentos. A interface é tão limpa e transparente que a adoção pela nossa equipe de 40 pessoas foi imediata."
               </p>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-brand-500 flex items-center justify-center text-white font-bold">SJ</div>
                 <div>
                   <h4 className="text-slate-900 dark:text-white font-medium">Sarah Jenkins</h4>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm">VP of Engineering, CloudScale</p>
+                   <p className="text-slate-600 dark:text-slate-400 text-sm">VP de Engenharia, CloudScale</p>
                 </div>
               </div>
             </div>
@@ -368,48 +368,48 @@ function PricingSection() {
     <section id="pricing" className="py-24 relative z-10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">Transparent Pricing</h2>
-          <p className="text-slate-600 dark:text-slate-400">Start for free, upgrade when your team needs more power.</p>
+           <h2 className="text-3xl font-bold mb-4">Preços transparentes</h2>
+           <p className="text-slate-600 dark:text-slate-400">Comece grátis e evolua quando sua equipe precisar de mais recursos.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <div className="glass-card p-8 rounded-3xl flex flex-col">
-            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">Starter</h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm mb-6">Perfect for small teams finding their flow.</p>
+            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">Inicial</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-sm mb-6">Perfeito para equipes pequenas encontrarem seu ritmo.</p>
             <div className="mb-8">
               <span className="text-5xl font-bold text-slate-900 dark:text-white">$0</span>
-              <span className="text-slate-600 dark:text-slate-400">/mo</span>
+              <span className="text-slate-600 dark:text-slate-400">/mês</span>
             </div>
             <ul className="space-y-4 mb-8 flex-1">
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Up to 5 team members</li>
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Unlimited active tasks</li>
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> 1 Integrations</li>
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Basic list &amp; board views</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Até 5 membros na equipe</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Tarefas ativas ilimitadas</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> 1 integração</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Visualizações básicas de lista e quadro</li>
             </ul>
             <a href="#" className="w-full glass-button-secondary py-3 rounded-xl text-center font-medium text-slate-900 dark:text-white transition-all">
-              Get Started
+               Começar
             </a>
           </div>
 
           <div className="glass-panel p-8 rounded-3xl flex flex-col relative border-brand-500/30 dark:border-brand-500/50 shadow-[0_0_30px_rgba(59,130,246,0.15)]">
             <div className="absolute top-0 right-8 transform -translate-y-1/2">
-              <span className="bg-gradient-to-r from-brand-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Popular</span>
+               <span className="bg-gradient-to-r from-brand-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Popular</span>
             </div>
-            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">Professional</h3>
-            <p className="text-slate-600 dark:text-slate-400 text-sm mb-6">For growing teams requiring advanced control.</p>
+             <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">Profissional</h3>
+             <p className="text-slate-600 dark:text-slate-400 text-sm mb-6">Para equipes em crescimento que precisam de controle avançado.</p>
             <div className="mb-8">
               <span className="text-5xl font-bold text-slate-900 dark:text-white">$12</span>
-              <span className="text-slate-600 dark:text-slate-400">/user/mo</span>
+              <span className="text-slate-600 dark:text-slate-400">/usuário/mês</span>
             </div>
             <ul className="space-y-4 mb-8 flex-1">
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Unlimited team members</li>
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Advanced analytics &amp; reporting</li>
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Unlimited integrations</li>
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Custom workflows &amp; automations</li>
-              <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Priority support</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Membros ilimitados na equipe</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Análises e relatórios avançados</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Integrações ilimitadas</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Fluxos e automações personalizados</li>
+               <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 text-sm"><Check className="w-5 h-5 text-brand-500 dark:text-brand-400" /> Suporte prioritário</li>
             </ul>
             <a href="#" className="w-full glass-button-primary py-3 rounded-xl text-center font-medium text-white transition-all">
-              Start 14-Day Free Trial
+               Começar teste grátis de 14 dias
             </a>
           </div>
         </div>
@@ -425,12 +425,12 @@ function FinalCtaSection() {
         <div className="absolute inset-0 bg-gradient-to-r from-brand-600/10 to-purple-600/10 z-0" />
 
         <div className="relative z-10">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">Ready to transform your workflow?</h2>
-          <p className="text-lg text-slate-700 dark:text-slate-300 mb-8 max-w-2xl mx-auto">Stop managing tools and start managing projects. Get your team aligned in minutes.</p>
+          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">Pronto para transformar seu fluxo de trabalho?</h2>
+          <p className="text-lg text-slate-700 dark:text-slate-300 mb-8 max-w-2xl mx-auto">Pare de gerenciar ferramentas e comece a gerenciar projetos. Alinhe sua equipe em minutos.</p>
           <Link to="/cadastro" className="inline-flex glass-button-primary px-8 py-4 rounded-full text-lg font-medium text-white">
-            Create your workspace
+            Crie seu espaço de trabalho
           </Link>
-          <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">No credit card required for Starter plan.</p>
+          <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">Não é necessário cartão de crédito no plano Inicial.</p>
         </div>
       </div>
     </section>
@@ -449,7 +449,7 @@ function FooterSection() {
               </div>
               <span className="font-bold text-lg text-slate-900 dark:text-white">Plan Things</span>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">The modern project management standard for teams that value focus and clarity.</p>
+             <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">O padrão moderno de gestão de projetos para equipes que valorizam foco e clareza.</p>
             <div className="flex gap-4">
               <a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-colors"><Twitter className="w-5 h-5" /></a>
               <a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-white transition-colors"><Github className="w-5 h-5" /></a>
@@ -458,39 +458,39 @@ function FooterSection() {
           </div>
 
           <div>
-            <h4 className="text-slate-900 dark:text-white font-semibold mb-4">Product</h4>
+             <h4 className="text-slate-900 dark:text-white font-semibold mb-4">Produto</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Features</a></li>
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Integrations</a></li>
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Pricing</a></li>
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Changelog</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Funcionalidades</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Integrações</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Planos</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Histórico de mudanças</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-slate-900 dark:text-white font-semibold mb-4">Company</h4>
+             <h4 className="text-slate-900 dark:text-white font-semibold mb-4">Empresa</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">About Us</a></li>
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Careers</a></li>
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Blog</a></li>
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Contact</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Sobre nós</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Carreiras</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Blog</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Contato</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-slate-900 dark:text-white font-semibold mb-4">Legal</h4>
+             <h4 className="text-slate-900 dark:text-white font-semibold mb-4">Jurídico</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Security</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Política de Privacidade</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Termos de Serviço</a></li>
+               <li><a href="#" className="text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Segurança</a></li>
             </ul>
           </div>
         </div>
         <div className="border-t border-slate-900/10 dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-          <p>&copy; 2026 Plan Things Inc. All rights reserved.</p>
+           <p>&copy; 2026 Plan Things Inc. Todos os direitos reservados.</p>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-green-500" />
-            All systems operational
+            Todos os sistemas operando normalmente
           </div>
         </div>
       </div>

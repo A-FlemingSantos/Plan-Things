@@ -36,7 +36,7 @@ export function CardItem({ cartao, onEdit, onDelete, isDragging, onDragPointerDo
       data-card-id={cartao.id}
       role="button"
       tabIndex={0}
-      aria-label={`Cartao: ${cartao.nome}`}
+      aria-label={`Cartão: ${cartao.nome}`}
       onClick={() => onEdit(cartao)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

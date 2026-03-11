@@ -24,7 +24,7 @@ public class Evento extends Cartao {
     @PreUpdate
     private void validarIntervalo() {
         if (dataInicio != null && dataFim != null && dataFim.isBefore(dataInicio)) {
-            throw new IllegalArgumentException("Data fim não pode ser menor que data início");
+            throw new IllegalArgumentException("A data de fim não pode ser anterior à data de início");
         }
     }
 

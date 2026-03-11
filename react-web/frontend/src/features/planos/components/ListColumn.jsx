@@ -127,7 +127,7 @@ export function ListColumn({
     if (!dragState?.active && filteredCards.length === 0) {
       return (
         <div className="list-column__empty">
-          Nenhum cartao nesta lista
+          Nenhum cartão nesta lista
         </div>
       );
     }
@@ -278,10 +278,10 @@ export function ListColumn({
           <button
             className="list-column__add-card"
             onClick={() => setAddMenuOpen(!addMenuOpen)}
-            aria-label="Adicionar cartao"
+            aria-label="Adicionar cartão"
           >
             <Plus className="w-4 h-4" />
-            <span>Adicionar cartao</span>
+            <span>Adicionar cartão</span>
           </button>
         </div>
       </div>

@@ -20,9 +20,9 @@ public class Perfil {
     private Long id;
 
     @Column(name = "email", columnDefinition = "VARCHAR(320)", nullable = false, unique = true)
-    @NotBlank(message = "Email é obrigatório")
-    @Email(message = "Email inválido")
-    @Size(max = 320, message = "Email deve ter no máximo 320 caracteres")
+    @NotBlank(message = "E-mail é obrigatório")
+    @Email(message = "E-mail inválido")
+    @Size(max = 320, message = "E-mail deve ter no máximo 320 caracteres")
     private String email;
 
     @Column(name = "nome", columnDefinition = "NVARCHAR(50)", nullable = false)

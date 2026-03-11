@@ -271,7 +271,7 @@ export function PlanoBoardPage() {
       await apiClient.delete(`/listas/perfil/${perfilId}/${lista.id}`);
       setDeletingLista(false);
       setListaToDelete(null);
-      showToast("success", "Lista excluida com sucesso!");
+      showToast("success", "Lista excluída com sucesso!");
       const listasData = await fetchListas();
       if (listasData) await fetchAllCartoes(listasData);
     } catch (err) {
@@ -358,7 +358,7 @@ export function PlanoBoardPage() {
       await apiClient.delete(`/cartoes/perfil/${perfilId}/${cartao.id}`);
       setDeletingCartao(false);
       setCartaoToDelete(null);
-      showToast("success", `${cartao.tipo === "TAREFA" ? "Tarefa" : "Evento"} excluido com sucesso!`);
+      showToast("success", `${cartao.tipo === "TAREFA" ? "Tarefa" : "Evento"} excluído com sucesso!`);
       if (cartao.listaId) {
         await fetchCartoesForList(cartao.listaId);
       }
@@ -756,7 +756,7 @@ export function PlanoBoardPage() {
             <div className="board-header-skeleton__name" />
           ) : (
             <h1 className="board-header__name" title={plano?.nome}>
-              {plano?.nome || "Board"}
+              {plano?.nome || "Quadro"}
             </h1>
           )}
         </div>
@@ -819,7 +819,7 @@ export function PlanoBoardPage() {
         </div>
         <h2 className="board-empty__title">Nenhuma lista criada</h2>
         <p className="board-empty__text">
-          Crie sua primeira lista para comecar a organizar as tarefas deste
+          Crie sua primeira lista para começar a organizar as tarefas deste
           plano.
         </p>
         <button
@@ -840,7 +840,7 @@ export function PlanoBoardPage() {
         <div className="board-error__icon">
           <AlertCircle className="w-7 h-7 text-red-500" />
         </div>
-        <h2 className="board-error__title">Erro ao carregar o board</h2>
+        <h2 className="board-error__title">Erro ao carregar o quadro</h2>
         <p className="board-error__text">{errorMessage}</p>
         <button className="board-error__retry" onClick={fetchAll}>
           Tentar novamente

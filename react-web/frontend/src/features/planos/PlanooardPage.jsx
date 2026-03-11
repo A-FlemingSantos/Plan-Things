@@ -8,7 +8,7 @@ export function PlanoBoardPage() {
     <div className="flex-1 p-6 sm:p-8 lg:p-10 max-w-7xl mx-auto w-full">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-950 dark:text-white">
-          Board do Plano
+          Quadro do plano
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
           Plano #{planoId} — será implementado na Etapa 3
@@ -20,7 +20,7 @@ export function PlanoBoardPage() {
           <LayoutList className="w-8 h-8 text-brand-500" />
         </div>
         <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-2">
-          Board em construção
+          Quadro em construção
         </h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm">
           As listas e cartões deste plano estarão disponíveis em breve.

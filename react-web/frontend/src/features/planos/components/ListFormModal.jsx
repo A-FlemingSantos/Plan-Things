@@ -2,16 +2,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 const COLOR_PRESETS = [
-  { id: "blue",   hex: "#3b82f6" },
-  { id: "cyan",   hex: "#06b6d4" },
-  { id: "green",  hex: "#10b981" },
-  { id: "yellow", hex: "#eab308" },
-  { id: "orange", hex: "#f97316" },
-  { id: "red",    hex: "#ef4444" },
-  { id: "pink",   hex: "#ec4899" },
-  { id: "purple", hex: "#8b5cf6" },
-  { id: "indigo", hex: "#6366f1" },
-  { id: "teal",   hex: "#14b8a6" },
+  { id: "blue", label: "azul", hex: "#3b82f6" },
+  { id: "cyan", label: "ciano", hex: "#06b6d4" },
+  { id: "green", label: "verde", hex: "#10b981" },
+  { id: "yellow", label: "amarelo", hex: "#eab308" },
+  { id: "orange", label: "laranja", hex: "#f97316" },
+  { id: "red", label: "vermelho", hex: "#ef4444" },
+  { id: "pink", label: "rosa", hex: "#ec4899" },
+  { id: "purple", label: "roxo", hex: "#8b5cf6" },
+  { id: "indigo", label: "índigo", hex: "#6366f1" },
+  { id: "teal", label: "verde-água", hex: "#14b8a6" },
 ];
 
 export function ListFormModal({ open, onClose, onSubmit, lista, loading }) {
@@ -62,12 +62,12 @@ export function ListFormModal({ open, onClose, onSubmit, lista, loading }) {
 
     const trimmed = nome.trim();
     if (!trimmed) {
-      setError("Nome e obrigatorio.");
+      setError("Nome é obrigatório.");
       inputRef.current?.focus();
       return;
     }
     if (trimmed.length > 50) {
-      setError("Nome deve ter no maximo 50 caracteres.");
+      setError("Nome deve ter no máximo 50 caracteres.");
       inputRef.current?.focus();
       return;
     }
@@ -115,7 +115,7 @@ export function ListFormModal({ open, onClose, onSubmit, lista, loading }) {
                 id="lista-nome"
                 type="text"
                 className={`plano-field__input ${error ? "plano-field__input--error" : ""}`}
-                placeholder="Ex: A Fazer, Em Progresso, Concluido"
+                placeholder="Ex.: A Fazer, Em Progresso, Concluído"
                 value={nome}
                 onChange={(e) => {
                   setNome(e.target.value);
@@ -155,7 +155,7 @@ export function ListFormModal({ open, onClose, onSubmit, lista, loading }) {
                     type="button"
                     role="radio"
                     aria-checked={selectedColor === color.id}
-                    aria-label={`Cor ${color.id}`}
+                    aria-label={`Cor ${color.label}`}
                     className={`color-swatch ${
                       selectedColor === color.id ? "color-swatch--active" : ""
                     }`}
@@ -187,7 +187,7 @@ export function ListFormModal({ open, onClose, onSubmit, lista, loading }) {
                   ? "Salvando..."
                   : "Criando..."
                 : isEditing
-                  ? "Salvar alteracoes"
+                  ? "Salvar alterações"
                   : "Criar lista"}
             </button>
           </div>

@@ -58,7 +58,7 @@ function DeletePerfilModal({ open, onClose, onConfirm, loading }) {
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
-      aria-label="Confirmar inativacao do perfil"
+      aria-label="Confirmar inativação do perfil"
     >
       <div className="perfil-modal">
         <div className="perfil-modal__header">
@@ -79,10 +79,10 @@ function DeletePerfilModal({ open, onClose, onConfirm, loading }) {
           <p className="perfil-modal__text">
             Tem certeza que deseja <strong>inativar seu perfil</strong>?
             <br />
-            Sua conta sera desativada e voce sera desconectado imediatamente.
+            Sua conta será desativada e você será desconectado imediatamente.
             <br />
             <br />
-            Esta acao pode ser irreversivel.
+            Esta ação pode ser irreversível.
           </p>
         </div>
 
@@ -235,20 +235,20 @@ export function PerfilPage() {
     const trimmedNome = nome.trim();
     const trimmedEmail = email.trim();
 
-    if (!trimmedNome) errs.nome = "Nome e obrigatorio.";
-    else if (trimmedNome.length > 50) errs.nome = "Nome deve ter no maximo 50 caracteres.";
+    if (!trimmedNome) errs.nome = "Nome é obrigatório.";
+    else if (trimmedNome.length > 50) errs.nome = "Nome deve ter no máximo 50 caracteres.";
 
-    if (!trimmedEmail) errs.email = "E-mail e obrigatorio.";
+    if (!trimmedEmail) errs.email = "E-mail é obrigatório.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail))
-      errs.email = "Formato de e-mail invalido.";
+      errs.email = "Formato de e-mail inválido.";
     else if (trimmedEmail.length > 320)
-      errs.email = "E-mail deve ter no maximo 320 caracteres.";
+      errs.email = "E-mail deve ter no máximo 320 caracteres.";
 
     if (sobrenome.trim().length > 50)
-      errs.sobrenome = "Sobrenome deve ter no maximo 50 caracteres.";
+      errs.sobrenome = "Sobrenome deve ter no máximo 50 caracteres.";
 
     if (telefone.trim() && !/^[0-9+() -]{1,20}$/.test(telefone.trim()))
-      errs.telefone = "Telefone invalido.";
+      errs.telefone = "Telefone inválido.";
 
     return errs;
   }
@@ -311,7 +311,7 @@ export function PerfilPage() {
         <div className="perfil-page__header">
           <h1 className="perfil-page__title">Meu Perfil</h1>
           <p className="perfil-page__subtitle">
-            Gerencie suas informacoes pessoais e configuracoes da conta.
+            Gerencie suas informações pessoais e configurações da conta.
           </p>
         </div>
         <PerfilSkeleton />
@@ -354,7 +354,7 @@ export function PerfilPage() {
       <div className="perfil-page__header">
         <h1 className="perfil-page__title">Meu Perfil</h1>
         <p className="perfil-page__subtitle">
-          Gerencie suas informacoes pessoais e configuracoes da conta.
+            Gerencie suas informações pessoais e configurações da conta.
         </p>
       </div>
 
@@ -520,7 +520,7 @@ export function PerfilPage() {
                       Salvando...
                     </>
                   ) : (
-                    "Salvar alteracoes"
+                      "Salvar alterações"
                   )}
                 </button>
               </div>
@@ -553,7 +553,7 @@ export function PerfilPage() {
               <div className="perfil-field">
                 <span className="perfil-field__label">Telefone</span>
                 <span className="perfil-field__input" style={{ display: "flex", alignItems: "center", background: "transparent", border: "none", padding: "0", height: "auto" }}>
-                  {perfil?.telefone || "Nao informado"}
+                  {perfil?.telefone || "Não informado"}
                 </span>
               </div>
             </div>
@@ -571,8 +571,8 @@ export function PerfilPage() {
         </div>
         <div className="perfil-danger-zone__body">
           <p className="perfil-danger-zone__description">
-            Ao inativar seu perfil, sua conta sera desativada e voce perdera acesso
-            a todos os seus planos, listas e cartoes. Esta acao pode ser irreversivel.
+            Ao inativar seu perfil, sua conta será desativada e você perderá acesso
+            a todos os seus planos, listas e cartões. Esta ação pode ser irreversível.
           </p>
           <button
             className="perfil-btn perfil-btn--outline-danger"

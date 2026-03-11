@@ -27,7 +27,7 @@ public class PerfilService {
 
     public Perfil save(Perfil perfil) {
         if (perfilRepository.findByEmail(perfil.getEmail()).isPresent()) {
-            throw new ConflictException("Email já cadastrado no sistema");
+            throw new ConflictException("E-mail já cadastrado no sistema");
         }
 
         if (perfil.getSenhaTexto() == null || perfil.getSenhaTexto().isBlank()) {
@@ -41,7 +41,7 @@ public class PerfilService {
 
     public Perfil findById(Long id) {
         return perfilRepository.findByIdAndCodStatusTrue(id)
-                .orElseThrow(() -> new NotFoundException("Perfil não encontrado " + id));
+                .orElseThrow(() -> new NotFoundException("Perfil não encontrado: " + id));
     }
 
     public Perfil update(Long id, Perfil perfil) {
@@ -65,14 +65,14 @@ public class PerfilService {
 
     public Perfil login(String email, String senha) {
         Perfil perfil = perfilRepository.findByEmail(email)
-                .orElseThrow(() -> new UnauthorizedException("Email ou senha inválidos"));
+                .orElseThrow(() -> new UnauthorizedException("E-mail ou senha inválidos"));
 
         if (!perfil.getCodStatus()) {
             throw new UnauthorizedException("Perfil inativo");
         }
 
         if (!Arrays.equals(perfil.getSenha(), hashSenha(senha))) {
-            throw new UnauthorizedException("Email ou senha inválidos");
+            throw new UnauthorizedException("E-mail ou senha inválidos");
         }
 
         return perfil;

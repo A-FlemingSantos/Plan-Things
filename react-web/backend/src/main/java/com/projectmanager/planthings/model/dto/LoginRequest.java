@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class LoginRequest {
-    @NotBlank(message = "Email é obrigatório")
-    @Email(message = "Email inválido")
-    @Size(max = 320, message = "Email deve ter no máximo 320 caracteres")
+    @NotBlank(message = "E-mail é obrigatório")
+    @Email(message = "E-mail inválido")
+    @Size(max = 320, message = "E-mail deve ter no máximo 320 caracteres")
     private String email;
 
     @NotBlank(message = "Senha é obrigatória")

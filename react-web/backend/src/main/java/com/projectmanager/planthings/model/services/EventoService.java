@@ -80,7 +80,7 @@ public class EventoService {
     private void validarIntervalo(Evento evento) {
         if (evento.getDataInicio() != null && evento.getDataFim() != null
                 && evento.getDataFim().isBefore(evento.getDataInicio())) {
-            throw new BadRequestException("Data fim não pode ser menor que data início");
+            throw new BadRequestException("A data de fim não pode ser anterior à data de início");
         }
     }
 

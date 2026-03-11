@@ -27,10 +27,10 @@ public class ReorderRequest {
     }
 
     public static class CardPosition {
-        @NotNull(message = "O id do cartão é obrigatório")
+        @NotNull(message = "O ID do cartão é obrigatório")
         private Long cardId;
 
-        @NotNull(message = "O id da lista é obrigatório")
+        @NotNull(message = "O ID da lista é obrigatório")
         private Long listaId;
 
         @NotNull(message = "A posição é obrigatória")

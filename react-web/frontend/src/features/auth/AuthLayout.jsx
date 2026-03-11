@@ -36,13 +36,13 @@ export function AuthLayout({
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 hover:text-brand-700 dark:hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            Voltar para homepage
+            Voltar para a página inicial
           </Link>
 
           <button
             onClick={handleThemeToggle}
             className="p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-900/5 dark:hover:bg-white/10 transition-colors focus:outline-none"
-            aria-label="Toggle Theme"
+            aria-label="Alternar tema"
           >
             <Sun className="w-5 h-5 hidden dark:block" />
             <Moon className="w-5 h-5 block dark:hidden" />

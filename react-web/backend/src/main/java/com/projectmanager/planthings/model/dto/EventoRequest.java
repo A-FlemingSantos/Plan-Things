@@ -18,10 +18,10 @@ public class EventoRequest {
     @Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "Cor inválida. Use o formato #RRGGBB")
     private String cor;
 
-    @NotNull(message = "Data de início é obrigatória")
+    @NotNull(message = "A data de início é obrigatória")
     private LocalDateTime dataInicio;
 
-    @NotNull(message = "Data fim é obrigatória")
+    @NotNull(message = "A data de fim é obrigatória")
     private LocalDateTime dataFim;
 
     public String getNome() {

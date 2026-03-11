@@ -118,7 +118,7 @@ GO
 
 IF OBJECT_ID(N'dbo.TR_Tarefa_Exclusiva', N'TR') IS NULL
 BEGIN
-    EXEC('CREATE TRIGGER dbo.TR_Tarefa_Exclusiva
+    EXEC(N'CREATE TRIGGER dbo.TR_Tarefa_Exclusiva
           ON dbo.Tarefa
           AFTER INSERT, UPDATE
           AS
@@ -129,14 +129,14 @@ BEGIN
                   FROM inserted i
                   JOIN dbo.Evento e ON e.id = i.id
               )
-                  THROW 50001, ''Cartao nao pode ser Tarefa e Evento ao mesmo tempo.'', 1;
+                  THROW 50001, N''Cartão não pode ser Tarefa e Evento ao mesmo tempo.'', 1;
           END');
 END;
 GO
 
 IF OBJECT_ID(N'dbo.TR_Evento_Exclusivo', N'TR') IS NULL
 BEGIN
-    EXEC('CREATE TRIGGER dbo.TR_Evento_Exclusivo
+    EXEC(N'CREATE TRIGGER dbo.TR_Evento_Exclusivo
           ON dbo.Evento
           AFTER INSERT, UPDATE
           AS
@@ -147,7 +147,7 @@ BEGIN
                   FROM inserted i
                   JOIN dbo.Tarefa t ON t.id = i.id
               )
-                  THROW 50001, ''Cartao nao pode ser Tarefa e Evento ao mesmo tempo.'', 1;
+                  THROW 50001, N''Cartão não pode ser Tarefa e Evento ao mesmo tempo.'', 1;
           END');
 END;
 GO
