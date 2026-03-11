@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ImagePlus, Trash2 } from "lucide-react";
+import { X, ImagePlus, Trash2, ChevronDown, Check, Palette, Upload } from "lucide-react";
 
 /**
  * Preset gradient backgrounds the user can pick as wallpaper.
@@ -54,12 +54,20 @@ function compressImage(file) {
   });
 }
 
+/** Returns the background style string for the current selection. */
+function resolvePreviewBg(selectedWallpaper, customImage) {
+  if (customImage) return null;
+  const preset = WALLPAPER_PRESETS.find((p) => p.id === selectedWallpaper);
+  return preset?.bg || WALLPAPER_PRESETS[0].bg;
+}
+
 export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
   const isEditing = !!plano;
   const [nome, setNome] = useState("");
   const [selectedWallpaper, setSelectedWallpaper] = useState(null);
   const [customImage, setCustomImage] = useState(null);
   const [error, setError] = useState("");
+  const [colorPickerOpen, setColorPickerOpen] = useState(false);
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
   const overlayRef = useRef(null);
@@ -83,6 +91,7 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
         setCustomImage(null);
       }
       setError("");
+      setColorPickerOpen(false);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open, plano]);
@@ -128,7 +137,6 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
       setError("Não foi possível processar a imagem.");
     }
 
-    // Reset the input so the same file can be re-selected
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -166,6 +174,9 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
 
   if (!open) return null;
 
+  const previewBg = resolvePreviewBg(selectedWallpaper, customImage);
+  const activePreset = WALLPAPER_PRESETS.find((p) => p.id === selectedWallpaper);
+
   return (
     <div
       className="plano-modal-overlay"
@@ -176,17 +187,29 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
       aria-label={isEditing ? "Editar plano" : "Criar novo plano"}
     >
       <div className="plano-modal">
-        {/* Header */}
-        <div className="plano-modal__header">
-          <h2 className="plano-modal__title">
-            {isEditing ? "Editar plano" : "Criar novo plano"}
-          </h2>
+        {/* Live preview banner */}
+        <div className="plano-modal__preview">
+          <div
+            className="plano-modal__preview-bg"
+            style={{
+              background: customImage ? undefined : previewBg,
+              backgroundImage: customImage ? `url(${customImage})` : undefined,
+              backgroundSize: customImage ? "cover" : undefined,
+              backgroundPosition: customImage ? "center" : undefined,
+            }}
+          />
+          <div className="plano-modal__preview-overlay" />
+          <div className="plano-modal__preview-content">
+            <h2 className="plano-modal__preview-title">
+              {nome.trim() || (isEditing ? "Editar plano" : "Novo plano")}
+            </h2>
+          </div>
           <button
             className="plano-modal__close"
             onClick={onClose}
             aria-label="Fechar"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -198,89 +221,121 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
               <label className="plano-field__label" htmlFor="plano-nome">
                 Nome do plano
               </label>
-              <input
-                ref={inputRef}
-                id="plano-nome"
-                type="text"
-                className={`plano-field__input ${error ? "plano-field__input--error" : ""}`}
-                placeholder="Ex.: Projeto de marketing do 1º trimestre"
-                value={nome}
-                onChange={(e) => {
-                  setNome(e.target.value);
-                  if (error) setError("");
-                }}
-                maxLength={50}
-                autoComplete="off"
-              />
-              {error ? (
-                <span className="plano-field__error">{error}</span>
-              ) : (
-                <span className="plano-field__hint">{nome.length}/50</span>
-              )}
+              <div className="plano-field__input-wrapper">
+                <input
+                  ref={inputRef}
+                  id="plano-nome"
+                  type="text"
+                  className={`plano-field__input ${error ? "plano-field__input--error" : ""}`}
+                  placeholder="Ex.: Projeto de marketing do 1º trimestre"
+                  value={nome}
+                  onChange={(e) => {
+                    setNome(e.target.value);
+                    if (error) setError("");
+                  }}
+                  maxLength={50}
+                  autoComplete="off"
+                />
+                <span className={`plano-field__counter ${nome.length >= 45 ? "plano-field__counter--warn" : ""}`}>
+                  {nome.length}/50
+                </span>
+              </div>
+              {error && <span className="plano-field__error">{error}</span>}
             </div>
 
-            {/* Imagem de capa */}
+            {/* Aparência section */}
             <div className="plano-field">
-              <label className="plano-field__label">Imagem de capa</label>
+              <label className="plano-field__label">Aparência</label>
 
-              {customImage ? (
-                <div className="cover-image-preview">
-                  <img
-                    src={customImage}
-                    alt="Pré-visualização da capa"
-                    className="cover-image-preview__img"
-                  />
-                  <button
-                    type="button"
-                    className="cover-image-preview__remove"
-                    onClick={handleRemoveImage}
-                    aria-label="Remover imagem de capa"
-                    title="Remover imagem"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ) : (
+              <div className="plano-appearance">
+                {/* Color picker toggle */}
                 <button
                   type="button"
-                  className="cover-image-upload"
-                  onClick={() => fileInputRef.current?.click()}
+                  className={`plano-color-toggle ${colorPickerOpen ? "plano-color-toggle--open" : ""}`}
+                  onClick={() => setColorPickerOpen((v) => !v)}
+                  aria-expanded={colorPickerOpen}
+                  aria-controls="color-picker-panel"
                 >
-                  <ImagePlus className="w-5 h-5" />
-                  <span>Escolher imagem</span>
+                  <span className="plano-color-toggle__swatch-wrapper">
+                    <Palette className="plano-color-toggle__icon" />
+                    <span
+                      className="plano-color-toggle__swatch"
+                      style={{ background: activePreset?.bg || WALLPAPER_PRESETS[0].bg }}
+                    />
+                  </span>
+                  <span className="plano-color-toggle__text">
+                    {customImage ? "Imagem personalizada" : (activePreset?.label || "Escolher cor")}
+                  </span>
+                  <ChevronDown className={`plano-color-toggle__chevron ${colorPickerOpen ? "plano-color-toggle__chevron--open" : ""}`} />
                 </button>
-              )}
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="sr-only"
-                onChange={handleFileChange}
-                aria-label="Selecionar imagem de capa"
-              />
-            </div>
+                {/* Expandable color swatches */}
+                <div
+                  id="color-picker-panel"
+                  className={`plano-color-panel ${colorPickerOpen ? "plano-color-panel--open" : ""}`}
+                >
+                  <div
+                    className="plano-color-grid"
+                    role="radiogroup"
+                    aria-label="Cor de fundo do plano"
+                  >
+                    {WALLPAPER_PRESETS.map((preset) => {
+                      const isActive = selectedWallpaper === preset.id && !customImage;
+                      return (
+                        <button
+                          key={preset.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={isActive}
+                          aria-label={`Cor ${preset.label}`}
+                          className={`plano-color-dot ${isActive ? "plano-color-dot--active" : ""}`}
+                          style={{ background: preset.bg }}
+                          onClick={() => handleSelectPreset(preset.id)}
+                        >
+                          {isActive && <Check className="plano-color-dot__check" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-            {/* Wallpaper */}
-            <div className="plano-field">
-              <label className="plano-field__label">Cor de fundo</label>
-              <div className="wallpaper-picker" role="radiogroup" aria-label="Cor de fundo do plano">
-                {WALLPAPER_PRESETS.map((preset) => (
+                {/* Image upload */}
+                {customImage ? (
+                  <div className="cover-image-preview">
+                    <img
+                      src={customImage}
+                      alt="Pré-visualização da capa"
+                      className="cover-image-preview__img"
+                    />
+                    <button
+                      type="button"
+                      className="cover-image-preview__remove"
+                      onClick={handleRemoveImage}
+                      aria-label="Remover imagem de capa"
+                      title="Remover imagem"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ) : (
                   <button
-                    key={preset.id}
                     type="button"
-                    role="radio"
-                    aria-checked={selectedWallpaper === preset.id && !customImage}
-                    aria-label={`Cor ${preset.label}`}
-                    className={`wallpaper-swatch ${
-                      selectedWallpaper === preset.id && !customImage
-                        ? "wallpaper-swatch--active"
-                        : ""
-                    }`}
-                    style={{ background: preset.bg }}
-                    onClick={() => handleSelectPreset(preset.id)}
-                  />
-                ))}
+                    className="cover-image-upload"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="w-4 h-4" />
+                    <span>Enviar imagem de capa</span>
+                  </button>
+                )}
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  onChange={handleFileChange}
+                  aria-label="Selecionar imagem de capa"
+                />
               </div>
             </div>
           </div>
