@@ -18,7 +18,12 @@ const CARD_GRADIENTS = [
 
 function getCoverStyle(plano) {
   if (plano.wallpaperUrl) {
-    return { backgroundImage: `url(${plano.wallpaperUrl})` };
+    // Base64 data URL → use as image
+    if (plano.wallpaperUrl.startsWith("data:")) {
+      return { backgroundImage: `url(${plano.wallpaperUrl})` };
+    }
+    // Gradient string → apply directly as background
+    return { background: plano.wallpaperUrl };
   }
   const idx = (plano.id ?? 0) % CARD_GRADIENTS.length;
   return { background: CARD_GRADIENTS[idx] };

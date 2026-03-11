@@ -17,7 +17,7 @@ public class Plano {
     @Column(name = "nome", columnDefinition = "NVARCHAR(50)", nullable = false)
     private String nome;
 
-    @Column(name = "wallpaper_url", columnDefinition = "VARCHAR(2048)")
+    @Column(name = "wallpaper_url", columnDefinition = "VARCHAR(MAX)")
     private String wallpaperUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

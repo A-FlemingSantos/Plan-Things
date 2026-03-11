@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { X, ImagePlus, Trash2 } from "lucide-react";
 
 /**
  * Preset gradient backgrounds the user can pick as wallpaper.
@@ -17,12 +17,51 @@ const WALLPAPER_PRESETS = [
   { id: "rose", label: "rosa", bg: "linear-gradient(135deg, #e11d48, #f43f5e)" },
 ];
 
+const MAX_IMAGE_WIDTH = 480;
+const MAX_IMAGE_HEIGHT = 240;
+const IMAGE_QUALITY = 0.75;
+const MAX_FILE_SIZE_MB = 5;
+
+/**
+ * Resizes and compresses an image file using a canvas, returning a base64 data URL.
+ */
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let { width, height } = img;
+
+        if (width > MAX_IMAGE_WIDTH || height > MAX_IMAGE_HEIGHT) {
+          const ratio = Math.min(MAX_IMAGE_WIDTH / width, MAX_IMAGE_HEIGHT / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", IMAGE_QUALITY));
+      };
+      img.onerror = () => reject(new Error("Não foi possível carregar a imagem."));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error("Não foi possível ler o arquivo."));
+    reader.readAsDataURL(file);
+  });
+}
+
 export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
   const isEditing = !!plano;
   const [nome, setNome] = useState("");
   const [selectedWallpaper, setSelectedWallpaper] = useState(null);
+  const [customImage, setCustomImage] = useState(null);
   const [error, setError] = useState("");
   const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
   const overlayRef = useRef(null);
 
   // Populate fields when editing
@@ -30,15 +69,20 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
     if (open) {
       if (plano) {
         setNome(plano.nome || "");
-        // Find matching preset or null
-        const match = WALLPAPER_PRESETS.find((p) => p.bg === plano.wallpaperUrl);
-        setSelectedWallpaper(match ? match.id : null);
+        if (plano.wallpaperUrl && plano.wallpaperUrl.startsWith("data:")) {
+          setCustomImage(plano.wallpaperUrl);
+          setSelectedWallpaper(null);
+        } else {
+          setCustomImage(null);
+          const match = WALLPAPER_PRESETS.find((p) => p.bg === plano.wallpaperUrl);
+          setSelectedWallpaper(match ? match.id : null);
+        }
       } else {
         setNome("");
         setSelectedWallpaper("blue");
+        setCustomImage(null);
       }
       setError("");
-      // Focus the input after mount
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open, plano]);
@@ -62,6 +106,42 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
     [onClose]
   );
 
+  async function handleFileChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Selecione um arquivo de imagem válido.");
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setError(`A imagem deve ter no máximo ${MAX_FILE_SIZE_MB}MB.`);
+      return;
+    }
+
+    try {
+      const dataUrl = await compressImage(file);
+      setCustomImage(dataUrl);
+      setSelectedWallpaper(null);
+      if (error) setError("");
+    } catch {
+      setError("Não foi possível processar a imagem.");
+    }
+
+    // Reset the input so the same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  function handleRemoveImage() {
+    setCustomImage(null);
+    setSelectedWallpaper("blue");
+  }
+
+  function handleSelectPreset(presetId) {
+    setSelectedWallpaper(presetId);
+    setCustomImage(null);
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -77,8 +157,9 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
       return;
     }
 
-    const wallpaperUrl =
-      WALLPAPER_PRESETS.find((p) => p.id === selectedWallpaper)?.bg || null;
+    const wallpaperUrl = customImage
+      ? customImage
+      : WALLPAPER_PRESETS.find((p) => p.id === selectedWallpaper)?.bg || null;
 
     onSubmit({ nome: trimmed, wallpaperUrl });
   }
@@ -138,6 +219,48 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
               )}
             </div>
 
+            {/* Imagem de capa */}
+            <div className="plano-field">
+              <label className="plano-field__label">Imagem de capa</label>
+
+              {customImage ? (
+                <div className="cover-image-preview">
+                  <img
+                    src={customImage}
+                    alt="Pré-visualização da capa"
+                    className="cover-image-preview__img"
+                  />
+                  <button
+                    type="button"
+                    className="cover-image-preview__remove"
+                    onClick={handleRemoveImage}
+                    aria-label="Remover imagem de capa"
+                    title="Remover imagem"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="cover-image-upload"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <ImagePlus className="w-5 h-5" />
+                  <span>Escolher imagem</span>
+                </button>
+              )}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={handleFileChange}
+                aria-label="Selecionar imagem de capa"
+              />
+            </div>
+
             {/* Wallpaper */}
             <div className="plano-field">
               <label className="plano-field__label">Cor de fundo</label>
@@ -147,15 +270,15 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
                     key={preset.id}
                     type="button"
                     role="radio"
-                    aria-checked={selectedWallpaper === preset.id}
+                    aria-checked={selectedWallpaper === preset.id && !customImage}
                     aria-label={`Cor ${preset.label}`}
                     className={`wallpaper-swatch ${
-                      selectedWallpaper === preset.id
+                      selectedWallpaper === preset.id && !customImage
                         ? "wallpaper-swatch--active"
                         : ""
                     }`}
                     style={{ background: preset.bg }}
-                    onClick={() => setSelectedWallpaper(preset.id)}
+                    onClick={() => handleSelectPreset(preset.id)}
                   />
                 ))}
               </div>

@@ -8,7 +8,6 @@ public class PlanoRequest {
     @Size(max = 50, message = "Nome deve ter no máximo 50 caracteres")
     private String nome;
 
-    @Size(max = 2048, message = "A URL do papel de parede deve ter no máximo 2048 caracteres")
     private String wallpaperUrl;
 
     public String getNome() {
