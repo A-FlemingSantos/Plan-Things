@@ -40,7 +40,7 @@ export function LoginPage() {
 
     try {
       const response = await apiClient.post("/perfil/login", {
-        email: data.email,
+        email: data.email.trim().toLowerCase(),
         senha: data.senha,
       });
 

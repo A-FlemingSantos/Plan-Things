@@ -84,7 +84,7 @@ class PerfilServiceTest {
         Perfil primeiro = buildPerfil("primeiro@planthings.com", "senha123");
         Perfil segundo = buildPerfil("segundo@planthings.com", "senha123");
 
-        when(perfilRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(perfilRepository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
         when(perfilRepository.save(Objects.requireNonNull(primeiro))).thenReturn(Objects.requireNonNull(primeiro));
         when(perfilRepository.save(Objects.requireNonNull(segundo))).thenReturn(Objects.requireNonNull(segundo));
 
@@ -101,6 +101,19 @@ class PerfilServiceTest {
         assertTrue(salvoDois.getCodStatus());
     }
 
+
+    @Test
+    void shouldNormalizeEmailOnSave() {
+        Perfil perfil = buildPerfil("  USER@Example.COM  ", "senha123");
+
+        when(perfilRepository.findByEmailIgnoreCase("user@example.com")).thenReturn(Optional.empty());
+        when(perfilRepository.save(Objects.requireNonNull(perfil))).thenReturn(Objects.requireNonNull(perfil));
+
+        Perfil salvo = perfilService.save(perfil);
+
+        assertEquals("user@example.com", salvo.getEmail());
+    }
+
     @Test
     void shouldUpgradeLegacySha256HashWhenLoginSucceeds() {
         byte[] legacyHash = hashLegacy("senha123");
@@ -110,7 +123,7 @@ class PerfilServiceTest {
         perfil.setCodStatus(true);
         perfil.setSenha(legacyHash);
 
-        when(perfilRepository.findByEmail("legacy@planthings.com"))
+        when(perfilRepository.findByEmailIgnoreCase("legacy@planthings.com"))
                 .thenReturn(Optional.of(Objects.requireNonNull(perfil)));
         when(perfilRepository.save(Objects.requireNonNull(perfil))).thenReturn(Objects.requireNonNull(perfil));
 
@@ -131,7 +144,7 @@ class PerfilServiceTest {
         perfil.setCodStatus(true);
         perfil.setSenha(passwordEncoder.encode("senha123").getBytes(StandardCharsets.UTF_8));
 
-        when(perfilRepository.findByEmail("bcrypt@planthings.com")).thenReturn(Optional.of(perfil));
+        when(perfilRepository.findByEmailIgnoreCase("bcrypt@planthings.com")).thenReturn(Optional.of(perfil));
 
         Perfil autenticado = perfilService.login("bcrypt@planthings.com", "senha123");
 
@@ -147,7 +160,7 @@ class PerfilServiceTest {
         perfil.setCodStatus(true);
         perfil.setSenha(hashLegacy("senha123"));
 
-        when(perfilRepository.findByEmail("legacy-invalid@planthings.com")).thenReturn(Optional.of(perfil));
+        when(perfilRepository.findByEmailIgnoreCase("legacy-invalid@planthings.com")).thenReturn(Optional.of(perfil));
 
         assertThrows(
                 UnauthorizedException.class,

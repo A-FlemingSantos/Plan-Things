@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface PerfilRepository  extends JpaRepository<Perfil, Long> {
     
     // Método para buscar perfil por email
-    Optional<Perfil> findByEmail(String email);
+    Optional<Perfil> findByEmailIgnoreCase(String email);
 
     java.util.List<Perfil> findByCodStatusTrue();
 

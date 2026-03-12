@@ -7,6 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,19 +20,22 @@ public class CorsConfig {
     private final String codespacesForwardingDomain;
     private final int devPort;
     private final int previewPort;
+    private final String customAllowedOrigins;
 
     public CorsConfig(
             @Value("${CODESPACES:false}") boolean codespaces,
             @Value("${CODESPACE_NAME:}") String codespaceName,
             @Value("${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:app.github.dev}") String codespacesForwardingDomain,
             @Value("${VITE_DEV_PORT:5173}") int devPort,
-            @Value("${VITE_PREVIEW_PORT:4173}") int previewPort
+            @Value("${VITE_PREVIEW_PORT:4173}") int previewPort,
+            @Value("${APP_CORS_ALLOWED_ORIGINS:}") String customAllowedOrigins
     ) {
         this.codespaces = codespaces;
         this.codespaceName = codespaceName;
         this.codespacesForwardingDomain = codespacesForwardingDomain;
         this.devPort = devPort;
         this.previewPort = previewPort;
+        this.customAllowedOrigins = customAllowedOrigins;
     }
 
     @Bean
@@ -62,6 +66,11 @@ public class CorsConfig {
             allowedOrigins.add("https://" + codespaceName + "-" + devPort + "." + codespacesForwardingDomain);
             allowedOrigins.add("https://" + codespaceName + "-" + previewPort + "." + codespacesForwardingDomain);
         }
+
+        Arrays.stream(customAllowedOrigins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isBlank())
+                .forEach(allowedOrigins::add);
 
         return Objects.requireNonNull(allowedOrigins.toArray(String[]::new));
     }

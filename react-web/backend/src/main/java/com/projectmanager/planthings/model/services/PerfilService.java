@@ -16,6 +16,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class PerfilService {
@@ -32,7 +33,8 @@ public class PerfilService {
     }
 
     public Perfil save(Perfil perfil) {
-        if (perfilRepository.findByEmail(perfil.getEmail()).isPresent()) {
+        String normalizedEmail = normalizeEmail(perfil.getEmail());
+        if (perfilRepository.findByEmailIgnoreCase(normalizedEmail).isPresent()) {
             throw new ConflictException("E-mail já cadastrado no sistema");
         }
 
@@ -40,6 +42,7 @@ public class PerfilService {
             throw new BadRequestException("Senha é obrigatória");
         }
 
+        perfil.setEmail(normalizedEmail);
         perfil.setSenha(hashSenhaSegura(perfil.getSenhaTexto()));
         perfil.setCodStatus(true);
         return perfilRepository.save(perfil);
@@ -52,12 +55,13 @@ public class PerfilService {
 
     public Perfil update(Long id, Perfil perfil) {
         Perfil perfilExistente = findById(id);
+        String normalizedEmail = normalizeEmail(perfil.getEmail());
 
-        if (!perfilExistente.getEmail().equalsIgnoreCase(perfil.getEmail())) {
-            if (perfilRepository.findByEmail(perfil.getEmail()).isPresent()) {
+        if (!perfilExistente.getEmail().equalsIgnoreCase(normalizedEmail)) {
+            if (perfilRepository.findByEmailIgnoreCase(normalizedEmail).isPresent()) {
                 throw new ConflictException("E-mail já cadastrado no sistema");
             }
-            perfilExistente.setEmail(perfil.getEmail());
+            perfilExistente.setEmail(normalizedEmail);
         }
 
         perfilExistente.setNome(perfil.getNome());
@@ -78,7 +82,9 @@ public class PerfilService {
     }
 
     public Perfil login(String email, String senha) {
-        Perfil perfil = perfilRepository.findByEmail(email)
+        String normalizedEmail = normalizeEmail(email);
+
+        Perfil perfil = perfilRepository.findByEmailIgnoreCase(normalizedEmail)
                 .orElseThrow(() -> new UnauthorizedException("E-mail ou senha inválidos"));
 
         if (!perfil.getCodStatus()) {
@@ -90,6 +96,15 @@ public class PerfilService {
         }
 
         return perfil;
+    }
+
+
+    private String normalizeEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new BadRequestException("E-mail é obrigatório");
+        }
+
+        return email.trim().toLowerCase(Locale.ROOT);
     }
 
     private boolean senhaConfere(Perfil perfil, String senhaPura) {
