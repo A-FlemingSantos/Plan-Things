@@ -64,7 +64,7 @@ export function RegisterPage() {
       await apiClient.post("/perfil", {
         nome,
         sobrenome,
-        email: data.email,
+        email: data.email.trim().toLowerCase(),
         senha: data.senha,
       });
 
