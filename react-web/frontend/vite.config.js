@@ -5,6 +5,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
+  const isTest = mode === "test";
+
   // ─── Carrega variáveis do .env ────────────────────────────────────────────
   const env = loadEnv(mode, process.cwd(), "");
 
@@ -67,11 +69,13 @@ export default defineConfig(({ mode }) => {
   };
 
   // Log de diagnóstico (visível apenas ao iniciar o servidor)
-  console.log(
-    `\n  🌐 Ambiente: ${isCodespaces ? "GitHub Codespaces" : "Local"}` +
-      `\n  📡 API target: ${apiBaseUrl}` +
-      `\n  🚀 Dev port:   ${devPort}\n`
-  );
+  if (!isTest) {
+    console.log(
+      `\n  🌐 Ambiente: ${isCodespaces ? "GitHub Codespaces" : "Local"}` +
+        `\n  📡 API target: ${apiBaseUrl}` +
+        `\n  🚀 Dev port:   ${devPort}\n`
+    );
+  }
 
   return {
     // ─── Servidor de desenvolvimento ───────────────────────────────────────
@@ -121,6 +125,14 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
+    },
+
+    test: {
+      environment: "jsdom",
+      setupFiles: "./src/test/setup.js",
+      css: true,
+      clearMocks: true,
+      restoreMocks: true,
     },
   };
 });

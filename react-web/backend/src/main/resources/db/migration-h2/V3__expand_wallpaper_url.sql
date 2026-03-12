@@ -1,0 +1,1 @@
+ALTER TABLE Plano ALTER COLUMN wallpaper_url VARCHAR(1048576);

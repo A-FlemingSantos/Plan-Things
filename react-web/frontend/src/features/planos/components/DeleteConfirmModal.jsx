@@ -62,7 +62,7 @@ export function DeleteConfirmModal({ open, onClose, onConfirm, plano, loading })
             Tem certeza que deseja excluir o plano{" "}
             <span className="delete-modal__name">{plano.nome}</span>?
             <br />
-            Esta ação não pode ser desfeita.
+            Todas as listas e cartões deste plano serão removidos. Esta ação não pode ser desfeita.
           </p>
         </div>
 

@@ -22,7 +22,7 @@ function toLocalDatetimeValue(isoStr) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
+export function CardFormModal({ open, onClose, onSubmit, cartao, initialType = "TAREFA", loading }) {
   const isEditing = !!cartao;
   const [tipo, setTipo] = useState("TAREFA");
   const [nome, setNome] = useState("");
@@ -54,11 +54,12 @@ export function CardFormModal({ open, onClose, onSubmit, cartao, loading }) {
         setDataConclusao("");
         setDataInicio("");
         setDataFim("");
+        setTipo(initialType);
       }
       setErrors({});
       setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [open, cartao]);
+  }, [open, cartao, initialType]);
 
   // Close on Escape
   useEffect(() => {

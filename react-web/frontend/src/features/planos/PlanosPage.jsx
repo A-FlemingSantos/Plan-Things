@@ -34,8 +34,12 @@ function sortPlanos(planos, sortBy) {
   return sorted;
 }
 
+function resolvePlanosPageState(planos) {
+  return planos.length === 0 ? "empty" : "success";
+}
+
 export function PlanosPage() {
-  const { user, perfilId } = useAuth();
+  const { user } = useAuth();
 
   // Data state
   const [planos, setPlanos] = useState([]);
@@ -62,15 +66,25 @@ export function PlanosPage() {
     setTimeout(() => setToast(null), 3500);
   }, []);
 
+  const closeForm = useCallback(() => {
+    setFormOpen(false);
+    setEditingPlano(null);
+  }, []);
+
+  const closeDeleteConfirm = useCallback(() => {
+    setDeletingPlano(false);
+    setPlanoToDelete(null);
+  }, []);
+
   // ─── Fetch planos ──────────────────────────────────────────────────────
   const fetchPlanos = useCallback(async () => {
-    if (!perfilId) return;
+    if (!user) return;
 
     setPageState("loading");
     setErrorMessage("");
 
     try {
-      const res = await apiClient.get(`/planos/perfil/${perfilId}`);
+      const res = await apiClient.get("/planos/me");
       const data = res.data;
 
       if (data.length === 0) {
@@ -85,7 +99,7 @@ export function PlanosPage() {
       setErrorMessage(normalized.message);
       setPageState("error");
     }
-  }, [perfilId]);
+  }, [user]);
 
   useEffect(() => {
     fetchPlanos();
@@ -95,10 +109,17 @@ export function PlanosPage() {
   async function handleCreate(data) {
     setModalLoading(true);
     try {
-      await apiClient.post(`/planos/perfil/${perfilId}`, data);
-      setFormOpen(false);
+      const response = await apiClient.post("/planos/me", data);
+      const createdPlano = response.data;
+
+      setPlanos((prev) => {
+        const next = [...prev, createdPlano];
+        setPageState(resolvePlanosPageState(next));
+        return next;
+      });
+
+      closeForm();
       showToast("success", "Plano criado com sucesso!");
-      await fetchPlanos();
     } catch (err) {
       const normalized = normalizeError(err);
       showToast("error", normalized.message);
@@ -113,14 +134,15 @@ export function PlanosPage() {
 
     setModalLoading(true);
     try {
-      await apiClient.put(
-        `/planos/perfil/${perfilId}/${editingPlano.id}`,
-        data
+      const response = await apiClient.put(`/planos/me/${editingPlano.id}`, data);
+      const updatedPlano = response.data;
+
+      setPlanos((prev) =>
+        prev.map((plano) => (plano.id === updatedPlano.id ? updatedPlano : plano))
       );
-      setFormOpen(false);
-      setEditingPlano(null);
+
+      closeForm();
       showToast("success", "Plano atualizado com sucesso!");
-      await fetchPlanos();
     } catch (err) {
       const normalized = normalizeError(err);
       showToast("error", normalized.message);
@@ -133,11 +155,15 @@ export function PlanosPage() {
   async function handleDelete(plano) {
     setModalLoading(true);
     try {
-      await apiClient.delete(`/planos/perfil/${perfilId}/${plano.id}`);
-      setDeletingPlano(false);
-      setPlanoToDelete(null);
+      await apiClient.delete(`/planos/me/${plano.id}`);
+      setPlanos((prev) => {
+        const next = prev.filter((item) => item.id !== plano.id);
+        setPageState(resolvePlanosPageState(next));
+        return next;
+      });
+
+      closeDeleteConfirm();
       showToast("success", "Plano excluído com sucesso!");
-      await fetchPlanos();
     } catch (err) {
       const normalized = normalizeError(err);
       showToast("error", normalized.message);
@@ -323,10 +349,7 @@ export function PlanosPage() {
       {/* Create / Edit Modal */}
       <PlanoFormModal
         open={formOpen}
-        onClose={() => {
-          setFormOpen(false);
-          setEditingPlano(null);
-        }}
+        onClose={closeForm}
         onSubmit={editingPlano ? handleEdit : handleCreate}
         plano={editingPlano}
         loading={modalLoading}
@@ -335,10 +358,7 @@ export function PlanosPage() {
       {/* Delete Confirmation */}
       <DeleteConfirmModal
         open={deletingPlano}
-        onClose={() => {
-          setDeletingPlano(false);
-          setPlanoToDelete(null);
-        }}
+        onClose={closeDeleteConfirm}
         onConfirm={handleDelete}
         plano={planoToDelete}
         loading={modalLoading}

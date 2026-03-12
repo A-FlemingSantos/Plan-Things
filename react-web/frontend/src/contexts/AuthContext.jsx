@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import apiClient from "@/lib/apiClient";
 
 const STORAGE_KEY = "planthings_session";
 
@@ -9,7 +10,7 @@ function loadSession() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const data = JSON.parse(raw);
-    if (data && data.id && data.email) return data;
+    if (data && data.email) return data;
     return null;
   } catch {
     localStorage.removeItem(STORAGE_KEY);
@@ -27,7 +28,6 @@ export function AuthProvider({ children }) {
 
   const login = useCallback((userData) => {
     const session = {
-      id: userData.id,
       email: userData.email,
       nome: userData.nome,
       sobrenome: userData.sobrenome,
@@ -37,14 +37,17 @@ export function AuthProvider({ children }) {
     setUser(session);
   }, []);
 
-  const logout = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
-    setUser(null);
+  const logout = useCallback(async () => {
+    try {
+      await apiClient.post("/perfil/logout");
+    } finally {
+      localStorage.removeItem(STORAGE_KEY);
+      setUser(null);
+    }
   }, []);
 
   const updateUser = useCallback((updatedData) => {
     const session = {
-      id: updatedData.id,
       email: updatedData.email,
       nome: updatedData.nome,
       sobrenome: updatedData.sobrenome,
@@ -57,7 +60,6 @@ export function AuthProvider({ children }) {
   const value = useMemo(
     () => ({
       user,
-      perfilId: user?.id ?? null,
       isAuthenticated: !!user,
       loading,
       login,

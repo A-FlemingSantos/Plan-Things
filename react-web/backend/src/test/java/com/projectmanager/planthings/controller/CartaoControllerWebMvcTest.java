@@ -1,5 +1,7 @@
 package com.projectmanager.planthings.controller;
 
+import com.projectmanager.planthings.auth.AuthSession;
+import com.projectmanager.planthings.config.AuthWebConfig;
 import com.projectmanager.planthings.exception.GlobalExceptionHandler;
 import com.projectmanager.planthings.exception.NotFoundException;
 import com.projectmanager.planthings.model.entity.Evento;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = CartaoController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, AuthWebConfig.class})
 @ActiveProfiles("test")
 class CartaoControllerWebMvcTest {
 
@@ -63,7 +65,8 @@ class CartaoControllerWebMvcTest {
 
         when(cartaoService.findAllByLista(1L, 30L)).thenReturn(List.of(tarefa, evento));
 
-        mockMvc.perform(get("/api/v1/cartoes/perfil/1/lista/30"))
+        mockMvc.perform(get("/api/v1/cartoes/me/lista/30")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(60))
                 .andExpect(jsonPath("$[0].tipo").value("TAREFA"))
@@ -75,7 +78,8 @@ class CartaoControllerWebMvcTest {
     void shouldReturn404WhenCartaoNotFound() throws Exception {
         when(cartaoService.findById(1L, 999L)).thenThrow(new NotFoundException("Cartão não encontrado para o perfil informado"));
 
-        mockMvc.perform(get("/api/v1/cartoes/perfil/1/999"))
+        mockMvc.perform(get("/api/v1/cartoes/me/999")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404));
     }

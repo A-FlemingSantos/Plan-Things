@@ -1,0 +1,1 @@
+ALTER TABLE Cartao ADD posicao INT NOT NULL DEFAULT 0;

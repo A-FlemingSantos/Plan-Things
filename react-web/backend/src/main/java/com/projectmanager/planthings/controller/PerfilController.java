@@ -1,67 +1,64 @@
 package com.projectmanager.planthings.controller;
 
-import com.projectmanager.planthings.model.entity.Perfil;
-import com.projectmanager.planthings.model.services.PerfilService;
+import com.projectmanager.planthings.auth.AuthSession;
+import com.projectmanager.planthings.auth.AuthenticatedPerfilId;
 import com.projectmanager.planthings.model.dto.LoginRequest;
 import com.projectmanager.planthings.model.dto.LoginResponse;
+import com.projectmanager.planthings.model.dto.PerfilRequest;
+import com.projectmanager.planthings.model.dto.PerfilResponse;
+import com.projectmanager.planthings.model.entity.Perfil;
+import com.projectmanager.planthings.model.services.PerfilService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
-
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/perfil")
 public class PerfilController {
-    
+
     @Autowired
     private PerfilService perfilService;
 
-    @GetMapping
-    public ResponseEntity<List<Perfil>> findAll() {
-
-            return ResponseEntity.ok(perfilService.findAll());
-    }
-
     @PostMapping
-    public ResponseEntity<Perfil> save(@Valid @RequestBody Perfil perfil) {
-
-        Perfil novoPerfil = perfilService.save(perfil);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoPerfil);
-
+    public ResponseEntity<PerfilResponse> save(@Valid @RequestBody PerfilRequest request) {
+        Perfil novoPerfil = perfilService.save(toEntity(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(novoPerfil));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Perfil> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(perfilService.findById(id));
+    @GetMapping("/me")
+    public ResponseEntity<PerfilResponse> findMe(@AuthenticatedPerfilId Long perfilId) {
+        return ResponseEntity.ok(toResponse(perfilService.findById(perfilId)));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Perfil> update(@PathVariable Long id, @Valid @RequestBody Perfil perfil) {
-        Perfil perfilAtualizado = perfilService.update(id, perfil);
-        return ResponseEntity.ok(perfilAtualizado);
+    @PutMapping("/me")
+    public ResponseEntity<PerfilResponse> update(
+            @AuthenticatedPerfilId Long perfilId,
+            @Valid @RequestBody PerfilRequest request
+    ) {
+        Perfil perfilAtualizado = perfilService.update(perfilId, toEntity(request));
+        return ResponseEntity.ok(toResponse(perfilAtualizado));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        perfilService.delete(id);
+    @DeleteMapping("/me")
+    public ResponseEntity<String> delete(
+            @AuthenticatedPerfilId Long perfilId,
+            HttpServletRequest request
+    ) {
+        perfilService.delete(perfilId);
+        AuthSession.invalidate(request);
         return ResponseEntity.ok("Perfil inativado com sucesso");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest loginRequest,
+            HttpServletRequest request
+    ) {
         Perfil perfil = perfilService.login(loginRequest.getEmail(), loginRequest.getSenha());
+        AuthSession.authenticate(request, perfil.getId());
 
         LoginResponse response = new LoginResponse(
             perfil.getId(),
@@ -73,6 +70,32 @@ public class PerfilController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        AuthSession.invalidate(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    private Perfil toEntity(PerfilRequest request) {
+        Perfil perfil = new Perfil();
+        perfil.setEmail(request.getEmail());
+        perfil.setNome(request.getNome());
+        perfil.setSobrenome(request.getSobrenome());
+        perfil.setTelefone(request.getTelefone());
+        perfil.setSenhaTexto(request.getSenha());
+        return perfil;
+    }
+
+    private PerfilResponse toResponse(Perfil perfil) {
+        return new PerfilResponse(
+                perfil.getId(),
+                perfil.getEmail(),
+                perfil.getNome(),
+                perfil.getSobrenome(),
+                perfil.getTelefone()
+        );
     }
 
 }

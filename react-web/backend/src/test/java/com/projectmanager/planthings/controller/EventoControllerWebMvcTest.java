@@ -1,5 +1,7 @@
 package com.projectmanager.planthings.controller;
 
+import com.projectmanager.planthings.auth.AuthSession;
+import com.projectmanager.planthings.config.AuthWebConfig;
 import com.projectmanager.planthings.exception.BadRequestException;
 import com.projectmanager.planthings.exception.GlobalExceptionHandler;
 import com.projectmanager.planthings.model.entity.Evento;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = EventoController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, AuthWebConfig.class})
 @ActiveProfiles("test")
 class EventoControllerWebMvcTest {
 
@@ -67,7 +69,8 @@ class EventoControllerWebMvcTest {
 
         when(eventoService.findAllByLista(1L, 30L)).thenReturn(List.of(evento));
 
-        mockMvc.perform(get("/api/v1/eventos/perfil/1/lista/30"))
+        mockMvc.perform(get("/api/v1/eventos/me/lista/30")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(50))
                 .andExpect(jsonPath("$[0].listaId").value(30));
@@ -107,7 +110,8 @@ class EventoControllerWebMvcTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/eventos/perfil/1/lista/30")
+        mockMvc.perform(post("/api/v1/eventos/me/lista/30")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L)
                         .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isCreated())
@@ -129,7 +133,8 @@ class EventoControllerWebMvcTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/eventos/perfil/1/lista/30")
+        mockMvc.perform(post("/api/v1/eventos/me/lista/30")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L)
                         .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isBadRequest())

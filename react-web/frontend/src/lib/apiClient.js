@@ -6,6 +6,10 @@
  *   - Desenvolvimento local → http://localhost:8080/api/v1
  *   - .env explicito → valor de VITE_API_URL (prioridade maxima)
  *
+ * As rotas protegidas agora usam sessao HTTP do backend.
+ * Por isso, o cliente envia cookies automaticamente com `withCredentials: true`
+ * e a aplicacao deve preferir a base `/api/v1` proxied pelo Vite.
+ *
  * Em desenvolvimento (vite dev), todas as requisicoes /api/* tambem passam
  * pelo proxy do Vite — util como fallback caso o CORS do backend nao esteja
  * configurado para aceitar a origem do frontend.

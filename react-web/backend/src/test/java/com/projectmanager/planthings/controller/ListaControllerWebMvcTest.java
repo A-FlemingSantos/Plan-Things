@@ -1,5 +1,7 @@
 package com.projectmanager.planthings.controller;
 
+import com.projectmanager.planthings.auth.AuthSession;
+import com.projectmanager.planthings.config.AuthWebConfig;
 import com.projectmanager.planthings.exception.BadRequestException;
 import com.projectmanager.planthings.exception.GlobalExceptionHandler;
 import com.projectmanager.planthings.exception.NotFoundException;
@@ -29,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ListaController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, AuthWebConfig.class})
 @ActiveProfiles("test")
 class ListaControllerWebMvcTest {
 
@@ -60,7 +62,8 @@ class ListaControllerWebMvcTest {
 
         when(listaService.findAllByPlano(1L, 10L)).thenReturn(List.of(lista));
 
-        mockMvc.perform(get("/api/v1/listas/perfil/1/plano/10"))
+        mockMvc.perform(get("/api/v1/listas/me/plano/10")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(20))
                 .andExpect(jsonPath("$[0].nome").value("Backlog"))
@@ -91,7 +94,8 @@ class ListaControllerWebMvcTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/listas/perfil/1/plano/10")
+        mockMvc.perform(post("/api/v1/listas/me/plano/10")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L)
                         .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isCreated())
@@ -111,18 +115,20 @@ class ListaControllerWebMvcTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/listas/perfil/1/plano/10")
+        mockMvc.perform(post("/api/v1/listas/me/plano/10")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L)
                         .contentType(jsonMediaType())
                         .content(body))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400));
     }
 
-    @Test
+        @Test
     void shouldReturn404WhenListaNotFound() throws Exception {
         when(listaService.findById(1L, 99L)).thenThrow(new NotFoundException("Lista não encontrada para o perfil informado"));
 
-        mockMvc.perform(get("/api/v1/listas/perfil/1/99"))
+        mockMvc.perform(get("/api/v1/listas/me/99")
+                        .sessionAttr(AuthSession.PERFIL_ID_SESSION_ATTRIBUTE, 1L))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404));
     }

@@ -6,7 +6,6 @@ import {
   Pencil,
   RefreshCw,
   Shield,
-  User,
   X,
   XCircle,
 } from "lucide-react";
@@ -154,7 +153,7 @@ function PerfilSkeleton() {
 
 // ─── Main Page ──────────────────────────────────────────────────────────────
 export function PerfilPage() {
-  const { user, perfilId, logout, updateUser } = useAuth();
+  const { logout, updateUser, user } = useAuth();
   const navigate = useNavigate();
 
   // page state
@@ -193,10 +192,10 @@ export function PerfilPage() {
 
   // ── Fetch profile ───────────────────────────────────────────────────────
   const fetchPerfil = useCallback(async () => {
-    if (!perfilId) return;
+    if (!user) return;
     setPageState(STATE.LOADING);
     try {
-      const { data } = await apiClient.get(`/perfil/${perfilId}`);
+      const { data } = await apiClient.get("/perfil/me");
       setPerfil(data);
       setPageState(STATE.SUCCESS);
     } catch (err) {
@@ -204,7 +203,7 @@ export function PerfilPage() {
       setErrorMessage(normalized.message);
       setPageState(STATE.ERROR);
     }
-  }, [perfilId]);
+  }, [user]);
 
   useEffect(() => {
     fetchPerfil();
@@ -274,7 +273,7 @@ export function PerfilPage() {
         email: email.trim(),
       };
 
-      const { data } = await apiClient.put(`/perfil/${perfilId}`, payload);
+      const { data } = await apiClient.put("/perfil/me", payload);
       setPerfil(data);
       updateUser(data);
       setEditing(false);
@@ -291,9 +290,9 @@ export function PerfilPage() {
   async function handleDelete() {
     setDeleting(true);
     try {
-      await apiClient.delete(`/perfil/${perfilId}`);
+      await apiClient.delete("/perfil/me");
       setDeleteModalOpen(false);
-      logout();
+      await logout();
       navigate("/login", { replace: true });
     } catch (err) {
       const normalized = normalizeError(err);

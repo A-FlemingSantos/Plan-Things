@@ -1,5 +1,6 @@
 package com.projectmanager.planthings.controller;
 
+import com.projectmanager.planthings.auth.AuthenticatedPerfilId;
 import com.projectmanager.planthings.model.dto.EventoRequest;
 import com.projectmanager.planthings.model.dto.EventoResponse;
 import com.projectmanager.planthings.model.entity.Evento;
@@ -20,33 +21,42 @@ public class EventoController {
     @Autowired
     private EventoService eventoService;
 
-    @GetMapping("/perfil/{perfilId}/lista/{listaId}")
-    public ResponseEntity<List<EventoResponse>> findAllByLista(@PathVariable Long perfilId, @PathVariable Long listaId) {
+    @GetMapping("/me/lista/{listaId}")
+    public ResponseEntity<List<EventoResponse>> findAllByLista(
+            @AuthenticatedPerfilId Long perfilId,
+            @PathVariable Long listaId
+    ) {
         List<Evento> eventos = eventoService.findAllByLista(perfilId, listaId);
         return ResponseEntity.ok(eventos.stream().map(this::toResponse).collect(Collectors.toList()));
     }
 
-    @GetMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<EventoResponse> findById(@PathVariable Long perfilId, @PathVariable Long id) {
+    @GetMapping("/me/{id}")
+    public ResponseEntity<EventoResponse> findById(@AuthenticatedPerfilId Long perfilId, @PathVariable Long id) {
         return ResponseEntity.ok(toResponse(eventoService.findById(perfilId, id)));
     }
 
-    @PostMapping("/perfil/{perfilId}/lista/{listaId}")
-    public ResponseEntity<EventoResponse> save(@PathVariable Long perfilId, @PathVariable Long listaId,
-                                               @Valid @RequestBody EventoRequest request) {
+    @PostMapping("/me/lista/{listaId}")
+    public ResponseEntity<EventoResponse> save(
+            @AuthenticatedPerfilId Long perfilId,
+            @PathVariable Long listaId,
+            @Valid @RequestBody EventoRequest request
+    ) {
         Evento novo = eventoService.save(perfilId, listaId, toEntity(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(novo));
     }
 
-    @PutMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<EventoResponse> update(@PathVariable Long perfilId, @PathVariable Long id,
-                                                 @Valid @RequestBody EventoRequest request) {
+    @PutMapping("/me/{id}")
+    public ResponseEntity<EventoResponse> update(
+            @AuthenticatedPerfilId Long perfilId,
+            @PathVariable Long id,
+            @Valid @RequestBody EventoRequest request
+    ) {
         Evento atualizado = eventoService.update(perfilId, id, toEntity(request));
         return ResponseEntity.ok(toResponse(atualizado));
     }
 
-    @DeleteMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long perfilId, @PathVariable Long id) {
+    @DeleteMapping("/me/{id}")
+    public ResponseEntity<String> delete(@AuthenticatedPerfilId Long perfilId, @PathVariable Long id) {
         eventoService.delete(perfilId, id);
         return ResponseEntity.ok("Evento removido com sucesso");
     }

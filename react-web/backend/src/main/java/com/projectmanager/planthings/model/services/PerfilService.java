@@ -7,6 +7,8 @@ import com.projectmanager.planthings.exception.UnauthorizedException;
 import com.projectmanager.planthings.model.entity.Perfil;
 import com.projectmanager.planthings.model.repository.PerfilRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -18,8 +20,12 @@ import java.util.List;
 @Service
 public class PerfilService {
 
+    private static final int LEGACY_SHA256_HASH_LENGTH = 32;
+
     @Autowired
     private PerfilRepository perfilRepository;
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public List<Perfil> findAll() {
         return perfilRepository.findByCodStatusTrue();
@@ -34,7 +40,7 @@ public class PerfilService {
             throw new BadRequestException("Senha é obrigatória");
         }
 
-        perfil.setSenha(hashSenha(perfil.getSenhaTexto()));
+        perfil.setSenha(hashSenhaSegura(perfil.getSenhaTexto()));
         perfil.setCodStatus(true);
         return perfilRepository.save(perfil);
     }
@@ -51,7 +57,7 @@ public class PerfilService {
         perfilExistente.setTelefone(perfil.getTelefone());
 
         if (perfil.getSenhaTexto() != null && !perfil.getSenhaTexto().isBlank()) {
-            perfilExistente.setSenha(hashSenha(perfil.getSenhaTexto()));
+            perfilExistente.setSenha(hashSenhaSegura(perfil.getSenhaTexto()));
         }
 
         return perfilRepository.save(perfilExistente);
@@ -71,14 +77,51 @@ public class PerfilService {
             throw new UnauthorizedException("Perfil inativo");
         }
 
-        if (!Arrays.equals(perfil.getSenha(), hashSenha(senha))) {
+        if (!senhaConfere(perfil, senha)) {
             throw new UnauthorizedException("E-mail ou senha inválidos");
         }
 
         return perfil;
     }
 
-    private byte[] hashSenha(String senhaPura) {
+    private boolean senhaConfere(Perfil perfil, String senhaPura) {
+        byte[] senhaArmazenada = perfil.getSenha();
+        if (senhaArmazenada == null || senhaArmazenada.length == 0) {
+            throw new IllegalStateException("Perfil sem senha armazenada: " + perfil.getId());
+        }
+
+        if (isLegacySha256Hash(senhaArmazenada)) {
+            boolean matches = Arrays.equals(senhaArmazenada, hashSenhaLegacy(senhaPura));
+            if (matches) {
+                perfil.setSenha(hashSenhaSegura(senhaPura));
+                perfilRepository.save(perfil);
+            }
+            return matches;
+        }
+
+        String senhaCodificada = new String(senhaArmazenada, StandardCharsets.UTF_8);
+        if (!isSupportedPasswordEncoderHash(senhaCodificada)) {
+            throw new IllegalStateException("Formato de senha armazenada não suportado para perfil: " + perfil.getId());
+        }
+
+        return passwordEncoder.matches(senhaPura, senhaCodificada);
+    }
+
+    private boolean isLegacySha256Hash(byte[] senhaArmazenada) {
+        return senhaArmazenada.length == LEGACY_SHA256_HASH_LENGTH;
+    }
+
+    private boolean isSupportedPasswordEncoderHash(String senhaCodificada) {
+        return senhaCodificada.startsWith("$2a$")
+                || senhaCodificada.startsWith("$2b$")
+                || senhaCodificada.startsWith("$2y$");
+    }
+
+    private byte[] hashSenhaSegura(String senhaPura) {
+        return passwordEncoder.encode(senhaPura).getBytes(StandardCharsets.UTF_8);
+    }
+
+    private byte[] hashSenhaLegacy(String senhaPura) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             return digest.digest(senhaPura.getBytes(StandardCharsets.UTF_8));

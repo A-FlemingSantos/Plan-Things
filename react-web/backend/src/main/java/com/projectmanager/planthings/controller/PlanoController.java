@@ -1,6 +1,8 @@
 package com.projectmanager.planthings.controller;
 
+import com.projectmanager.planthings.auth.AuthenticatedPerfilId;
 import com.projectmanager.planthings.model.dto.PlanoRequest;
+import com.projectmanager.planthings.model.dto.PlanoBoardResponse;
 import com.projectmanager.planthings.model.dto.PlanoResponse;
 import com.projectmanager.planthings.model.entity.Plano;
 import com.projectmanager.planthings.model.services.PlanoService;
@@ -20,32 +22,46 @@ public class PlanoController {
     @Autowired
     private PlanoService planoService;
 
-    @GetMapping("/perfil/{perfilId}")
-    public ResponseEntity<List<PlanoResponse>> findAllByPerfil(@PathVariable Long perfilId) {
+    @GetMapping("/me")
+    public ResponseEntity<List<PlanoResponse>> findAllByPerfil(@AuthenticatedPerfilId Long perfilId) {
         List<Plano> planos = planoService.findAllByPerfilId(perfilId);
         return ResponseEntity.ok(planos.stream().map(this::toResponse).collect(Collectors.toList()));
     }
 
-    @GetMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<PlanoResponse> findById(@PathVariable Long perfilId, @PathVariable Long id) {
+    @GetMapping("/me/{id}")
+    public ResponseEntity<PlanoResponse> findById(@AuthenticatedPerfilId Long perfilId, @PathVariable Long id) {
         return ResponseEntity.ok(toResponse(planoService.findById(perfilId, id)));
     }
 
-    @PostMapping("/perfil/{perfilId}")
-    public ResponseEntity<PlanoResponse> save(@PathVariable Long perfilId, @Valid @RequestBody PlanoRequest request) {
+    @GetMapping("/me/{id}/board")
+    public ResponseEntity<PlanoBoardResponse> findBoardById(
+            @AuthenticatedPerfilId Long perfilId,
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(planoService.findBoardById(perfilId, id));
+    }
+
+    @PostMapping("/me")
+    public ResponseEntity<PlanoResponse> save(
+            @AuthenticatedPerfilId Long perfilId,
+            @Valid @RequestBody PlanoRequest request
+    ) {
         Plano novoPlano = planoService.save(perfilId, toEntity(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(novoPlano));
     }
 
-    @PutMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<PlanoResponse> update(@PathVariable Long perfilId, @PathVariable Long id,
-                                                @Valid @RequestBody PlanoRequest request) {
+    @PutMapping("/me/{id}")
+    public ResponseEntity<PlanoResponse> update(
+            @AuthenticatedPerfilId Long perfilId,
+            @PathVariable Long id,
+            @Valid @RequestBody PlanoRequest request
+    ) {
         Plano atualizado = planoService.update(perfilId, id, toEntity(request));
         return ResponseEntity.ok(toResponse(atualizado));
     }
 
-    @DeleteMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long perfilId, @PathVariable Long id) {
+    @DeleteMapping("/me/{id}")
+    public ResponseEntity<String> delete(@AuthenticatedPerfilId Long perfilId, @PathVariable Long id) {
         planoService.delete(perfilId, id);
         return ResponseEntity.ok("Plano removido com sucesso");
     }

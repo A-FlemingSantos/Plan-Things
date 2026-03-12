@@ -39,7 +39,7 @@ public class Perfil {
     private String telefone;
 
     @JsonIgnore
-    @Column(name = "senha", columnDefinition = "VARBINARY(32)", nullable = false)
+    @Column(name = "senha", columnDefinition = "VARBINARY(100)", nullable = false)
     private byte[] senha;
 
     @Column(name = "cod_status", nullable = false)

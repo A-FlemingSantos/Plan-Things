@@ -1,5 +1,6 @@
 package com.projectmanager.planthings.controller;
 
+import com.projectmanager.planthings.auth.AuthenticatedPerfilId;
 import com.projectmanager.planthings.model.dto.ListaRequest;
 import com.projectmanager.planthings.model.dto.ListaResponse;
 import com.projectmanager.planthings.model.entity.Lista;
@@ -20,33 +21,42 @@ public class ListaController {
     @Autowired
     private ListaService listaService;
 
-    @GetMapping("/perfil/{perfilId}/plano/{planoId}")
-    public ResponseEntity<List<ListaResponse>> findAllByPlano(@PathVariable Long perfilId, @PathVariable Long planoId) {
+    @GetMapping("/me/plano/{planoId}")
+    public ResponseEntity<List<ListaResponse>> findAllByPlano(
+            @AuthenticatedPerfilId Long perfilId,
+            @PathVariable Long planoId
+    ) {
         List<Lista> listas = listaService.findAllByPlano(perfilId, planoId);
         return ResponseEntity.ok(listas.stream().map(this::toResponse).collect(Collectors.toList()));
     }
 
-    @GetMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<ListaResponse> findById(@PathVariable Long perfilId, @PathVariable Long id) {
+    @GetMapping("/me/{id}")
+    public ResponseEntity<ListaResponse> findById(@AuthenticatedPerfilId Long perfilId, @PathVariable Long id) {
         return ResponseEntity.ok(toResponse(listaService.findById(perfilId, id)));
     }
 
-    @PostMapping("/perfil/{perfilId}/plano/{planoId}")
-    public ResponseEntity<ListaResponse> save(@PathVariable Long perfilId, @PathVariable Long planoId,
-                                              @Valid @RequestBody ListaRequest request) {
+    @PostMapping("/me/plano/{planoId}")
+    public ResponseEntity<ListaResponse> save(
+            @AuthenticatedPerfilId Long perfilId,
+            @PathVariable Long planoId,
+            @Valid @RequestBody ListaRequest request
+    ) {
         Lista novaLista = listaService.save(perfilId, planoId, toEntity(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(novaLista));
     }
 
-    @PutMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<ListaResponse> update(@PathVariable Long perfilId, @PathVariable Long id,
-                                                @Valid @RequestBody ListaRequest request) {
+    @PutMapping("/me/{id}")
+    public ResponseEntity<ListaResponse> update(
+            @AuthenticatedPerfilId Long perfilId,
+            @PathVariable Long id,
+            @Valid @RequestBody ListaRequest request
+    ) {
         Lista atualizada = listaService.update(perfilId, id, toEntity(request));
         return ResponseEntity.ok(toResponse(atualizada));
     }
 
-    @DeleteMapping("/perfil/{perfilId}/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long perfilId, @PathVariable Long id) {
+    @DeleteMapping("/me/{id}")
+    public ResponseEntity<String> delete(@AuthenticatedPerfilId Long perfilId, @PathVariable Long id) {
         listaService.delete(perfilId, id);
         return ResponseEntity.ok("Lista removida com sucesso");
     }

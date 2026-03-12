@@ -30,8 +30,8 @@ export function AuthenticatedLayout() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const handleLogout = useCallback(() => {
-    logout();
+  const handleLogout = useCallback(async () => {
+    await logout();
     navigate("/login", { replace: true });
   }, [logout, navigate]);
 

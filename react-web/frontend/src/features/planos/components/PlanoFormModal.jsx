@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ImagePlus, Trash2, ChevronDown, Check, Palette, Upload } from "lucide-react";
+import { X, Trash2, ChevronDown, Check, Palette } from "lucide-react";
 
 /**
  * Preset gradient backgrounds the user can pick as wallpaper.
@@ -17,43 +17,6 @@ const WALLPAPER_PRESETS = [
   { id: "rose", label: "rosa", bg: "linear-gradient(135deg, #e11d48, #f43f5e)" },
 ];
 
-const MAX_IMAGE_WIDTH = 480;
-const MAX_IMAGE_HEIGHT = 240;
-const IMAGE_QUALITY = 0.75;
-const MAX_FILE_SIZE_MB = 5;
-
-/**
- * Resizes and compresses an image file using a canvas, returning a base64 data URL.
- */
-function compressImage(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        let { width, height } = img;
-
-        if (width > MAX_IMAGE_WIDTH || height > MAX_IMAGE_HEIGHT) {
-          const ratio = Math.min(MAX_IMAGE_WIDTH / width, MAX_IMAGE_HEIGHT / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", IMAGE_QUALITY));
-      };
-      img.onerror = () => reject(new Error("Não foi possível carregar a imagem."));
-      img.src = e.target.result;
-    };
-    reader.onerror = () => reject(new Error("Não foi possível ler o arquivo."));
-    reader.readAsDataURL(file);
-  });
-}
-
 /** Returns the background style string for the current selection. */
 function resolvePreviewBg(selectedWallpaper, customImage) {
   if (customImage) return null;
@@ -69,7 +32,6 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
   const [error, setError] = useState("");
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
   const inputRef = useRef(null);
-  const fileInputRef = useRef(null);
   const overlayRef = useRef(null);
 
   // Populate fields when editing
@@ -114,31 +76,6 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
     },
     [onClose]
   );
-
-  async function handleFileChange(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      setError("Selecione um arquivo de imagem válido.");
-      return;
-    }
-    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setError(`A imagem deve ter no máximo ${MAX_FILE_SIZE_MB}MB.`);
-      return;
-    }
-
-    try {
-      const dataUrl = await compressImage(file);
-      setCustomImage(dataUrl);
-      setSelectedWallpaper(null);
-      if (error) setError("");
-    } catch {
-      setError("Não foi possível processar a imagem.");
-    }
-
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  }
 
   function handleRemoveImage() {
     setCustomImage(null);
@@ -264,7 +201,7 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
                     />
                   </span>
                   <span className="plano-color-toggle__text">
-                    {customImage ? "Imagem personalizada" : (activePreset?.label || "Escolher cor")}
+                    {customImage ? "Imagem legada" : (activePreset?.label || "Escolher cor")}
                   </span>
                   <ChevronDown className={`plano-color-toggle__chevron ${colorPickerOpen ? "plano-color-toggle__chevron--open" : ""}`} />
                 </button>
@@ -299,43 +236,33 @@ export function PlanoFormModal({ open, onClose, onSubmit, plano, loading }) {
                   </div>
                 </div>
 
-                {/* Image upload */}
                 {customImage ? (
-                  <div className="cover-image-preview">
-                    <img
-                      src={customImage}
-                      alt="Pré-visualização da capa"
-                      className="cover-image-preview__img"
-                    />
-                    <button
-                      type="button"
-                      className="cover-image-preview__remove"
-                      onClick={handleRemoveImage}
-                      aria-label="Remover imagem de capa"
-                      title="Remover imagem"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                  <>
+                    <div className="cover-image-preview">
+                      <img
+                        src={customImage}
+                        alt="Pré-visualização da capa"
+                        className="cover-image-preview__img"
+                      />
+                      <button
+                        type="button"
+                        className="cover-image-preview__remove"
+                        onClick={handleRemoveImage}
+                        aria-label="Substituir imagem legada por capa predefinida"
+                        title="Substituir por capa predefinida"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      Esta capa foi mantida apenas para compatibilidade. Novos uploads locais foram desativados para evitar salvar imagens base64 no banco.
+                    </p>
+                  </>
                 ) : (
-                  <button
-                    type="button"
-                    className="cover-image-upload"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="w-4 h-4" />
-                    <span>Enviar imagem de capa</span>
-                  </button>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Use uma das capas predefinidas. Uploads locais foram removidos para evitar armazenar imagens pesadas no banco de dados.
+                  </p>
                 )}
-
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
-                  onChange={handleFileChange}
-                  aria-label="Selecionar imagem de capa"
-                />
               </div>
             </div>
           </div>

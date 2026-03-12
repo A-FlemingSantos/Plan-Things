@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,8 +21,10 @@ const loginSchema = z.object({
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [apiError, setApiError] = useState(null);
+  const successMessage = location.state?.message;
 
   const {
     register,
@@ -59,6 +61,15 @@ export function LoginPage() {
       altAction="Criar cadastro"
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+        {successMessage && (
+          <div
+            role="status"
+            className="rounded-xl border border-emerald-300 dark:border-emerald-500/40 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-300"
+          >
+            {successMessage}
+          </div>
+        )}
+
         {apiError && (
           <div
             role="alert"

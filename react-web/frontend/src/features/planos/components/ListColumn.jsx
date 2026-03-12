@@ -1,16 +1,18 @@
 import { useState, useRef, useEffect } from "react";
-import { Pencil, Trash2, Plus, CheckSquare, Calendar } from "lucide-react";
+import { Pencil, Trash2, Plus, CheckSquare, Calendar, AlertCircle } from "lucide-react";
 import { CardItem } from "./CardItem";
 
 export function ListColumn({
   lista,
   cartoes,
   cartoesLoading,
+  cartoesError,
   onEdit,
   onDelete,
   onAddCard,
   onEditCard,
   onDeleteCard,
+  onRetryCards,
   dragState,
   dropTarget,
   onDragPointerDown,
@@ -102,7 +104,6 @@ export function ListColumn({
     : { backgroundColor: "transparent" };
 
   const cards = cartoes || [];
-  const hasCards = cards.length > 0;
 
   // DnD: determine if this list is a drop target
   const isDragOver = dragState?.active && dropTarget?.listaId === lista.id;
@@ -114,6 +115,24 @@ export function ListColumn({
         <div className="list-column__loading">
           <div className="card-skeleton" style={{ animationDelay: "0s" }} />
           <div className="card-skeleton" style={{ animationDelay: "0.1s" }} />
+        </div>
+      );
+    }
+
+    if (cartoesError) {
+      return (
+        <div className="list-column__error" role="alert">
+          <div className="list-column__error-icon">
+            <AlertCircle className="w-4 h-4" />
+          </div>
+          <p className="list-column__error-text">{cartoesError}</p>
+          <button
+            type="button"
+            className="list-column__error-retry"
+            onClick={onRetryCards}
+          >
+            Tentar novamente
+          </button>
         </div>
       );
     }

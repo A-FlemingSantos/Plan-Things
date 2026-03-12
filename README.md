@@ -16,13 +16,13 @@ Aplicação web para gestão de projetos de pequenas equipes.
 
 ## Variáveis de ambiente (backend)
 
-O backend aceita configuração de banco via variáveis:
+Para usar SQL Server, o backend aceita configuração de banco via variáveis:
 
 - `DB_URL`
 - `DB_USERNAME`
 - `DB_PASSWORD`
 
-Se não forem definidas, os fallbacks de `application.properties` são usados.
+Essas variáveis continuam sendo a forma correta de apontar para um banco SQL Server real. Quando elas não são informadas durante o desenvolvimento local com `spring-boot:run`, o backend sobe com um fallback H2 em memória usando migrations alinhadas ao esquema principal.
 
 Modelo disponível em `react-web/backend/.env.example`.
 
@@ -31,17 +31,16 @@ cd react-web/backend
 cp .env.example .env
 ```
 
-Como o Spring Boot não lê `.env` automaticamente, carregue no shell antes de iniciar:
+O backend agora tenta ler `react-web/backend/.env` automaticamente quando o arquivo existe. Então, para rodar com SQL Server, basta copiar o modelo e preencher os valores:
 
 ```bash
 cd react-web/backend
-set -a
-source .env
-set +a
 ./mvnw spring-boot:run
 ```
 
-No PowerShell (Windows):
+Se você não criar `.env`, o backend usa o fallback local H2 em memória.
+
+Se preferir, você também pode exportar manualmente as variáveis antes de iniciar. No PowerShell (Windows):
 
 ```powershell
 cd react-web/backend
@@ -57,6 +56,8 @@ Get-Content .env | ForEach-Object {
 ## Variáveis de ambiente (frontend)
 
 O frontend pode definir `VITE_API_URL` para sobrescrever a URL da API.
+
+Para o fluxo autenticado, prefira usar a base `/api/v1` resolvida pelo Vite/Codespaces em vez de apontar para outra origem manualmente. As rotas protegidas agora dependem da sessao HTTP criada pelo backend.
 
 Modelo disponível em `react-web/frontend/.env.example`.
 
@@ -82,6 +83,13 @@ npm install
 npm run dev
 ```
 
+## Testes frontend
+
+```bash
+cd react-web/frontend
+npm run test
+```
+
 ## Banco e migrações
 
 - Migrações Flyway ficam em `react-web/backend/src/main/resources/db/migration`.
@@ -94,6 +102,19 @@ npm run dev
 cd react-web/backend
 ./mvnw test
 ```
+
+## Autenticacao
+
+- `POST /api/v1/perfil/login` valida as credenciais e cria uma sessao HTTP no backend.
+- `POST /api/v1/perfil/logout` invalida a sessao atual.
+- As rotas protegidas deixaram de aceitar `perfilId` vindo do cliente e passaram a usar caminhos `/me`, com o perfil derivado da sessao autenticada no backend.
+
+Exemplos:
+
+- `GET /api/v1/perfil/me`
+- `GET /api/v1/planos/me`
+- `GET /api/v1/planos/me/{planoId}/board`
+- `POST /api/v1/listas/me/plano/{planoId}`
 
 ## Endpoints principais da API
 
@@ -109,7 +130,3 @@ cd react-web/backend
 ## Licença
 
 [MIT](LICENSE) — © 2025 Arthur Fleming Santos
-
-## Documentação adicional
-
-- Guia de integração: [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)

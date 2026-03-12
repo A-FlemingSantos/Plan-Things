@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { AlertTriangle, X, CheckSquare, Calendar } from "lucide-react";
+import { AlertTriangle, X } from "lucide-react";
 
 export function DeleteCardConfirmModal({ open, onClose, onConfirm, cartao, loading }) {
   const overlayRef = useRef(null);
