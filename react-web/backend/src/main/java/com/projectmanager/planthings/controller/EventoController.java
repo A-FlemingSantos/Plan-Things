@@ -78,6 +78,7 @@ public class EventoController {
                 evento.getDescricao(),
                 evento.getCor(),
                 evento.getLista() != null ? evento.getLista().getId() : null,
+                evento.getPosicao(),
                 evento.getDataInicio(),
                 evento.getDataFim()
         );

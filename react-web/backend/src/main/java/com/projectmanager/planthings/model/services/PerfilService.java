@@ -52,6 +52,14 @@ public class PerfilService {
 
     public Perfil update(Long id, Perfil perfil) {
         Perfil perfilExistente = findById(id);
+
+        if (!perfilExistente.getEmail().equalsIgnoreCase(perfil.getEmail())) {
+            if (perfilRepository.findByEmail(perfil.getEmail()).isPresent()) {
+                throw new ConflictException("E-mail já cadastrado no sistema");
+            }
+            perfilExistente.setEmail(perfil.getEmail());
+        }
+
         perfilExistente.setNome(perfil.getNome());
         perfilExistente.setSobrenome(perfil.getSobrenome());
         perfilExistente.setTelefone(perfil.getTelefone());

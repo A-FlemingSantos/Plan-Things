@@ -8,6 +8,7 @@ public class EventoResponse {
     private String descricao;
     private String cor;
     private Long listaId;
+    private Integer posicao;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
 
@@ -15,12 +16,13 @@ public class EventoResponse {
     }
 
     public EventoResponse(Long id, String nome, String descricao, String cor, Long listaId,
-                          LocalDateTime dataInicio, LocalDateTime dataFim) {
+                          Integer posicao, LocalDateTime dataInicio, LocalDateTime dataFim) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.cor = cor;
         this.listaId = listaId;
+        this.posicao = posicao;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
     }
@@ -63,6 +65,14 @@ public class EventoResponse {
 
     public void setListaId(Long listaId) {
         this.listaId = listaId;
+    }
+
+    public Integer getPosicao() {
+        return posicao;
+    }
+
+    public void setPosicao(Integer posicao) {
+        this.posicao = posicao;
     }
 
     public LocalDateTime getDataInicio() {

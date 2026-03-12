@@ -77,6 +77,7 @@ public class TarefaController {
                 tarefa.getDescricao(),
                 tarefa.getCor(),
                 tarefa.getLista() != null ? tarefa.getLista().getId() : null,
+                tarefa.getPosicao(),
                 tarefa.getDataConclusao()
         );
     }
