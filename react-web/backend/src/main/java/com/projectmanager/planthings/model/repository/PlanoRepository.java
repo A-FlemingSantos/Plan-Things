@@ -11,4 +11,6 @@ public interface PlanoRepository extends JpaRepository<Plano, Long> {
     List<Plano> findByPerfilId(Long perfilId);
 
     java.util.Optional<Plano> findByIdAndPerfilId(Long id, Long perfilId);
+
+    boolean existsByIdAndPerfilIdAndPerfilCodStatusTrue(Long id, Long perfilId);
 }

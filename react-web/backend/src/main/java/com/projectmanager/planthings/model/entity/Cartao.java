@@ -2,6 +2,9 @@ package com.projectmanager.planthings.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Cartao")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -26,6 +29,9 @@ public abstract class Cartao {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "lista_id", nullable = false)
     private Lista lista;
+
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartaoAtribuicao> atribuicoes = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -73,5 +79,13 @@ public abstract class Cartao {
 
     public void setLista(Lista lista) {
         this.lista = lista;
+    }
+
+    public List<CartaoAtribuicao> getAtribuicoes() {
+        return atribuicoes;
+    }
+
+    public void setAtribuicoes(List<CartaoAtribuicao> atribuicoes) {
+        this.atribuicoes = atribuicoes;
     }
 }

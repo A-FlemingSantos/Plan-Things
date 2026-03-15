@@ -1,8 +1,11 @@
 package com.projectmanager.planthings.controller;
 
+import com.projectmanager.planthings.model.dto.CartaoAssigneeRequest;
+import com.projectmanager.planthings.model.dto.CartaoAssigneeResponse;
 import com.projectmanager.planthings.model.dto.CartaoResponse;
 import com.projectmanager.planthings.model.dto.ReorderRequest;
 import com.projectmanager.planthings.model.entity.Cartao;
+import com.projectmanager.planthings.model.entity.CartaoAtribuicao;
 import com.projectmanager.planthings.model.entity.Evento;
 import com.projectmanager.planthings.model.entity.Tarefa;
 import com.projectmanager.planthings.model.services.CartaoService;
@@ -24,12 +27,20 @@ public class CartaoController {
     @GetMapping("/perfil/{perfilId}/lista/{listaId}")
     public ResponseEntity<List<CartaoResponse>> findAllByLista(@PathVariable Long perfilId, @PathVariable Long listaId) {
         List<Cartao> cartoes = cartaoService.findAllByLista(perfilId, listaId);
-        return ResponseEntity.ok(cartoes.stream().map(this::toResponse).collect(Collectors.toList()));
+        return ResponseEntity.ok(cartoes.stream().map(c -> toResponse(perfilId, c)).collect(Collectors.toList()));
     }
 
     @GetMapping("/perfil/{perfilId}/{id}")
     public ResponseEntity<CartaoResponse> findById(@PathVariable Long perfilId, @PathVariable Long id) {
-        return ResponseEntity.ok(toResponse(cartaoService.findById(perfilId, id)));
+        return ResponseEntity.ok(toResponse(perfilId, cartaoService.findById(perfilId, id)));
+    }
+
+    @PutMapping("/perfil/{perfilId}/{id}/assignees")
+    public ResponseEntity<CartaoResponse> assignProfiles(@PathVariable Long perfilId,
+                                                         @PathVariable Long id,
+                                                         @Valid @RequestBody CartaoAssigneeRequest request) {
+        cartaoService.assignProfiles(perfilId, id, request.getPerfilIds(), perfilId);
+        return ResponseEntity.ok(toResponse(perfilId, cartaoService.findById(perfilId, id)));
     }
 
     @DeleteMapping("/perfil/{perfilId}/{id}")
@@ -45,7 +56,7 @@ public class CartaoController {
         return ResponseEntity.ok("Cartões reordenados com sucesso");
     }
 
-    private CartaoResponse toResponse(Cartao cartao) {
+    private CartaoResponse toResponse(Long perfilId, Cartao cartao) {
         String tipo = "CARTAO";
         java.time.LocalDateTime dataConclusao = null;
         java.time.LocalDateTime dataInicio = null;
@@ -60,6 +71,10 @@ public class CartaoController {
             dataFim = evento.getDataFim();
         }
 
+        List<CartaoAssigneeResponse> assignees = cartaoService.findAssignmentsByCard(perfilId, cartao.getId()).stream()
+                .map(this::toAssigneeResponse)
+                .collect(Collectors.toList());
+
         return new CartaoResponse(
                 cartao.getId(),
                 tipo,
@@ -70,7 +85,16 @@ public class CartaoController {
                 cartao.getPosicao(),
                 dataConclusao,
                 dataInicio,
-                dataFim
+                dataFim,
+                assignees
+        );
+    }
+
+    private CartaoAssigneeResponse toAssigneeResponse(CartaoAtribuicao atribuicao) {
+        return new CartaoAssigneeResponse(
+                atribuicao.getPerfil().getId(),
+                atribuicao.getPerfil().getNome(),
+                atribuicao.getPerfil().getEmail()
         );
     }
 }

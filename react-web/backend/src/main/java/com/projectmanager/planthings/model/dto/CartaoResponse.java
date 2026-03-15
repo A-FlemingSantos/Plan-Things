@@ -1,6 +1,8 @@
 package com.projectmanager.planthings.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CartaoResponse {
     private Long id;
@@ -13,12 +15,14 @@ public class CartaoResponse {
     private LocalDateTime dataConclusao;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
+    private List<CartaoAssigneeResponse> assignees = new ArrayList<>();
 
     public CartaoResponse() {
     }
 
     public CartaoResponse(Long id, String tipo, String nome, String descricao, String cor, Long listaId,
-                          Integer posicao, LocalDateTime dataConclusao, LocalDateTime dataInicio, LocalDateTime dataFim) {
+                          Integer posicao, LocalDateTime dataConclusao, LocalDateTime dataInicio,
+                          LocalDateTime dataFim, List<CartaoAssigneeResponse> assignees) {
         this.id = id;
         this.tipo = tipo;
         this.nome = nome;
@@ -29,6 +33,7 @@ public class CartaoResponse {
         this.dataConclusao = dataConclusao;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
+        this.assignees = assignees != null ? assignees : new ArrayList<>();
     }
 
     public Long getId() {
@@ -109,5 +114,13 @@ public class CartaoResponse {
 
     public void setDataFim(LocalDateTime dataFim) {
         this.dataFim = dataFim;
+    }
+
+    public List<CartaoAssigneeResponse> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(List<CartaoAssigneeResponse> assignees) {
+        this.assignees = assignees;
     }
 }
