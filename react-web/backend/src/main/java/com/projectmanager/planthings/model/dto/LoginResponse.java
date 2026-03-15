@@ -6,22 +6,22 @@ public class LoginResponse {
     private String nome;
     private String sobrenome;
     private String telefone;
+    private String token;
     private String message;
 
-    // Construtores
     public LoginResponse() {
     }
 
-    public LoginResponse(Long id, String email, String nome, String sobrenome, String telefone, String message) {
+    public LoginResponse(Long id, String email, String nome, String sobrenome, String telefone, String token, String message) {
         this.id = id;
         this.email = email;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.telefone = telefone;
+        this.token = token;
         this.message = message;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -60,6 +60,14 @@ public class LoginResponse {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getMessage() {

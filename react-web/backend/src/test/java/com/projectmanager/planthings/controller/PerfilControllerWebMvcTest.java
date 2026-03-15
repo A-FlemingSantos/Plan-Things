@@ -1,6 +1,7 @@
 package com.projectmanager.planthings.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.projectmanager.planthings.config.security.JwtService;
 import com.projectmanager.planthings.exception.ConflictException;
 import com.projectmanager.planthings.exception.GlobalExceptionHandler;
 import com.projectmanager.planthings.exception.NotFoundException;
@@ -10,6 +11,7 @@ import com.projectmanager.planthings.model.entity.Perfil;
 import com.projectmanager.planthings.model.services.PerfilService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -29,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = PerfilController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @Import(GlobalExceptionHandler.class)
 @ActiveProfiles("test")
 class PerfilControllerWebMvcTest {
@@ -41,6 +44,9 @@ class PerfilControllerWebMvcTest {
 
         @MockitoBean
     private PerfilService perfilService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
         private static @NonNull MediaType jsonMediaType() {
                 return Objects.requireNonNull(MediaType.APPLICATION_JSON);
@@ -115,6 +121,7 @@ class PerfilControllerWebMvcTest {
         perfil.setTelefone("+55 11 98888-7777");
 
         when(perfilService.login(eq("login@planthings.com"), eq("123456"))).thenReturn(perfil);
+        when(jwtService.generateToken(perfil)).thenReturn("token-de-teste");
 
         LoginRequest request = new LoginRequest("login@planthings.com", "123456");
 
