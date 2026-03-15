@@ -30,6 +30,10 @@ public class PerfilService {
             throw new ConflictException("E-mail já cadastrado no sistema");
         }
 
+        if (perfilRepository.findByUsername(perfil.getUsername()).isPresent()) {
+            throw new ConflictException("Username já cadastrado no sistema");
+        }
+
         if (perfil.getSenhaTexto() == null || perfil.getSenhaTexto().isBlank()) {
             throw new BadRequestException("Senha é obrigatória");
         }
@@ -44,8 +48,20 @@ public class PerfilService {
                 .orElseThrow(() -> new NotFoundException("Perfil não encontrado: " + id));
     }
 
+    public Perfil findByUsernameForInvite(String username) {
+        return perfilRepository.findByUsernameAndCodStatusTrue(username)
+                .orElseThrow(() -> new NotFoundException("Destinatário não encontrado para username: " + username));
+    }
+
     public Perfil update(Long id, Perfil perfil) {
         Perfil perfilExistente = findById(id);
+
+        if (!perfilExistente.getUsername().equals(perfil.getUsername())
+                && perfilRepository.findByUsername(perfil.getUsername()).isPresent()) {
+            throw new ConflictException("Username já cadastrado no sistema");
+        }
+
+        perfilExistente.setUsername(perfil.getUsername());
         perfilExistente.setNome(perfil.getNome());
         perfilExistente.setSobrenome(perfil.getSobrenome());
         perfilExistente.setTelefone(perfil.getTelefone());

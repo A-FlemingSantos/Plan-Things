@@ -3,25 +3,25 @@ package com.projectmanager.planthings.model.dto;
 public class LoginResponse {
     private Long id;
     private String email;
+    private String username;
     private String nome;
     private String sobrenome;
     private String telefone;
     private String message;
 
-    // Construtores
     public LoginResponse() {
     }
 
-    public LoginResponse(Long id, String email, String nome, String sobrenome, String telefone, String message) {
+    public LoginResponse(Long id, String email, String username, String nome, String sobrenome, String telefone, String message) {
         this.id = id;
         this.email = email;
+        this.username = username;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.telefone = telefone;
         this.message = message;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -36,6 +36,14 @@ public class LoginResponse {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getNome() {

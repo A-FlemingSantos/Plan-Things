@@ -51,6 +51,7 @@ class PerfilControllerWebMvcTest {
         Perfil perfil = new Perfil();
         perfil.setId(10L);
         perfil.setEmail("teste@planthings.com");
+        perfil.setUsername("felix.lima");
         perfil.setNome("Felix");
         perfil.setSobrenome("Lima");
         perfil.setTelefone("+55 11 99999-9999");
@@ -61,6 +62,7 @@ class PerfilControllerWebMvcTest {
         String body = """
                 {
                   "email": "teste@planthings.com",
+                  "username": "felix.lima",
                   "nome": "Felix",
                   "sobrenome": "Lima",
                   "telefone": "+55 11 99999-9999",
@@ -73,7 +75,8 @@ class PerfilControllerWebMvcTest {
                         .content(body))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(10))
-                .andExpect(jsonPath("$.email").value("teste@planthings.com"));
+                .andExpect(jsonPath("$.email").value("teste@planthings.com"))
+                .andExpect(jsonPath("$.username").value("felix.lima"));
     }
 
     @Test
@@ -83,6 +86,7 @@ class PerfilControllerWebMvcTest {
         String body = """
                 {
                   "email": "teste@planthings.com",
+                  "username": "felix.lima",
                   "nome": "Felix",
                   "senha": "123456"
                 }
@@ -110,6 +114,7 @@ class PerfilControllerWebMvcTest {
         Perfil perfil = new Perfil();
         perfil.setId(1L);
         perfil.setEmail("login@planthings.com");
+        perfil.setUsername("login.user");
         perfil.setNome("Login");
         perfil.setSobrenome("User");
         perfil.setTelefone("+55 11 98888-7777");
@@ -125,7 +130,8 @@ class PerfilControllerWebMvcTest {
                         .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.email").value("login@planthings.com"));
+                .andExpect(jsonPath("$.email").value("login@planthings.com"))
+                .andExpect(jsonPath("$.username").value("login.user"));
     }
 
     @Test

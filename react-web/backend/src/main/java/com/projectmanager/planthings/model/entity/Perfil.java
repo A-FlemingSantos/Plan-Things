@@ -25,6 +25,12 @@ public class Perfil {
     @Size(max = 320, message = "E-mail deve ter no máximo 320 caracteres")
     private String email;
 
+    @Column(name = "username", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
+    @NotBlank(message = "Username é obrigatório")
+    @Size(min = 3, max = 50, message = "Username deve ter entre 3 e 50 caracteres")
+    @Pattern(regexp = "^[a-zA-Z0-9._-]+$", message = "Username inválido")
+    private String username;
+
     @Column(name = "nome", columnDefinition = "NVARCHAR(50)", nullable = false)
     @NotBlank(message = "Nome é obrigatório")
     @Size(max = 50, message = "Nome deve ter no máximo 50 caracteres")
@@ -72,6 +78,14 @@ public class Perfil {
 
     public String getNome() {
         return nome;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setNome(String nome) {
