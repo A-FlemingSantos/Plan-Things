@@ -28,17 +28,26 @@ public class CartaoService {
     @Autowired
     private ListaRepository listaRepository;
 
+    @Autowired
+    private PlanoAuthorizationService planoAuthorizationService;
+
     public List<Cartao> findAllByLista(Long perfilId, Long listaId) {
-        return cartaoRepository.findByListaIdAndListaPlanoPerfilIdOrderByPosicaoAsc(listaId, perfilId);
+        Lista lista = listaRepository.findById(listaId)
+                .orElseThrow(() -> new NotFoundException("Lista não encontrada para o perfil informado"));
+        planoAuthorizationService.assertCanViewPlano(lista.getPlano().getId(), perfilId);
+        return cartaoRepository.findByListaIdOrderByPosicaoAsc(listaId);
     }
 
     public Cartao findById(Long perfilId, Long id) {
-        return cartaoRepository.findByIdAndListaPlanoPerfilId(id, perfilId)
+        Cartao cartao = cartaoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cartão não encontrado para o perfil informado"));
+        planoAuthorizationService.assertCanViewPlano(cartao.getLista().getPlano().getId(), perfilId);
+        return cartao;
     }
 
     public void delete(Long perfilId, Long id) {
         Cartao cartao = Objects.requireNonNull(findById(perfilId, id));
+        planoAuthorizationService.assertManager(cartao.getLista().getPlano().getId(), perfilId);
         cartaoRepository.delete(cartao);
     }
 
@@ -54,11 +63,18 @@ public class CartaoService {
 
     @Transactional
     public void reorder(Long perfilId, List<ReorderRequest.CardPosition> positions) {
+        if (positions.isEmpty()) {
+            return;
+        }
+        Cartao primeiro = cartaoRepository.findById(positions.get(0).getCardId())
+                .orElseThrow(() -> new NotFoundException("Cartão não encontrado"));
+        planoAuthorizationService.assertManager(primeiro.getLista().getPlano().getId(), perfilId);
+
         List<Long> cardIds = positions.stream()
                 .map(ReorderRequest.CardPosition::getCardId)
                 .collect(Collectors.toList());
 
-        List<Cartao> cartoes = cartaoRepository.findAllByIdInAndListaPlanoPerfilId(cardIds, perfilId);
+        List<Cartao> cartoes = cartaoRepository.findAllById(cardIds);
 
         if (cartoes.size() != cardIds.size()) {
             throw new NotFoundException("Um ou mais cartões não foram encontrados para o perfil informado");
@@ -67,7 +83,6 @@ public class CartaoService {
         Map<Long, Cartao> cartaoMap = cartoes.stream()
                 .collect(Collectors.toMap(Cartao::getId, c -> c));
 
-        // Validate all target lists belong to the same user
         List<Long> listaIds = positions.stream()
                 .map(ReorderRequest.CardPosition::getListaId)
                 .distinct()
@@ -76,7 +91,7 @@ public class CartaoService {
         Map<Long, Lista> listaMap = listaIds.stream()
                 .collect(Collectors.toMap(
                         id -> id,
-                        id -> listaRepository.findByIdAndPlanoPerfilId(id, perfilId)
+                        id -> listaRepository.findById(id)
                                 .orElseThrow(() -> new NotFoundException("Lista não encontrada para o perfil informado"))
                 ));
 

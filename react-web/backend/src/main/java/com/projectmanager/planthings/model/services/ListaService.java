@@ -24,17 +24,23 @@ public class ListaService {
     @Autowired
     private PlanoRepository planoRepository;
 
+    @Autowired
+    private PlanoAuthorizationService planoAuthorizationService;
+
     public List<Lista> findAllByPlano(Long perfilId, Long planoId) {
-        ensurePlanoOwnership(perfilId, planoId);
-        return listaRepository.findByPlanoIdAndPlanoPerfilId(planoId, perfilId);
+        planoAuthorizationService.assertCanViewPlano(planoId, perfilId);
+        return listaRepository.findByPlanoId(planoId);
     }
 
     public Lista findById(Long perfilId, Long id) {
-        return listaRepository.findByIdAndPlanoPerfilId(id, perfilId)
+        Lista lista = listaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Lista não encontrada para o perfil informado"));
+        planoAuthorizationService.assertCanViewPlano(lista.getPlano().getId(), perfilId);
+        return lista;
     }
 
     public Lista save(Long perfilId, Long planoId, Lista lista) {
+        planoAuthorizationService.assertManager(planoId, perfilId);
         Plano plano = ensurePlanoOwnership(perfilId, planoId);
         validarCor(lista.getCor());
 
@@ -45,6 +51,7 @@ public class ListaService {
 
     public Lista update(Long perfilId, Long id, Lista lista) {
         Lista existente = findById(perfilId, id);
+        planoAuthorizationService.assertManager(existente.getPlano().getId(), perfilId);
         validarCor(lista.getCor());
 
         existente.setNome(lista.getNome());
@@ -54,11 +61,12 @@ public class ListaService {
 
     public void delete(Long perfilId, Long id) {
         Lista existente = findById(perfilId, id);
+        planoAuthorizationService.assertManager(existente.getPlano().getId(), perfilId);
         listaRepository.delete(Objects.requireNonNull(existente));
     }
 
     private Plano ensurePlanoOwnership(Long perfilId, Long planoId) {
-        return planoRepository.findByIdAndPerfilId(planoId, perfilId)
+        return planoRepository.findById(planoId)
                 .orElseThrow(() -> new NotFoundException("Plano não encontrado para o perfil informado"));
     }
 

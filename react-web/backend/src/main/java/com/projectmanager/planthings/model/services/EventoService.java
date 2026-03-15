@@ -30,18 +30,27 @@ public class EventoService {
     @Autowired
     private TarefaRepository tarefaRepository;
 
+    @Autowired
+    private PlanoAuthorizationService planoAuthorizationService;
+
     public List<Evento> findAllByLista(Long perfilId, Long listaId) {
-        return eventoRepository.findByListaIdAndListaPlanoPerfilId(listaId, perfilId);
+        Lista lista = listaRepository.findById(listaId)
+                .orElseThrow(() -> new NotFoundException("Lista não encontrada para o perfil informado"));
+        planoAuthorizationService.assertCanViewPlano(lista.getPlano().getId(), perfilId);
+        return eventoRepository.findByListaId(listaId);
     }
 
     public Evento findById(Long perfilId, Long id) {
-        return eventoRepository.findByIdAndListaPlanoPerfilId(id, perfilId)
+        Evento evento = eventoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Evento não encontrado para o perfil informado"));
+        planoAuthorizationService.assertCanViewPlano(evento.getLista().getPlano().getId(), perfilId);
+        return evento;
     }
 
     @Transactional
     public Evento save(Long perfilId, Long listaId, Evento evento) {
         Lista lista = ensureListaOwnership(perfilId, listaId);
+        planoAuthorizationService.assertManager(lista.getPlano().getId(), perfilId);
         validarIntervalo(evento);
         cartaoService.validarCor(evento.getCor());
 
@@ -54,6 +63,7 @@ public class EventoService {
     @Transactional
     public Evento update(Long perfilId, Long id, Evento evento) {
         Evento existente = findById(perfilId, id);
+        planoAuthorizationService.assertManager(existente.getLista().getPlano().getId(), perfilId);
         validarExclusividade(id);
         validarIntervalo(evento);
         cartaoService.validarCor(evento.getCor());
@@ -69,11 +79,12 @@ public class EventoService {
     @Transactional
     public void delete(Long perfilId, Long id) {
         Evento existente = findById(perfilId, id);
+        planoAuthorizationService.assertManager(existente.getLista().getPlano().getId(), perfilId);
         eventoRepository.delete(Objects.requireNonNull(existente));
     }
 
     private Lista ensureListaOwnership(Long perfilId, Long listaId) {
-        return listaRepository.findByIdAndPlanoPerfilId(listaId, perfilId)
+        return listaRepository.findById(listaId)
                 .orElseThrow(() -> new NotFoundException("Lista não encontrada para o perfil informado"));
     }
 

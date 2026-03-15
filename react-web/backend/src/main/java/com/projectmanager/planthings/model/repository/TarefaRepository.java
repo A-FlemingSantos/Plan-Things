@@ -9,6 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
+	List<Tarefa> findByListaId(Long listaId);
+
 	List<Tarefa> findByListaIdAndListaPlanoPerfilId(Long listaId, Long perfilId);
 
 	Optional<Tarefa> findByIdAndListaPlanoPerfilId(Long id, Long perfilId);

@@ -1,8 +1,14 @@
 package com.projectmanager.planthings.controller;
 
 import com.projectmanager.planthings.model.dto.PlanoRequest;
+import com.projectmanager.planthings.model.dto.ConviteRequest;
+import com.projectmanager.planthings.model.dto.ConviteResponse;
+import com.projectmanager.planthings.model.dto.PlanoMembroResponse;
 import com.projectmanager.planthings.model.dto.PlanoResponse;
+import com.projectmanager.planthings.model.entity.PlanoConvite;
+import com.projectmanager.planthings.model.entity.PlanoMembro;
 import com.projectmanager.planthings.model.entity.Plano;
+import com.projectmanager.planthings.model.services.PlanoColaboracaoService;
 import com.projectmanager.planthings.model.services.PlanoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,9 @@ public class PlanoController {
 
     @Autowired
     private PlanoService planoService;
+
+    @Autowired
+    private PlanoColaboracaoService planoColaboracaoService;
 
     @GetMapping("/perfil/{perfilId}")
     public ResponseEntity<List<PlanoResponse>> findAllByPerfil(@PathVariable Long perfilId) {
@@ -50,6 +59,54 @@ public class PlanoController {
         return ResponseEntity.ok("Plano removido com sucesso");
     }
 
+    @PostMapping("/{planoId}/convites")
+    public ResponseEntity<ConviteResponse> convidar(@PathVariable Long planoId,
+                                                    @RequestParam Long perfilId,
+                                                    @RequestBody ConviteRequest request) {
+        PlanoConvite convite = planoColaboracaoService.convidar(planoId, perfilId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toConviteResponse(convite));
+    }
+
+    @GetMapping("/{planoId}/convites")
+    public ResponseEntity<List<ConviteResponse>> listarConvites(@PathVariable Long planoId,
+                                                                @RequestParam Long perfilId) {
+        return ResponseEntity.ok(planoColaboracaoService.listarConvites(planoId, perfilId).stream()
+                .map(this::toConviteResponse)
+                .collect(Collectors.toList()));
+    }
+
+    @PostMapping("/{planoId}/convites/{conviteId}/aceitar")
+    public ResponseEntity<ConviteResponse> aceitarConvite(@PathVariable Long planoId,
+                                                          @PathVariable Long conviteId,
+                                                          @RequestParam Long perfilId) {
+        PlanoConvite convite = planoColaboracaoService.aceitarConvite(planoId, conviteId, perfilId);
+        return ResponseEntity.ok(toConviteResponse(convite));
+    }
+
+    @PostMapping("/{planoId}/convites/{conviteId}/recusar")
+    public ResponseEntity<ConviteResponse> recusarConvite(@PathVariable Long planoId,
+                                                          @PathVariable Long conviteId,
+                                                          @RequestParam Long perfilId) {
+        PlanoConvite convite = planoColaboracaoService.recusarConvite(planoId, conviteId, perfilId);
+        return ResponseEntity.ok(toConviteResponse(convite));
+    }
+
+    @GetMapping("/{planoId}/membros")
+    public ResponseEntity<List<PlanoMembroResponse>> listarMembros(@PathVariable Long planoId,
+                                                                   @RequestParam Long perfilId) {
+        return ResponseEntity.ok(planoColaboracaoService.listarMembros(planoId, perfilId).stream()
+                .map(this::toMembroResponse)
+                .collect(Collectors.toList()));
+    }
+
+    @DeleteMapping("/{planoId}/membros/{membroPerfilId}")
+    public ResponseEntity<String> removerMembro(@PathVariable Long planoId,
+                                                @PathVariable Long membroPerfilId,
+                                                @RequestParam Long perfilId) {
+        planoColaboracaoService.removerMembro(planoId, membroPerfilId, perfilId);
+        return ResponseEntity.ok("Membro removido com sucesso");
+    }
+
     private Plano toEntity(PlanoRequest request) {
         Plano plano = new Plano();
         plano.setNome(request.getNome());
@@ -63,6 +120,28 @@ public class PlanoController {
                 plano.getNome(),
                 plano.getWallpaperUrl(),
                 plano.getPerfil() != null ? plano.getPerfil().getId() : null
+        );
+    }
+
+    private ConviteResponse toConviteResponse(PlanoConvite convite) {
+        return new ConviteResponse(
+                convite.getId(),
+                convite.getPlano().getId(),
+                convite.getConvidadoPerfil().getId(),
+                convite.getConvidadoEmail(),
+                convite.getConvidadorPerfil().getId(),
+                convite.getStatus().name(),
+                convite.getCriadoEm(),
+                convite.getRespondidoEm()
+        );
+    }
+
+    private PlanoMembroResponse toMembroResponse(PlanoMembro membro) {
+        return new PlanoMembroResponse(
+                membro.getPerfil().getId(),
+                membro.getPerfil().getEmail(),
+                membro.getPerfil().getNome(),
+                membro.getPapel().name()
         );
     }
 }

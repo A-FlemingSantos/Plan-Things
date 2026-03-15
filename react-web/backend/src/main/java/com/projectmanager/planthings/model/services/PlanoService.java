@@ -20,6 +20,9 @@ public class PlanoService {
     @Autowired
     private PerfilRepository perfilRepository;
 
+    @Autowired
+    private PlanoAuthorizationService planoAuthorizationService;
+
     public List<Plano> findAllByPerfilId(Long perfilId) {
         ensurePerfilAtivo(perfilId);
         return planoRepository.findByPerfilId(perfilId);
@@ -27,7 +30,8 @@ public class PlanoService {
 
     public Plano findById(Long perfilId, Long id) {
         ensurePerfilAtivo(perfilId);
-        return planoRepository.findByIdAndPerfilId(id, perfilId)
+        planoAuthorizationService.assertCanViewPlano(id, perfilId);
+        return planoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Plano não encontrado para o perfil informado"));
     }
 
@@ -39,6 +43,7 @@ public class PlanoService {
     }
 
     public Plano update(Long perfilId, Long id, Plano plano) {
+        planoAuthorizationService.assertManager(id, perfilId);
         Plano existente = findById(perfilId, id);
         existente.setNome(plano.getNome());
         existente.setWallpaperUrl(plano.getWallpaperUrl());
@@ -46,6 +51,7 @@ public class PlanoService {
     }
 
     public void delete(Long perfilId, Long id) {
+        planoAuthorizationService.assertManager(id, perfilId);
         Plano existente = findById(perfilId, id);
         planoRepository.delete(Objects.requireNonNull(existente));
     }

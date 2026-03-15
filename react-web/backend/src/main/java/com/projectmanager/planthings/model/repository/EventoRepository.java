@@ -9,6 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface EventoRepository extends JpaRepository<Evento, Long> {
+	List<Evento> findByListaId(Long listaId);
+
 	List<Evento> findByListaIdAndListaPlanoPerfilId(Long listaId, Long perfilId);
 
 	Optional<Evento> findByIdAndListaPlanoPerfilId(Long id, Long perfilId);
