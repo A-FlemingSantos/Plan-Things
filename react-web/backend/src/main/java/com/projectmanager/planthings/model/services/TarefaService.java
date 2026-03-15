@@ -29,13 +29,19 @@ public class TarefaService {
     @Autowired
     private EventoRepository eventoRepository;
 
+    @Autowired
+    private PlanoAccessService planoAccessService;
+
     public List<Tarefa> findAllByLista(Long perfilId, Long listaId) {
-        return tarefaRepository.findByListaIdAndListaPlanoPerfilId(listaId, perfilId);
+        planoAccessService.assertCanViewLista(perfilId, listaId);
+        return tarefaRepository.findByListaId(listaId);
     }
 
     public Tarefa findById(Long perfilId, Long id) {
-        return tarefaRepository.findByIdAndListaPlanoPerfilId(id, perfilId)
-                .orElseThrow(() -> new NotFoundException("Tarefa não encontrada para o perfil informado"));
+        Tarefa tarefa = tarefaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Tarefa não encontrada"));
+        planoAccessService.assertCanViewPlano(perfilId, tarefa.getLista().getPlano().getId());
+        return tarefa;
     }
 
     @Transactional
@@ -52,6 +58,7 @@ public class TarefaService {
     @Transactional
     public Tarefa update(Long perfilId, Long id, Tarefa tarefa) {
         Tarefa existente = findById(perfilId, id);
+        planoAccessService.assertIsManager(perfilId, existente.getLista().getPlano().getId());
         validarExclusividade(id);
         cartaoService.validarCor(tarefa.getCor());
 
@@ -65,12 +72,15 @@ public class TarefaService {
     @Transactional
     public void delete(Long perfilId, Long id) {
         Tarefa existente = findById(perfilId, id);
+        planoAccessService.assertIsManager(perfilId, existente.getLista().getPlano().getId());
         tarefaRepository.delete(Objects.requireNonNull(existente));
     }
 
     private Lista ensureListaOwnership(Long perfilId, Long listaId) {
-        return listaRepository.findByIdAndPlanoPerfilId(listaId, perfilId)
-                .orElseThrow(() -> new NotFoundException("Lista não encontrada para o perfil informado"));
+        Lista lista = listaRepository.findById(listaId)
+                .orElseThrow(() -> new NotFoundException("Lista não encontrada"));
+        planoAccessService.assertIsManager(perfilId, lista.getPlano().getId());
+        return lista;
     }
 
     private void validarExclusividade(Long id) {

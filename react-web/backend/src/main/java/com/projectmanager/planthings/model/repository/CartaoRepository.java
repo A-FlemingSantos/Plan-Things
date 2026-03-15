@@ -10,11 +10,11 @@ import java.util.List;
 public interface CartaoRepository extends JpaRepository<Cartao, Long> {
     List<Cartao> findByListaId(Long listaId);
 
-    List<Cartao> findByListaIdAndListaPlanoPerfilIdOrderByPosicaoAsc(Long listaId, Long perfilId);
+    List<Cartao> findByListaIdOrderByPosicaoAsc(Long listaId);
 
-    java.util.Optional<Cartao> findByIdAndListaPlanoPerfilId(Long id, Long perfilId);
-
-    List<Cartao> findAllByIdInAndListaPlanoPerfilId(List<Long> ids, Long perfilId);
+    List<Cartao> findAllByIdIn(List<Long> ids);
 
     long countByListaId(Long listaId);
+
+    boolean existsByIdAndListaPlanoId(Long cartaoId, Long planoId);
 }

@@ -5,6 +5,7 @@ import com.projectmanager.planthings.model.entity.Evento;
 import com.projectmanager.planthings.model.entity.Lista;
 import com.projectmanager.planthings.model.entity.Perfil;
 import com.projectmanager.planthings.model.entity.Plano;
+import com.projectmanager.planthings.model.services.PlanoAccessService;
 import com.projectmanager.planthings.model.repository.EventoRepository;
 import com.projectmanager.planthings.model.repository.ListaRepository;
 import com.projectmanager.planthings.model.repository.TarefaRepository;
@@ -37,6 +38,9 @@ class EventoServiceTest {
     private CartaoService cartaoService;
 
     @Mock
+    private PlanoAccessService planoAccessService;
+
+    @Mock
     private TarefaRepository tarefaRepository;
 
     @InjectMocks
@@ -51,7 +55,8 @@ class EventoServiceTest {
         atualizacao.setDataInicio(LocalDateTime.of(2026, 3, 12, 9, 0));
         atualizacao.setDataFim(LocalDateTime.of(2026, 3, 12, 10, 0));
 
-        when(eventoRepository.findByIdAndListaPlanoPerfilId(10L, 1L)).thenReturn(Optional.of(existente));
+        when(eventoRepository.findById(10L)).thenReturn(Optional.of(existente));
+        when(planoAccessService.assertIsManager(1L, 2L)).thenReturn(existente.getLista().getPlano());
         when(tarefaRepository.existsById(10L)).thenReturn(true);
 
         assertThrows(ConflictException.class, () -> eventoService.update(1L, 10L, atualizacao));
@@ -70,7 +75,8 @@ class EventoServiceTest {
         atualizacao.setDataInicio(LocalDateTime.of(2026, 4, 10, 14, 0));
         atualizacao.setDataFim(LocalDateTime.of(2026, 4, 10, 16, 0));
 
-        when(eventoRepository.findByIdAndListaPlanoPerfilId(10L, 1L)).thenReturn(Optional.of(existente));
+        when(eventoRepository.findById(10L)).thenReturn(Optional.of(existente));
+        when(planoAccessService.assertIsManager(1L, 2L)).thenReturn(existente.getLista().getPlano());
         when(tarefaRepository.existsById(10L)).thenReturn(false);
         when(eventoRepository.save(Objects.requireNonNull(existente))).thenReturn(existente);
 

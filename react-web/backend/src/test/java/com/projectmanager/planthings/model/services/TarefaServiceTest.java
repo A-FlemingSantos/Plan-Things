@@ -4,6 +4,7 @@ import com.projectmanager.planthings.exception.ConflictException;
 import com.projectmanager.planthings.model.entity.Lista;
 import com.projectmanager.planthings.model.entity.Perfil;
 import com.projectmanager.planthings.model.entity.Plano;
+import com.projectmanager.planthings.model.services.PlanoAccessService;
 import com.projectmanager.planthings.model.entity.Tarefa;
 import com.projectmanager.planthings.model.repository.EventoRepository;
 import com.projectmanager.planthings.model.repository.ListaRepository;
@@ -37,6 +38,9 @@ class TarefaServiceTest {
     private CartaoService cartaoService;
 
     @Mock
+    private PlanoAccessService planoAccessService;
+
+    @Mock
     private EventoRepository eventoRepository;
 
     @InjectMocks
@@ -50,7 +54,8 @@ class TarefaServiceTest {
         atualizacao.setCor("#123456");
         atualizacao.setDataConclusao(LocalDateTime.of(2026, 3, 10, 8, 0));
 
-        when(tarefaRepository.findByIdAndListaPlanoPerfilId(10L, 1L)).thenReturn(Optional.of(existente));
+        when(tarefaRepository.findById(10L)).thenReturn(Optional.of(existente));
+        when(planoAccessService.assertIsManager(1L, 2L)).thenReturn(existente.getLista().getPlano());
         when(eventoRepository.existsById(10L)).thenReturn(true);
 
         assertThrows(ConflictException.class, () -> tarefaService.update(1L, 10L, atualizacao));
@@ -68,7 +73,8 @@ class TarefaServiceTest {
         atualizacao.setCor("#ABCDEF");
         atualizacao.setDataConclusao(LocalDateTime.of(2026, 4, 1, 12, 30));
 
-        when(tarefaRepository.findByIdAndListaPlanoPerfilId(10L, 1L)).thenReturn(Optional.of(existente));
+        when(tarefaRepository.findById(10L)).thenReturn(Optional.of(existente));
+        when(planoAccessService.assertIsManager(1L, 2L)).thenReturn(existente.getLista().getPlano());
         when(eventoRepository.existsById(10L)).thenReturn(false);
         when(tarefaRepository.save(Objects.requireNonNull(existente))).thenReturn(existente);
 

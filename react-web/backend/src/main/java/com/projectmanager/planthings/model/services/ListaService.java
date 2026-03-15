@@ -24,18 +24,22 @@ public class ListaService {
     @Autowired
     private PlanoRepository planoRepository;
 
+    @Autowired
+    private PlanoAccessService planoAccessService;
+
     public List<Lista> findAllByPlano(Long perfilId, Long planoId) {
-        ensurePlanoOwnership(perfilId, planoId);
-        return listaRepository.findByPlanoIdAndPlanoPerfilId(planoId, perfilId);
+        planoAccessService.assertCanViewPlano(perfilId, planoId);
+        return listaRepository.findByPlanoId(planoId);
     }
 
     public Lista findById(Long perfilId, Long id) {
-        return listaRepository.findByIdAndPlanoPerfilId(id, perfilId)
-                .orElseThrow(() -> new NotFoundException("Lista não encontrada para o perfil informado"));
+        return planoAccessService.assertCanViewLista(perfilId, id);
     }
 
     public Lista save(Long perfilId, Long planoId, Lista lista) {
-        Plano plano = ensurePlanoOwnership(perfilId, planoId);
+        planoAccessService.assertIsManager(perfilId, planoId);
+        Plano plano = planoRepository.findById(planoId)
+                .orElseThrow(() -> new NotFoundException("Plano não encontrado"));
         validarCor(lista.getCor());
 
         lista.setId(null);
@@ -44,7 +48,7 @@ public class ListaService {
     }
 
     public Lista update(Long perfilId, Long id, Lista lista) {
-        Lista existente = findById(perfilId, id);
+        Lista existente = planoAccessService.assertIsManagerOnLista(perfilId, id);
         validarCor(lista.getCor());
 
         existente.setNome(lista.getNome());
@@ -53,13 +57,8 @@ public class ListaService {
     }
 
     public void delete(Long perfilId, Long id) {
-        Lista existente = findById(perfilId, id);
+        Lista existente = planoAccessService.assertIsManagerOnLista(perfilId, id);
         listaRepository.delete(Objects.requireNonNull(existente));
-    }
-
-    private Plano ensurePlanoOwnership(Long perfilId, Long planoId) {
-        return planoRepository.findByIdAndPerfilId(planoId, perfilId)
-                .orElseThrow(() -> new NotFoundException("Plano não encontrado para o perfil informado"));
     }
 
     private void validarCor(String cor) {
