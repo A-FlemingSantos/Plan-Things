@@ -20,6 +20,14 @@ cd react-mobile
 npm install
 ```
 
+> Se você acabou de atualizar o código e recebeu erro de dependência faltando, rode:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+
 2. Configure a URL da API:
 
 ```bash
@@ -69,4 +77,4 @@ Se ainda falhar, verifique se o backend está aceitando requisições da origem 
 
 ## Observação sobre URL da API
 
-Se `EXPO_PUBLIC_API_URL` não estiver definida, o app tenta detectar automaticamente o host do Expo Dev Server e usar `http://<host>:8080/api/v1`.
+Se `EXPO_PUBLIC_API_URL` não estiver definida, o app usa `http://localhost:8080/api/v1` como fallback. Em celular físico, configure obrigatoriamente o IP local no `.env`.
