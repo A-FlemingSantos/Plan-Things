@@ -1,11 +1,27 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Switch } from 'react-native';
+import { useMemo } from 'react';
 import { Screen } from '../components/Screen';
 import { Card } from '../components/Card';
-import { colors } from '../theme/colors';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 export function ProfileScreen() {
   const { user, logout } = useAuth();
+  const { colors, mode, toggleTheme } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { padding: 20, gap: 16 },
+        title: { color: colors.text, fontSize: 26, fontWeight: '800', letterSpacing: -0.5, marginBottom: 8 },
+        label: { color: colors.muted, fontSize: 13, marginTop: 4, fontWeight: '600' },
+        value: { color: colors.text, fontSize: 18, fontWeight: '700', marginBottom: 8 },
+        row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+        button: { marginTop: 16, backgroundColor: colors.danger, padding: 16, borderRadius: 14, alignItems: 'center', shadowColor: colors.danger, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 6, elevation: 4 },
+        buttonText: { color: '#ffffff', fontWeight: '800', fontSize: 16, letterSpacing: 0.3 },
+      }),
+    [colors]
+  );
 
   return (
     <Screen>
@@ -20,6 +36,21 @@ export function ProfileScreen() {
           <Text style={styles.value}>{user?.telefone || 'Não informado'}</Text>
         </Card>
 
+        <Card style={{ gap: 10 }}>
+          <View style={styles.row}>
+            <View>
+              <Text style={styles.label}>Tema</Text>
+              <Text style={styles.value}>{mode === 'dark' ? 'Escuro' : 'Claro'}</Text>
+            </View>
+            <Switch
+              value={mode === 'dark'}
+              onValueChange={toggleTheme}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={mode === 'dark' ? colors.surfaceSoft : colors.surface}
+            />
+          </View>
+        </Card>
+
         <Pressable style={styles.button} onPress={logout}>
           <Text style={styles.buttonText}>Sair</Text>
         </Pressable>
@@ -27,12 +58,3 @@ export function ProfileScreen() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { padding: 16, gap: 12 },
-  title: { color: colors.text, fontSize: 24, fontWeight: '700' },
-  label: { color: colors.muted, fontSize: 12, marginTop: 2 },
-  value: { color: colors.text, fontSize: 16, fontWeight: '600' },
-  button: { marginTop: 8, backgroundColor: colors.danger, padding: 14, borderRadius: 12, alignItems: 'center' },
-  buttonText: { color: '#fff', fontWeight: '700' },
-});

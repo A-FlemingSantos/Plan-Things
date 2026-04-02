@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../contexts/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
-import { colors } from '../theme/colors';
+import { useTheme } from '../contexts/ThemeContext';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { AppTabs } from './TabNavigator';
@@ -11,6 +11,7 @@ const Stack = createNativeStackNavigator();
 
 export function RootNavigator() {
   const { isAuthenticated, loading } = useAuth();
+  const { colors } = useTheme();
 
   if (loading) {
     return (
