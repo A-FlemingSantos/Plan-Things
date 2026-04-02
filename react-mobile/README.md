@@ -32,4 +32,41 @@ cp .env.example .env
 npm run start
 ```
 
-> Use `EXPO_PUBLIC_API_URL` com o host acessível pelo dispositivo/emulador (ex.: IP local da máquina).
+## Expo Go não carrega? (guia rápido)
+
+### 1) Backend precisa estar ativo e acessível na rede
+
+No backend:
+
+```bash
+cd react-web/backend
+./mvnw spring-boot:run
+```
+
+### 2) Se usar celular físico, **não** use `localhost`
+
+No `.env` de `react-mobile`, use o IP da sua máquina na rede local:
+
+```env
+EXPO_PUBLIC_API_URL=http://SEU_IP_LOCAL:8080/api/v1
+```
+
+Exemplo:
+
+```env
+EXPO_PUBLIC_API_URL=http://192.168.0.15:8080/api/v1
+```
+
+### 3) Inicie o Expo em modo tunnel (ajuda em redes bloqueadas)
+
+```bash
+npm run start -- --tunnel
+```
+
+### 4) CORS no backend
+
+Se ainda falhar, verifique se o backend está aceitando requisições da origem do app mobile.
+
+## Observação sobre URL da API
+
+Se `EXPO_PUBLIC_API_URL` não estiver definida, o app tenta detectar automaticamente o host do Expo Dev Server e usar `http://<host>:8080/api/v1`.
